@@ -1,4 +1,4 @@
-import whyYouDo from '../assets/images/not_found/whyYouDo.png';
+import whyYouDo from '../../assets/images/not_found/whyYouDo.png';
 
 const NotFound = () => {
   return (
