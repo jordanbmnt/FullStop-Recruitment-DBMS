@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 import { TrendingUp, Users, Activity, ArrowUpRight, ArrowDownRight, RefreshCw, Search, Workflow } from 'lucide-react';
+import CandidateDetailsModal from '../../components/candidate_details_modal';
 
 const categoryDataGenerator = (applicantData) => {
   // Object to store the counts of each field
@@ -464,7 +465,7 @@ const useData = () => {
   return { statsData, monthlyData, categoryData, usersData };
 };
 
-const SearchResult = ({ searchResult }) => {
+const SearchResult = ({ searchResult, setSearchResult }) => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'available':
@@ -511,7 +512,9 @@ const SearchResult = ({ searchResult }) => {
 
       {/* Action Button - Compact */}
       <button
-        onClick={() => { }}
+        onClick={() => {
+          setSearchResult()
+        }}
         className="w-full px-3 py-2 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 hover:shadow-md hover:-translate-y-0.5 rounded transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transform-gpu"
       >
         View Details
@@ -641,6 +644,8 @@ export const Dashboard = () => {
   const [searchQueryMaxLength, setSearchQueryMaxLength] = useState(0);
   const [searchQueryLimit, setSearchQueryLimit] = useState(2);
   const [searchResult, setSearchResult] = useState(null);
+  const [activeSearchResult, setActiveSearchResult] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     if (searchQuery) {
@@ -767,7 +772,10 @@ export const Dashboard = () => {
                           animationFillMode: 'both'
                         }}
                       >
-                        <SearchResult searchResult={r} />
+                        <SearchResult searchResult={r} setSearchResult={() => {
+                          setActiveSearchResult(r);
+                          setIsModalVisible(true)
+                        }} />
                       </div>
                     ))}
                   </div>
@@ -783,7 +791,7 @@ export const Dashboard = () => {
                     >
                       <div className="text-center">
                         <button
-                          onAuxClick={(e)=>{
+                          onAuxClick={(e) => {
                             // ask for increment and sort
                             window.alert("MWAHAHAH")
                           }}
@@ -830,6 +838,12 @@ export const Dashboard = () => {
           )}
         </div>
       </div>
+
+      {/* Modal */}
+      <CandidateDetailsModal candidate={activeSearchResult} isOpen={isModalVisible} onClose={() => {
+        setIsModalVisible(false);
+        setActiveSearchResult(null)
+      }} />
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
