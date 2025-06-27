@@ -95,7 +95,9 @@ const useData = () => {
       lastUpdated: "2024-05-20",
       field: "Software Development",
       jobTitle: "Frontend Developer",
-      yearsOfXp: 5
+      yearsOfXp: 5,
+      skills: ["React", "JavaScript", "HTML", "CSS", "UI/UX Design"],
+      summary: "Experienced Frontend Developer with 5 years of building responsive and user-friendly web applications using modern JavaScript frameworks."
     },
     {
       id: 2,
@@ -107,7 +109,9 @@ const useData = () => {
       lastUpdated: "2024-06-15",
       field: "Marketing",
       jobTitle: "Digital Marketing Specialist",
-      yearsOfXp: 3
+      yearsOfXp: 3,
+      skills: ["SEO", "Content Marketing", "Social Media Management", "Email Marketing", "Google Analytics"],
+      summary: "Dynamic Digital Marketing Specialist with 3 years of experience in driving online engagement and lead generation through various digital channels."
     },
     {
       id: 3,
@@ -119,7 +123,9 @@ const useData = () => {
       lastUpdated: "2023-11-01",
       field: "Finance",
       jobTitle: "Financial Analyst",
-      yearsOfXp: 7
+      yearsOfXp: 7,
+      skills: ["Financial Modeling", "Data Analysis", "Budgeting", "Forecasting", "Excel"],
+      summary: "Highly analytical Financial Analyst with 7 years of experience providing insightful financial reports and strategic recommendations to support business growth."
     },
     {
       id: 4,
@@ -131,7 +137,9 @@ const useData = () => {
       lastUpdated: "2024-06-20",
       field: "Healthcare",
       jobTitle: "Registered Nurse",
-      yearsOfXp: 10
+      yearsOfXp: 10,
+      skills: ["Patient Care", "Medication Administration", "Electronic Health Records (EHR)", "Critical Care", "First Aid"],
+      summary: "Dedicated Registered Nurse with a decade of experience in various healthcare settings, committed to providing compassionate and effective patient care."
     },
     {
       id: 5,
@@ -143,7 +151,9 @@ const useData = () => {
       lastUpdated: "2024-04-10",
       field: "Project Management",
       jobTitle: "Project Manager",
-      yearsOfXp: 8
+      yearsOfXp: 8,
+      skills: ["Agile Methodologies", "Scrum", "Risk Management", "Stakeholder Communication", "Budget Management"],
+      summary: "Results-driven Project Manager with 8 years of successfully leading complex projects from initiation to completion, ensuring on-time and within-budget delivery."
     },
     {
       id: 6,
@@ -155,7 +165,9 @@ const useData = () => {
       lastUpdated: "2024-06-01",
       field: "Human Resources",
       jobTitle: "HR Business Partner",
-      yearsOfXp: 6
+      yearsOfXp: 6,
+      skills: ["Talent Acquisition", "Employee Relations", "Performance Management", "HR Policy Development", "Conflict Resolution"],
+      summary: "Strategic HR Business Partner with 6 years of experience aligning HR initiatives with business objectives to foster a positive and productive work environment."
     },
     {
       id: 7,
@@ -167,7 +179,9 @@ const useData = () => {
       lastUpdated: "2024-05-28",
       field: "Data Science",
       jobTitle: "Data Scientist",
-      yearsOfXp: 4
+      yearsOfXp: 4,
+      skills: ["Talking", "Team Work", "Python", "Machine Learning", "Statistical Modeling", "Data Visualization"],
+      summary: "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sunt neque vitae odio enim labore! Ratione enim distinctio illo, error reiciendis aperiam vitae vel ducimus at expedita corporis corporis doloribus excepturi accusantium, repellendus ab, laudantium exercitationem voluptatibus animi iusto cum fugiat debitis! Reprehenderit repellat enim voluptate cupiditate. Veniam, impedit cupiditate corrupti cumque illum maxime! Nulla, sed fugiat labore minus repellendus ab. Minima minus, quidem eos dolore praesentium modi quod voluptates enim possimus, doloremque illo aliquam sint est magni deleniti repellendus voluptatum alias consectetur repellat optio, aperiam veniam aspernatur maiores adipisci. Veniam provident culpa distinctio dicta quidem, ex dignissimos expedita aperiam soluta vitae."
     },
     {
       id: 8,
@@ -179,7 +193,9 @@ const useData = () => {
       lastUpdated: "2024-03-15",
       field: "Education",
       jobTitle: "High School Teacher",
-      yearsOfXp: 9
+      yearsOfXp: 9,
+      skills: ["Curriculum Development", "Classroom Management", "Lesson Planning", "Student Assessment", "Differentiated Instruction"],
+      summary: "Passionate High School Teacher with 9 years of experience fostering engaging learning environments and promoting academic excellence in diverse student populations."
     },
     {
       id: 9,
@@ -191,7 +207,9 @@ const useData = () => {
       lastUpdated: "2024-06-10",
       field: "Design",
       jobTitle: "UX/UI Designer",
-      yearsOfXp: 2
+      yearsOfXp: 2,
+      skills: ["Wireframing", "Prototyping", "User Research", "Figma", "Adobe XD"],
+      summary: "Creative UX/UI Designer with 2 years of experience crafting intuitive and visually appealing digital experiences that enhance user satisfaction."
     },
     {
       id: 10,
@@ -203,7 +221,9 @@ const useData = () => {
       lastUpdated: "2024-05-05",
       field: "Sales",
       jobTitle: "Sales Representative",
-      yearsOfXp: 3
+      yearsOfXp: 3,
+      skills: ["Client Relationship Management", "Negotiation", "Lead Generation", "CRM Software", "Presentation Skills"],
+      summary: "Dynamic Sales Representative with 3 years of proven success in exceeding sales targets and building strong, lasting client relationships."
     },
     {
       id: 11,
@@ -215,7 +235,9 @@ const useData = () => {
       lastUpdated: "2023-12-20",
       field: "Engineering",
       jobTitle: "Mechanical Engineer",
-      yearsOfXp: 12
+      yearsOfXp: 12,
+      skills: ["CAD Software", "Prototyping", "Thermodynamics", "Stress Analysis", "Project Design"],
+      summary: "Experienced Mechanical Engineer with 12 years of expertise in designing, developing, and optimizing mechanical systems for various industries."
     },
     {
       id: 12,
@@ -227,7 +249,9 @@ const useData = () => {
       lastUpdated: "2024-06-22",
       field: "Customer Service",
       jobTitle: "Customer Support Lead",
-      yearsOfXp: 5
+      yearsOfXp: 5,
+      skills: ["Conflict Resolution", "Communication Skills", "Problem-Solving", "Team Leadership", "CRM Systems"],
+      summary: "Customer-focused Customer Support Lead with 5 years of experience in managing support teams and resolving complex customer inquiries efficiently."
     },
     {
       id: 13,
@@ -239,7 +263,9 @@ const useData = () => {
       lastUpdated: "2024-04-25",
       field: "IT",
       jobTitle: "Network Administrator",
-      yearsOfXp: 7
+      yearsOfXp: 7,
+      skills: ["Network Security", "Troubleshooting", "System Administration", "Cisco Routers", "Cloud Computing"],
+      summary: "Proficient Network Administrator with 7 years of experience in designing, implementing, and maintaining robust and secure network infrastructures."
     },
     {
       id: 14,
@@ -251,7 +277,9 @@ const useData = () => {
       lastUpdated: "2024-06-08",
       field: "Content Creation",
       jobTitle: "Content Writer",
-      yearsOfXp: 4
+      yearsOfXp: 4,
+      skills: ["Copywriting", "SEO Writing", "Editing", "Research", "Blog Post Creation"],
+      summary: "Creative Content Writer with 4 years of experience crafting compelling and engaging content for various digital platforms and audiences."
     },
     {
       id: 15,
@@ -263,7 +291,9 @@ const useData = () => {
       lastUpdated: "2024-05-18",
       field: "Research",
       jobTitle: "Research Scientist",
-      yearsOfXp: 6
+      yearsOfXp: 6,
+      skills: ["Experimental Design", "Statistical Analysis", "Data Interpretation", "Report Writing", "Laboratory Techniques"],
+      summary: "Dedicated Research Scientist with 6 years of experience conducting rigorous scientific investigations and contributing to impactful discoveries."
     },
     {
       id: 16,
@@ -275,7 +305,9 @@ const useData = () => {
       lastUpdated: "2024-06-05",
       field: "Finance",
       jobTitle: "Accountant",
-      yearsOfXp: 8
+      yearsOfXp: 8,
+      skills: ["Financial Reporting", "Tax Preparation", "Auditing", "Bookkeeping", "GAAP"],
+      summary: "Detail-oriented Accountant with 8 years of experience managing financial records, preparing statements, and ensuring compliance with regulations."
     },
     {
       id: 17,
@@ -287,7 +319,9 @@ const useData = () => {
       lastUpdated: "2023-10-10",
       field: "Legal",
       jobTitle: "Paralegal",
-      yearsOfXp: 3
+      yearsOfXp: 3,
+      skills: ["Legal Research", "Document Preparation", "Case Management", "Client Communication", "Litigation Support"],
+      summary: "Diligent Paralegal with 3 years of experience providing comprehensive support to legal teams, including research and document management."
     },
     {
       id: 18,
@@ -299,7 +333,9 @@ const useData = () => {
       lastUpdated: "2024-06-18",
       field: "Marketing",
       jobTitle: "Social Media Manager",
-      yearsOfXp: 2
+      yearsOfXp: 2,
+      skills: ["Social Media Strategy", "Content Scheduling", "Community Management", "Analytics", "Influencer Marketing"],
+      summary: "Engaging Social Media Manager with 2 years of experience developing and executing successful social media campaigns to boost brand awareness and engagement."
     },
     {
       id: 19,
@@ -311,7 +347,9 @@ const useData = () => {
       lastUpdated: "2024-05-12",
       field: "Construction",
       jobTitle: "Construction Manager",
-      yearsOfXp: 15
+      yearsOfXp: 15,
+      skills: ["Project Planning", "Site Supervision", "Budget Control", "Safety Regulations", "Contract Negotiation"],
+      summary: "Highly experienced Construction Manager with 15 years in overseeing large-scale construction projects, ensuring quality, safety, and timely completion."
     },
     {
       id: 20,
@@ -323,7 +361,9 @@ const useData = () => {
       lastUpdated: "2024-04-01",
       field: "Education",
       jobTitle: "University Lecturer",
-      yearsOfXp: 11
+      yearsOfXp: 11,
+      skills: ["Lecturing", "Course Design", "Academic Advising", "Research", "Public Speaking"],
+      summary: "Accomplished University Lecturer with 11 years of experience in higher education, delivering engaging lectures and contributing to academic research."
     },
     {
       id: 21,
@@ -335,7 +375,9 @@ const useData = () => {
       lastUpdated: "2024-06-21",
       field: "Healthcare",
       jobTitle: "Medical Assistant",
-      yearsOfXp: 1
+      yearsOfXp: 1,
+      skills: ["Patient Intake", "Vital Signs", "Phlebotomy", "Medical Terminology", "Appointment Scheduling"],
+      summary: "Dedicated Medical Assistant with 1 year of experience providing essential support in clinical settings, ensuring efficient patient flow and care."
     },
     {
       id: 22,
@@ -347,7 +389,9 @@ const useData = () => {
       lastUpdated: "2024-05-30",
       field: "Software Development",
       jobTitle: "Backend Developer",
-      yearsOfXp: 7
+      yearsOfXp: 7,
+      skills: ["Node.js", "Python", "Databases (SQL/NoSQL)", "API Development", "Cloud Platforms"],
+      summary: "Senior Backend Developer with 7 years of experience in designing and implementing robust and scalable server-side applications."
     },
     {
       id: 23,
@@ -359,7 +403,9 @@ const useData = () => {
       lastUpdated: "2023-09-01",
       field: "Art & Design",
       jobTitle: "Graphic Designer",
-      yearsOfXp: 4
+      yearsOfXp: 4,
+      skills: ["Adobe Creative Suite", "Typography", "Branding", "Print Design", "Web Graphics"],
+      summary: "Creative Graphic Designer with 4 years of experience producing visually compelling designs for various marketing and branding initiatives."
     },
     {
       id: 24,
@@ -371,7 +417,9 @@ const useData = () => {
       lastUpdated: "2024-06-12",
       field: "Data Science",
       jobTitle: "Machine Learning Engineer",
-      yearsOfXp: 6
+      yearsOfXp: 6,
+      skills: ["Machine Learning Algorithms", "Deep Learning", "TensorFlow", "PyTorch", "Model Deployment"],
+      summary: "Innovative Machine Learning Engineer with 6 years of experience developing and deploying advanced AI models to solve complex business problems."
     },
     {
       id: 25,
@@ -383,7 +431,9 @@ const useData = () => {
       lastUpdated: "2024-03-20",
       field: "Logistics",
       jobTitle: "Supply Chain Manager",
-      yearsOfXp: 9
+      yearsOfXp: 9,
+      skills: ["Inventory Management", "Logistics Optimization", "Vendor Management", "Supply Chain Analytics", "SAP"],
+      summary: "Strategic Supply Chain Manager with 9 years of experience optimizing logistics operations and ensuring efficient flow of goods and services."
     },
     {
       id: 26,
@@ -395,7 +445,9 @@ const useData = () => {
       lastUpdated: "2024-06-03",
       field: "Customer Service",
       jobTitle: "Call Center Agent",
-      yearsOfXp: 2
+      yearsOfXp: 2,
+      skills: ["Active Listening", "De-escalation", "Ticketing Systems", "Product Knowledge", "Empathy"],
+      summary: "Client-focused Call Center Agent with 2 years of experience providing exceptional customer support and resolving inquiries in a fast-paced environment."
     },
     {
       id: 27,
@@ -407,7 +459,9 @@ const useData = () => {
       lastUpdated: "2024-05-25",
       field: "IT",
       jobTitle: "Cybersecurity Analyst",
-      yearsOfXp: 5
+      yearsOfXp: 5,
+      skills: ["Threat Detection", "Vulnerability Assessment", "Incident Response", "Firewalls", "Security Information and Event Management (SIEM)"],
+      summary: "Proactive Cybersecurity Analyst with 5 years of experience safeguarding digital assets through comprehensive security measures and rapid incident response."
     },
     {
       id: 28,
@@ -419,7 +473,9 @@ const useData = () => {
       lastUpdated: "2023-08-15",
       field: "Hospitality",
       jobTitle: "Hotel Manager",
-      yearsOfXp: 10
+      yearsOfXp: 10,
+      skills: ["Operations Management", "Staff Supervision", "Guest Relations", "Revenue Management", "Event Planning"],
+      summary: "Experienced Hotel Manager with 10 years of successful leadership in hospitality, driving guest satisfaction and operational excellence."
     },
     {
       id: 29,
@@ -431,7 +487,9 @@ const useData = () => {
       lastUpdated: "2024-06-16",
       field: "Sales",
       jobTitle: "Account Executive",
-      yearsOfXp: 4
+      yearsOfXp: 4,
+      skills: ["Strategic Selling", "Pipeline Management", "CRM Software (e.g., Salesforce)", "Closing Deals", "Client Presentations"],
+      summary: "Accomplished Account Executive with 4 years of experience in driving revenue growth and cultivating strong client relationships in competitive markets."
     },
     {
       id: 30,
@@ -443,7 +501,9 @@ const useData = () => {
       lastUpdated: "2024-05-01",
       field: "Research",
       jobTitle: "Market Researcher",
-      yearsOfXp: 3
+      yearsOfXp: 3,
+      skills: ["Market Analysis", "Survey Design", "Qualitative Research", "Quantitative Research", "Report Generation"],
+      summary: "Insightful Market Researcher with 3 years of experience in conducting in-depth market analysis and providing actionable insights for business strategy."
     }
   ];
 
