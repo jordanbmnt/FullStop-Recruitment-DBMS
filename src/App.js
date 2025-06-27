@@ -1,14 +1,15 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Dashboard from "./components/dashboard";
+import DashboardSidebar from "./components/dashboard_sidebar";
 import CvLink from "./pages/cv_link";
 import NotFound from "./pages/not_found";
+import { Dashboard } from "./pages/dashboard";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Dashboard />}>
-          <Route index element={<CvLink />} />
+        <Route path='/' element={<DashboardSidebar />}>
+          <Route index element={<Dashboard />} />
           <Route path='cv-link' element={<CvLink />} />
         </Route>
         <Route path='*' element={<NotFound />} />
