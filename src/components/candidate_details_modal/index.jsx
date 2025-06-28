@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Download, Eye, User, Mail, Calendar, Briefcase, MapPin, Phone } from 'lucide-react';
+import { X, Download, Eye, User, Mail, Calendar, Briefcase, Phone } from 'lucide-react';
 
 const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
   const [activeTab, setActiveTab] = useState('overview');
