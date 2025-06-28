@@ -714,7 +714,7 @@ export const Dashboard = () => {
         user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
         user.field.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.yearsOfXp == searchQuery
+        user.yearsOfXp === searchQuery
       ).sort((a, b) => {
         return b.yearsOfXp - a.yearsOfXp
       });
@@ -722,7 +722,7 @@ export const Dashboard = () => {
       setSearchQueryMaxLength(foundUser.length)
       setSearchResult(foundUser.slice(0, searchQueryLimit));
     }
-  }, [searchQuery, searchQueryLimit]);
+  }, [searchQuery, searchQueryLimit, usersData]);
 
   const handleShowMore = () => {
     const nextIncrement = searchQueryLimit + 5;
