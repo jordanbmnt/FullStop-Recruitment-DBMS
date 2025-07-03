@@ -707,18 +707,6 @@ export const Dashboard = () => {
   const [activeSearchResult, setActiveSearchResult] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
-
-  // Test
-  (async () => {
-    try {
-      const a = await fetch('/.netlify/functions/get_cv_users').then(res => res)
-
-      console.warn(a)
-    } catch (e) {
-      console.warn("Error:", e)
-    }
-  })()
-
   useEffect(() => {
     if (searchQuery) {
       // Search users by name or email
