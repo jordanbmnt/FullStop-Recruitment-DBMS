@@ -1,13 +1,21 @@
-// Docs on request and context https://docs.netlify.com/functions/build/#code-your-function-2
-export default (request, context) => {
-  try {
-    const url = new URL(request.url)
-    const subject = url.searchParams.get('name') || 'World'
+import { MongoClient } from "mongodb";
+require("@dotenvx/dotenvx").config();
 
-    return new Response(`Hello ${subject}`)
-  } catch (error) {
-    return new Response(error.toString(), {
-      status: 500,
-    })
+const mongoClient = new MongoClient(process.env.MONGODB_URI);
+
+const clientPromise = mongoClient.connect();
+
+export const handler = async (event) => {
+  try {
+    const database = (await clientPromise).db(process.env.MONGODB_DATABASE);
+    const collection = database.collection(process.env.MONGODB_COLLECTION);
+    const results = await collection.find({}).limit(10).toArray();
+    
+    return {
+      statusCode: 200,
+      body: JSON.stringify(results),
+    };
+  } catch (e) {
+    return { statusCode: 500, body: e.toString() };
   }
-}
+};
