@@ -710,29 +710,35 @@ export const Dashboard = () => {
   useEffect(() => {
     if (searchQuery) {
       // Search users by name or email
-      const foundUser = usersData.filter(user =>
-        user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.field.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.yearsOfXp === searchQuery
-      ).sort((a, b) => {
-        return b.yearsOfXp - a.yearsOfXp
-      });
+      // const foundUser = usersData.filter(user =>
+      //   user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      //   user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      //   user.field.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      //   user.yearsOfXp === searchQuery
+      // ).sort((a, b) => {
+      //   return b.yearsOfXp - a.yearsOfXp
+      // });
 
-      setSearchQueryMaxLength(foundUser.length)
-      setSearchResult(foundUser.slice(0, searchQueryLimit));
-    }
-  }, [searchQuery, searchQueryLimit, usersData]);
+      // setSearchQueryMaxLength(foundUser.length)
+      // setSearchResult(foundUser.slice(0, searchQueryLimit));
 
-  //! REMOVE
-  (async () => {
-    try {
-      const a = await fetch('/.netlify/functions/get_cv_users?field=software').then((response) => response.json())
-      console.warn(a)
-    } catch (e) {
-      console.warn("Error:", e)
+      // make a way to specifically search for fields/skills/name/etc.
+      (async () => {
+        try {
+          await fetch(`/.netlify/functions/get_cv_users?name=${searchQuery.toLowerCase()}&email=${searchQuery.toLowerCase()}&limit=${searchQueryLimit}`).then((response) => {
+            const res = response.json()
+            if (res && res.length > 0) setSearchResult(res.body)
+
+            return;
+          })
+          return;
+        } catch (e) {
+          console.warn("Error:", e)
+        }
+      })()
     }
-  })()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, searchQueryLimit]);
 
   const handleShowMore = () => {
     const nextIncrement = searchQueryLimit + 5;
