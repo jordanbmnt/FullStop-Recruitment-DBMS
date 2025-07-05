@@ -724,6 +724,16 @@ export const Dashboard = () => {
     }
   }, [searchQuery, searchQueryLimit, usersData]);
 
+  //! REMOVE
+  (async () => {
+    try {
+      const a = await fetch('/.netlify/functions/get_cv_users?field=software').then((response) => response.json())
+      console.warn(a)
+    } catch (e) {
+      console.warn("Error:", e)
+    }
+  })()
+
   const handleShowMore = () => {
     const nextIncrement = searchQueryLimit + 5;
     console.warn(nextIncrement)
