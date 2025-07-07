@@ -55,15 +55,18 @@ export default async (request, _context) => {
     const database = (await clientPromise).db(process.env.MONGODB_DATABASE);
     const collection = database.collection(process.env.MONGODB_COLLECTION);
     const findQuery = collectionQueryBuilder({ searchParams });
+    const maxResults = await collection.countDocuments(findQuery);
     const results = await collection
       .find(findQuery)
-      .limit(returnLimit | 10)
+      .sort('yearsOfXp', 'desc')
+      .limit(parseInt(returnLimit))
       .toArray();
 
     return new Response(
       JSON.stringify({
         statusCode: 200,
         body: results,
+        maxLength: maxResults,
       })
     );
   } catch (e) {
