@@ -7,12 +7,14 @@ import { Skeleton } from '../../components/skeleton';
 const categoryDataGenerator = (applicantData) => {
   // Object to store the counts of each field
   const fieldCounts = {};
+  let countOfFields = 0;
 
   // Iterate through the applicant data to count occurrences of each field
   applicantData.forEach(applicant => {
-    const field = applicant.field;
+    const field = applicant._id;
     if (field) { // Ensure field is not null or undefined
-      fieldCounts[field] = (fieldCounts[field] || 0) + 1;
+      fieldCounts[field] = applicant.count;
+      countOfFields += applicant.count;
     }
   });
 
@@ -28,9 +30,12 @@ const categoryDataGenerator = (applicantData) => {
   const formattedData = Object.keys(fieldCounts).map((field, index) => {
     return {
       name: field,
-      value: fieldCounts[field],
+      value: ((fieldCounts[field] / countOfFields).toFixed(2) * 100),
+      count: fieldCounts[field],
       color: generateColor(index)
     };
+  }).sort((a, b) => {
+    return b.value - a.value
   });
 
   return formattedData;
@@ -510,8 +515,6 @@ const useData = () => {
 
   const monthlyData = monthlyApplicantData(usersData);
 
-  const categoryData = categoryDataGenerator(usersData);
-
   const statsData = {
     totalUsers: usersData.length,
     uniqueFields: [...new Set(usersData.map((d) => d.jobTitle))].length,
@@ -523,7 +526,7 @@ const useData = () => {
     conversionGrowth: 15.7
   };
 
-  return { statsData, monthlyData, categoryData, usersData };
+  return { statsData, monthlyData, usersData };
 };
 
 const SearchResult = ({ searchResult, setSearchResult }) => {
@@ -655,7 +658,7 @@ const MonthlyChart = ({ data }) => (
 
 const CategoryChart = ({ data }) => (
   <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200/50 p-6 hover:shadow-xl transition-all duration-300">
-    <h3 className="text-lg font-semibold text-gray-900 mb-4">Traffic Sources</h3>
+    <h3 className="text-lg font-semibold text-gray-900 mb-4">Career Type Overview ({data.length})</h3>
     <ResponsiveContainer width="100%" height={300}>
       <PieChart>
         <Pie
@@ -663,9 +666,9 @@ const CategoryChart = ({ data }) => (
           cx="50%"
           cy="50%"
           innerRadius={60}
-          outerRadius={100}
-          paddingAngle={5}
-          dataKey="value"
+          outerRadius={120}
+          paddingAngle={0}
+          dataKey="count"
         >
           {data.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={entry.color} />
@@ -681,9 +684,9 @@ const CategoryChart = ({ data }) => (
         />
       </PieChart>
     </ResponsiveContainer>
-    <div className="flex justify-center space-x-4 mt-4">
-      {data.slice(0, 4).map((entry, index) => (
-        <div key={index} className="flex items-center">
+    <div className="flex space-x-4 mt-4 m-w-max overflow-x-scroll scroll-px-50">
+      {data.map((entry, index) => (
+        <div key={index} className="flex items-center justify-center min-w-max bg-white rounded-lg border border-gray-200 px-3 py-1">
           <div
             className="w-3 h-3 rounded-full mr-2"
             style={{ backgroundColor: entry.color }}
@@ -697,13 +700,14 @@ const CategoryChart = ({ data }) => (
 
 // Main Dashboard Component
 export const Dashboard = () => {
-  const { statsData, monthlyData, categoryData } = useData();
+  const { statsData, monthlyData } = useData();
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchQueryTerm, setSearchQueryTerm] = useState('');
   const [searchQueryMaxLength, setSearchQueryMaxLength] = useState(0);
   const [searchQueryLimit, setSearchQueryLimit] = useState(3);
   const [searchResult, setSearchResult] = useState(null);
+  const [categoryData, setCategoryData] = useState([]);
   const [activeSearchResult, setActiveSearchResult] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -728,6 +732,25 @@ export const Dashboard = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, searchQueryLimit]);
+
+  useEffect(() => {
+    try {
+      fetch(`/.netlify/functions/get_fields?occurrence=true`).then(res => res.json()).then(value => {
+        if (value && value.body.length > 0) {
+          console.warn(value.body)
+          const fieldStats = categoryDataGenerator(value.body);
+          setCategoryData(fieldStats);
+        }
+      });
+      return;
+    } catch (e) {
+      setSearchResult([]);
+      setIsSearching(false);
+      console.warn("Error:", e)
+      return;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleShowMore = () => {
     const nextIncrement = searchQueryLimit + 5;
@@ -773,7 +796,7 @@ export const Dashboard = () => {
             </div>
             <button
               onClick={() => handleSearch({ code: "Enter" })}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-colors duration-200 font-medium"
+              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none font-medium  hover:shadow-md hover:scale-103 transition-all duration-300"
             >
               Submit
             </button>

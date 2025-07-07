@@ -58,7 +58,7 @@ export default async (request, _context) => {
     const maxResults = await collection.countDocuments(findQuery);
     const results = await collection
       .find(findQuery)
-      .sort('yearsOfXp', 'desc')
+      .sort("yearsOfXp", "desc")
       .limit(parseInt(returnLimit))
       .toArray();
 

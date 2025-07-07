@@ -1,13 +1,50 @@
-// Docs on request and context https://docs.netlify.com/functions/build/#code-your-function-2
-export default (request, context) => {
-  try {
-    const url = new URL(request.url)
-    const subject = url.searchParams.get('name') || 'World'
+import { MongoClient } from "mongodb";
+require("@dotenvx/dotenvx").config();
 
-    return new Response(`Hello ${subject}`)
-  } catch (error) {
-    return new Response(error.toString(), {
-      status: 500,
-    })
+const FIELD_OCCURRENCES_AGG = [
+  {
+    $group: {
+      _id: "$field",
+      count: {
+        $sum: 1,
+      },
+    },
+  },
+];
+const EXISTING_FIELDS_AGG = [
+  {
+    $group: {
+      _id: "$field",
+    },
+  },
+  {
+    $count: "uniqueFieldsCount",
+  },
+];
+
+const mongoClient = new MongoClient(process.env.MONGODB_URI);
+const clientPromise = mongoClient.connect();
+
+// eslint-disable-next-line import/no-anonymous-default-export
+export default async (request, _context) => {
+  try {
+    const { searchParams } = new URL(request.url);
+    const searchParamsDict = {
+      occurrence: searchParams.get("occurrence"),
+    };
+    const database = (await clientPromise).db(process.env.MONGODB_DATABASE);
+    const collection = database.collection(process.env.MONGODB_COLLECTION);
+    const results = await collection
+      .aggregate(searchParamsDict ? FIELD_OCCURRENCES_AGG : EXISTING_FIELDS_AGG)
+      .toArray();
+
+    return new Response(
+      JSON.stringify({
+        statusCode: 200,
+        body: results,
+      })
+    );
+  } catch (e) {
+    return { statusCode: 500, body: e.toString() };
   }
-}
+};
