@@ -4,7 +4,7 @@ import { TrendingUp, Users, Activity, ArrowUpRight, ArrowDownRight, Search, Work
 import CandidateDetailsModal from '../../components/candidate_details_modal';
 import { Skeleton } from '../../components/skeleton';
 import { OverviewLoadingBlock } from './overview_loading_block';
-import { SearchResult } from './SearchResult';
+import { SearchResult } from './search_result';
 
 const categoryDataGenerator = (applicantData) => {
   // Object to store the counts of each field
