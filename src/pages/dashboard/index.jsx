@@ -3,6 +3,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { TrendingUp, Users, Activity, ArrowUpRight, ArrowDownRight, Search, Workflow } from 'lucide-react';
 import CandidateDetailsModal from '../../components/candidate_details_modal';
 import { Skeleton } from '../../components/skeleton';
+import { OverviewLoadingBlock } from './overview_loading_block';
 
 const categoryDataGenerator = (applicantData) => {
   // Object to store the counts of each field
@@ -937,8 +938,16 @@ export const Dashboard = () => {
 
         {/* Charts Grid - Column on mobile, Tile view on larger screens */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
-          <MonthlyChart data={monthlyData} />
-          <CategoryChart data={categoryData} />
+          {
+            monthlyData.length > 0 ?
+              <MonthlyChart data={monthlyData} /> :
+              <OverviewLoadingBlock />
+          }
+          {
+            categoryData.length > 0 ?
+              <CategoryChart data={categoryData} /> :
+              <OverviewLoadingBlock />
+          }
         </div>
 
         {/* Bottom Section - Column on mobile, Tile view on larger screens */}
