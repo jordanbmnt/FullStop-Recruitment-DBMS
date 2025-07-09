@@ -86,8 +86,47 @@ const monthlyApplicantData = (applicantData) => {
 
   // Convert the aggregated object into an array
   const formattedData = Object.values(monthlyData);
+  console.warn(formattedData)
 
-  return formattedData;
+  // return formattedData;
+  return [
+  {
+    "month": "March",
+    "users": 2
+  },
+  {
+    "month": "April",
+    "users": 3
+  },
+  {
+    "month": "May",
+    "users": 12
+  },
+  {
+    "month": "June",
+    "users": 13
+  },
+  {
+    "month": "August",
+    "users": 1
+  },
+  {
+    "month": "September",
+    "users": 1
+  },
+  {
+    "month": "October",
+    "users": 1
+  },
+  {
+    "month": "November",
+    "users": 1
+  },
+  {
+    "month": "December",
+    "users": 1
+  }
+]
 }
 
 // Data Layer - Easy to replace with API calls

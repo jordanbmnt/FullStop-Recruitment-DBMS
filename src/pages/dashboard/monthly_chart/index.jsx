@@ -23,13 +23,6 @@ export const MonthlyChart = ({ data }) => (
           strokeWidth={3}
           dot={{ fill: '#3b82f6', strokeWidth: 2, r: 5 }}
         />
-        <Line
-          type="monotone"
-          dataKey="revenue"
-          stroke="#10b981"
-          strokeWidth={3}
-          dot={{ fill: '#10b981', strokeWidth: 2, r: 5 }}
-        />
       </LineChart>
     </ResponsiveContainer>
   </div>
