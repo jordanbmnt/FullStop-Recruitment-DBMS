@@ -1,17 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
-import { TrendingUp, Users, Activity, ArrowUpRight, ArrowDownRight, RefreshCw, Search, Workflow } from 'lucide-react';
+import { TrendingUp, Users, Activity, Search, Workflow } from 'lucide-react';
 import CandidateDetailsModal from '../../components/candidate_details_modal';
+import { Skeleton } from '../../components/skeleton';
+import { OverviewLoadingBlock } from './overview_loading_block';
+import { SearchResult } from './search_result';
+import { StatCard } from './stat_card';
+import { MonthlyChart } from './monthly_chart';
+import { CategoryChart } from './category_chart';
+import { TopSkillsChart } from './top_skills_chart';
 
 const categoryDataGenerator = (applicantData) => {
   // Object to store the counts of each field
   const fieldCounts = {};
+  let countOfFields = 0;
 
   // Iterate through the applicant data to count occurrences of each field
   applicantData.forEach(applicant => {
-    const field = applicant.field;
+    const field = applicant._id;
     if (field) { // Ensure field is not null or undefined
-      fieldCounts[field] = (fieldCounts[field] || 0) + 1;
+      fieldCounts[field] = applicant.count;
+      countOfFields += applicant.count;
     }
   });
 
@@ -27,54 +35,13 @@ const categoryDataGenerator = (applicantData) => {
   const formattedData = Object.keys(fieldCounts).map((field, index) => {
     return {
       name: field,
-      value: fieldCounts[field],
+      value: ((fieldCounts[field] / countOfFields).toFixed(2) * 100),
+      count: fieldCounts[field],
       color: generateColor(index)
     };
+  }).sort((a, b) => {
+    return b.value - a.value
   });
-
-  return formattedData;
-}
-
-const monthlyApplicantData = (applicantData) => {
-  // Mapping for month numbers to short month names
-  const monthNames = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-  ];
-
-  // Object to store aggregated data by month
-  const monthlyData = {};
-
-  // Initialize monthlyData for the months we are interested in, to ensure all months appear
-  // assuming data for current year up to June based on provided sample data.
-  // In a real application, you might dynamically determine the range.
-  for (let i = 0; i < 6; i++) { // For Jan to Jun
-    monthlyData[monthNames[i]] = {
-      month: monthNames[i],
-      users: 0,
-      revenue: 0
-    };
-  }
-
-  applicantData.forEach(applicant => {
-    // Only consider available applicants for this aggregation
-    if (applicant.status === 'available' && applicant.lastUpdated) {
-      const date = new Date(applicant.lastUpdated);
-      const monthIndex = date.getMonth(); // 0 for Jan, 1 for Feb, etc.
-      const monthName = monthNames[monthIndex];
-
-      // Ensure the month exists in our initialized data structure
-      if (monthlyData[monthName]) {
-        monthlyData[monthName].users += 1;
-        // Simulate revenue: higher years of experience means higher simulated "value"
-        // Using 1000 as a base multiplier for yearsOfXp for revenue simulation
-        monthlyData[monthName].revenue += (applicant.yearsOfXp || 0) * 1000;
-      }
-    }
-  });
-
-  // Convert the aggregated object into an array
-  const formattedData = Object.values(monthlyData);
 
   return formattedData;
 }
@@ -507,10 +474,6 @@ const useData = () => {
     }
   ];
 
-  const monthlyData = monthlyApplicantData(usersData);
-
-  const categoryData = categoryDataGenerator(usersData);
-
   const statsData = {
     totalUsers: usersData.length,
     uniqueFields: [...new Set(usersData.map((d) => d.jobTitle))].length,
@@ -522,273 +485,90 @@ const useData = () => {
     conversionGrowth: 15.7
   };
 
-  return { statsData, monthlyData, categoryData, usersData };
+  return { statsData, usersData };
 };
-
-const SearchResult = ({ searchResult, setSearchResult }) => {
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'available':
-        return 'bg-green-100 text-green-800 border-green-200';
-      case 'not available':
-        return 'bg-red-100 text-red-800 border-red-200';
-      default:
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-    }
-  };
-
-  return (
-    <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm hover:shadow-lg hover:shadow-blue-500/10 hover:-translate-y-1 hover:border-blue-200 transition-all duration-300 transform-gpu">
-      {/* Header Section - Compact */}
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex-1 min-w-0 pr-2">
-          <h3 className="text-base font-semibold text-gray-900 truncate leading-tight">
-            {searchResult.name}
-          </h3>
-          <p className="text-xs text-gray-500 truncate mt-0.5">
-            {searchResult.email}
-          </p>
-        </div>
-        <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium border flex-shrink-0 transition-all duration-200 ${getStatusColor(searchResult.status)}`}>
-          {searchResult.status}
-        </span>
-      </div>
-
-      {/* Details Grid - Compact Layout */}
-      <div className="grid grid-cols-1 gap-2 mb-3 text-sm">
-        <div className="flex justify-between items-center">
-          <span className="text-gray-600 text-xs">Field</span>
-          <span className="text-gray-900 font-medium text-right truncate ml-2">{searchResult.field}</span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-gray-600 text-xs">Experience</span>
-          <span className="text-gray-900 text-right">{searchResult.yearsOfXp} years</span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-gray-600 text-xs">Updated</span>
-          <span className="text-gray-600 text-right text-xs">{searchResult.lastUpdated}</span>
-        </div>
-      </div>
-
-      {/* Action Button - Compact */}
-      <button
-        onClick={() => {
-          setSearchResult()
-        }}
-        className="w-full px-3 py-2 text-xs font-medium text-white bg-blue-600 hover:bg-blue-700 hover:shadow-md hover:-translate-y-0.5 rounded transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transform-gpu"
-      >
-        View Details
-      </button>
-    </div>
-  );
-};
-
-// Stat Card Component
-const StatCard = ({ title, value, growth, icon: Icon, format = 'number' }) => {
-  const isPositive = growth > 0;
-  const formattedValue = format === 'currency'
-    ? `R${value.toLocaleString()}`
-    : format === 'percentage'
-      ? `${value}%`
-      : value.toLocaleString();
-
-  return (
-    <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200/50 p-6 hover:shadow-xl hover:scale-105 transition-all duration-300">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm font-medium text-gray-600">{title}</p>
-          <p className="text-2xl font-bold text-gray-900 mt-2">{formattedValue}</p>
-        </div>
-        <div className="h-12 w-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
-          <Icon className="h-6 w-6 text-white" />
-        </div>
-      </div>
-      <div className="mt-4 flex items-center">
-        {isPositive ? (
-          <ArrowUpRight className="h-4 w-4 text-green-500" />
-        ) : (
-          <ArrowDownRight className="h-4 w-4 text-red-500" />
-        )}
-        <span className={`text-sm font-medium ml-1 ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
-          {Math.abs(growth)}%
-        </span>
-        <span className="text-sm text-gray-500 ml-1">vs last month</span>
-      </div>
-    </div>
-  );
-};
-
-// Chart Components
-const MonthlyChart = ({ data }) => (
-  <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200/50 p-6 hover:shadow-xl transition-all duration-300">
-    <h3 className="text-lg font-semibold text-gray-900 mb-4">Monthly Overview</h3>
-    <ResponsiveContainer width="100%" height={300}>
-      <LineChart data={data}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-        <XAxis dataKey="month" stroke="#64748b" />
-        <YAxis stroke="#64748b" />
-        <Tooltip
-          contentStyle={{
-            backgroundColor: 'white',
-            border: '1px solid #e2e8f0',
-            borderRadius: '12px',
-            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)'
-          }}
-        />
-        <Line
-          type="monotone"
-          dataKey="users"
-          stroke="#3b82f6"
-          strokeWidth={3}
-          dot={{ fill: '#3b82f6', strokeWidth: 2, r: 5 }}
-        />
-        <Line
-          type="monotone"
-          dataKey="revenue"
-          stroke="#10b981"
-          strokeWidth={3}
-          dot={{ fill: '#10b981', strokeWidth: 2, r: 5 }}
-        />
-      </LineChart>
-    </ResponsiveContainer>
-  </div>
-);
-
-const CategoryChart = ({ data }) => (
-  <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200/50 p-6 hover:shadow-xl transition-all duration-300">
-    <h3 className="text-lg font-semibold text-gray-900 mb-4">Traffic Sources</h3>
-    <ResponsiveContainer width="100%" height={300}>
-      <PieChart>
-        <Pie
-          data={data}
-          cx="50%"
-          cy="50%"
-          innerRadius={60}
-          outerRadius={100}
-          paddingAngle={5}
-          dataKey="value"
-        >
-          {data.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={entry.color} />
-          ))}
-        </Pie>
-        <Tooltip
-          contentStyle={{
-            backgroundColor: 'white',
-            border: '1px solid #e2e8f0',
-            borderRadius: '12px',
-            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)'
-          }}
-        />
-      </PieChart>
-    </ResponsiveContainer>
-    <div className="flex justify-center space-x-4 mt-4">
-      {data.slice(0, 4).map((entry, index) => (
-        <div key={index} className="flex items-center">
-          <div
-            className="w-3 h-3 rounded-full mr-2"
-            style={{ backgroundColor: entry.color }}
-          ></div>
-          <span className="text-sm text-gray-600">{entry.name} ({entry.value}%)</span>
-        </div>
-      ))}
-    </div>
-  </div>
-);
 
 // Main Dashboard Component
 export const Dashboard = () => {
-  const { statsData, monthlyData, categoryData, usersData } = useData();
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const { statsData } = useData();
+  const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [searchQueryTerm, setSearchQueryTerm] = useState('');
   const [searchQueryMaxLength, setSearchQueryMaxLength] = useState(0);
-  const [searchQueryLimit, setSearchQueryLimit] = useState(2);
+  const [searchQueryLimit, setSearchQueryLimit] = useState(3);
   const [searchResult, setSearchResult] = useState(null);
+  const [categoryData, setCategoryData] = useState([]);
   const [activeSearchResult, setActiveSearchResult] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     if (searchQuery) {
-      // Search users by name or email
-      const foundUser = usersData.filter(user =>
-        user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.field.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        user.yearsOfXp === searchQuery
-      ).sort((a, b) => {
-        return b.yearsOfXp - a.yearsOfXp
-      });
-
-      setSearchQueryMaxLength(foundUser.length)
-      setSearchResult(foundUser.slice(0, searchQueryLimit));
+      try {
+        fetch(`/.netlify/functions/get_cv_users?name=${searchQuery.toLowerCase()}&email=${searchQuery.toLowerCase()}&limit=${searchQueryLimit}`).then(res => res.json()).then(value => {
+          if (value && value.body.length > 0) {
+            setSearchResult(value.body);
+            setSearchQueryMaxLength(value.maxLength);
+            setIsSearching(false);
+          }
+          setIsSearching(false);
+        });
+        return;
+      } catch (e) {
+        setSearchResult([]);
+        setIsSearching(false);
+        console.warn("Error:", e)
+        return;
+      }
     }
-  }, [searchQuery, searchQueryLimit, usersData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchQuery, searchQueryLimit]);
+
+  useEffect(() => {
+    try {
+      fetch(`/.netlify/functions/get_fields?occurrence=true`).then(res => res.json()).then(value => {
+        if (value && value.body.length > 0) {
+          const fieldStats = categoryDataGenerator(value.body);
+          setCategoryData(fieldStats);
+        }
+      });
+      return;
+    } catch (e) {
+      setSearchResult([]);
+      setIsSearching(false);
+      console.warn("Error:", e)
+      return;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleShowMore = () => {
     const nextIncrement = searchQueryLimit + 5;
-    console.warn(nextIncrement)
     if (nextIncrement <= searchQueryMaxLength) setSearchQueryLimit(nextIncrement);
     else if (nextIncrement > searchQueryMaxLength && searchQueryLimit !== searchQueryMaxLength) setSearchQueryLimit(searchQueryMaxLength)
   }
 
-  const handleRefresh = () => {
-    setIsRefreshing(true);
-    // Simulate refresh delay
-    setTimeout(() => {
-      setIsRefreshing(false);
-      // In real app, this would trigger data refetch
-    }, 1000);
-  };
-
-  const handleSearch = (query) => {
-    setSearchQuery(query);
-    if (searchQueryLimit > 2) setSearchQueryLimit(2)
-    if (!query.trim()) {
-      setSearchResult(null);
-      return;
+  const handleSearch = (event) => {
+    if (event.code === "Enter") {
+      setIsSearching(true);
+      setSearchQuery(searchQueryTerm);
+      if (searchQueryLimit > 3) setSearchQueryLimit(3)
+      if (!searchQueryTerm.trim()) {
+        setSearchResult(null);
+        return;
+      }
     }
   };
 
   return (
     <div className="min-h-screen">
-      {/* Header */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="text-center lg:text-left grid grid-cols-1 lg:grid-cols-2 lg:gap-8">
-            <div className="mb-6">
-              <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-4">
-                Welcome Back!
-              </h1>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto lg:mx-0">
-                Here's a comprehensive overview of your business performance and key metrics for today.
-              </p>
-            </div>
-
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-8">
-              <div className="flex items-center space-x-3 bg-white/60 backdrop-blur-sm rounded-full px-6 py-3 border border-gray-200/50">
-                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                <div className="text-left">
-                  <p className="text-sm text-gray-500 font-medium">Last Updated</p>
-                  <p className="text-sm font-semibold text-gray-900">{new Date().toLocaleString()}</p>
-                </div>
-              </div>
-
-              <button
-                onClick={handleRefresh}
-                disabled={isRefreshing}
-                className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-6 py-3 rounded-full transition-all duration-200 shadow-lg hover:shadow-xl disabled:cursor-not-allowed group"
-              >
-                <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-300'}`} />
-                <span className="font-medium">{isRefreshing ? 'Refreshing...' : 'Refresh Data'}</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Search Bar Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200/50 p-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-3 pb-6">
+        <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200/50 p-6" onMouseLeave={() => {
+          if (searchResult && searchQueryTerm === "") {
+            setSearchQuery(null);
+            setSearchResult(null);
+          }
+        }}>
           <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
             <div className="relative flex-1 w-full">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-50">
@@ -796,104 +576,112 @@ export const Dashboard = () => {
               </div>
               <input
                 type="text"
-                value={searchQuery}
-                onChange={(e) => handleSearch(e.target.value)}
+                value={searchQueryTerm}
+                onChange={(e) => setSearchQueryTerm(e.target.value)}
+                onKeyDownCapture={(e) => handleSearch(e)}
                 placeholder="Search for users by name or email..."
                 className="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm text-gray-900 placeholder-gray-500 transition-all duration-200"
               />
             </div>
+            <button
+              onClick={() => handleSearch({ code: "Enter" })}
+              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none font-medium  hover:shadow-md hover:scale-103 transition-all duration-300"
+            >
+              Submit
+            </button>
           </div>
 
           {/* Search Results */}
           {searchQuery && (
             <div className="mt-6 animate-in slide-in-from-top-2 fade-in-0 duration-500 ease-out">
-              {searchResult ? (
-                <div className="space-y-4">
-                  {/* Results Header */}
-                  <div className="flex items-center justify-between animate-in fade-in-0 slide-in-from-top-1 duration-400 delay-200 ease-out">
-                    <div>
-                      <h2 className="text-lg font-semibold text-gray-900">
-                        Search Results
-                      </h2>
-                      <p className="text-sm text-gray-600 mt-1">
-                        Found {searchResult.length} {searchResult.length === 1 ? 'user' : 'users'} matching "{searchQuery}"
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Results List */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                    {searchResult.map((r, index) => (
-                      <div
-                        key={index}
-                        className="animate-in fade-in-0 slide-in-from-bottom-3 duration-400 ease-out"
-                        style={{
-                          animationDelay: `${300 + index * 100}ms`,
-                          animationFillMode: 'both'
-                        }}
-                      >
-                        <SearchResult searchResult={r} setSearchResult={() => {
-                          setActiveSearchResult(r);
-                          setIsModalVisible(true)
-                        }} />
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Load More Section */}
-                  {searchResult.length > 0 && (
-                    <div
-                      className="pt-6 border-t border-gray-200 animate-in fade-in-0 slide-in-from-bottom-2 duration-400 ease-out"
-                      style={{
-                        animationDelay: `${400 + searchResult.length * 100}ms`,
-                        animationFillMode: 'both'
-                      }}
-                    >
-                      <div className="text-center">
-                        <button
-                          onAuxClick={(e) => {
-                            // ask for increment and sort
-                            window.alert("MWAHAHAH")
-                          }}
-                          disabled={searchQueryLimit === searchQueryMaxLength}
-                          onClick={() => { handleShowMore() }}
-                          className={`group inline-flex items-center px-6 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md bg-white ${searchQueryLimit === searchQueryMaxLength ? 'text-gray-100' : 'text-gray-700 hover:bg-gray-50 hover:shadow-md hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 ease-out'}`}
-                        >
-                          <svg className="w-4 h-4 mr-2 transition-transform duration-200 group-hover:translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                          </svg>
-                          Show More Results
-                        </button>
-                        <p className="text-xs text-gray-500 mt-2">
-                          Showing {searchResult.length} results of {searchQueryMaxLength}
+              {
+                isSearching ? (<Skeleton type="searchResult" searchQuery={searchQuery} />) : searchResult && !isSearching ? (
+                  <div className="space-y-4">
+                    {/* Results Header */}
+                    <div className="flex items-center justify-between animate-in fade-in-0 slide-in-from-top-1 duration-400 delay-200 ease-out">
+                      <div>
+                        <h2 className="text-lg font-semibold text-gray-900">
+                          Search Results
+                        </h2>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Found {searchResult.length} {searchResult.length === 1 ? 'user' : 'users'} matching "{searchQuery}"
                         </p>
                       </div>
                     </div>
-                  )}
-                </div>
-              ) : (
-                /* No Results State */
-                <div className="bg-white rounded-lg border border-gray-200 p-8 text-center animate-in fade-in-0 zoom-in-95 duration-500 delay-300 ease-out">
-                  <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center rounded-full bg-gray-100 animate-in fade-in-0 scale-in-0 duration-300 delay-600">
-                    <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
+
+                    {/* Results List */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                      {searchResult.map((r, index) => (
+                        <div
+                          key={index}
+                          className="animate-in fade-in-0 slide-in-from-bottom-3 duration-400 ease-out"
+                          style={{
+                            animationDelay: `${300 + index * 100}ms`,
+                            animationFillMode: 'both'
+                          }}
+                        >
+                          <SearchResult searchResult={r} setSearchResult={() => {
+                            setActiveSearchResult(r);
+                            setIsModalVisible(true)
+                          }} />
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Load More Section */}
+                    {searchResult.length > 0 && (
+                      <div
+                        className="pt-6 border-t border-gray-200 animate-in fade-in-0 slide-in-from-bottom-2 duration-400 ease-out"
+                        style={{
+                          animationDelay: `${400 + searchResult.length * 100}ms`,
+                          animationFillMode: 'both'
+                        }}
+                      >
+                        <div className="text-center">
+                          <button
+                            onAuxClick={(e) => {
+                              // ask for increment and sort
+                              window.alert("MWAHAHAH")
+                            }}
+                            disabled={searchQueryLimit === searchQueryMaxLength}
+                            onClick={() => { handleShowMore() }}
+                            className={`group inline-flex items-center px-6 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md bg-white ${searchQueryLimit === searchQueryMaxLength ? 'text-gray-100' : 'text-gray-700 hover:bg-gray-50 hover:shadow-md hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-900 ease-out'}`}
+                          >
+                            <svg className="w-4 h-4 mr-2 transition-transform duration-200 group-hover:translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                            Show More Results
+                          </button>
+                          <p className="text-xs text-gray-500 mt-2">
+                            Showing {searchResult.length} results of {searchQueryMaxLength}
+                          </p>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                  <div className="animate-in fade-in-0 slide-in-from-bottom-2 duration-400 delay-700 ease-out">
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">
-                      No users found
-                    </h3>
-                    <p className="text-sm text-gray-500 mb-4">
-                      We couldn't find any users matching "{searchQuery}". Try adjusting your search terms.
-                    </p>
+                ) : (
+                  /* No Results State */
+                  <div className="bg-white rounded-lg border border-gray-200 p-8 text-center animate-in fade-in-0 zoom-in-95 duration-500 delay-300 ease-out">
+                    <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center rounded-full bg-gray-100 animate-in fade-in-0 scale-in-0 duration-300 delay-600">
+                      <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                      </svg>
+                    </div>
+                    <div className="animate-in fade-in-0 slide-in-from-bottom-2 duration-400 delay-700 ease-out">
+                      <h3 className="text-lg font-medium text-gray-900 mb-2">
+                        No users found
+                      </h3>
+                      <p className="text-sm text-gray-500 mb-4">
+                        We couldn't find any users matching "{searchQuery}". Try adjusting your search terms.
+                      </p>
+                    </div>
+                    <div className="space-y-2 text-xs text-gray-400">
+                      <p className="opacity-0 animate-in fade-in-0 duration-300 delay-900" style={{ animationFillMode: 'forwards' }}>• Check for typos in your search</p>
+                      <p className="opacity-0 animate-in fade-in-0 duration-300 delay-1000" style={{ animationFillMode: 'forwards' }}>• Try using different keywords</p>
+                      <p className="opacity-0 animate-in fade-in-0 duration-300 delay-1100" style={{ animationFillMode: 'forwards' }}>• Use fewer words in your search</p>
+                    </div>
                   </div>
-                  <div className="space-y-2 text-xs text-gray-400">
-                    <p className="opacity-0 animate-in fade-in-0 duration-300 delay-900" style={{ animationFillMode: 'forwards' }}>• Check for typos in your search</p>
-                    <p className="opacity-0 animate-in fade-in-0 duration-300 delay-1000" style={{ animationFillMode: 'forwards' }}>• Try using different keywords</p>
-                    <p className="opacity-0 animate-in fade-in-0 duration-300 delay-1100" style={{ animationFillMode: 'forwards' }}>• Use fewer words in your search</p>
-                  </div>
-                </div>
-              )}
+                )}
             </div>
           )}
         </div>
@@ -922,7 +710,7 @@ export const Dashboard = () => {
             icon={Workflow}
           />
           <StatCard
-            title="available Users"
+            title="Available Users"
             value={statsData.availableUsers}
             growth={statsData.availableGrowth}
             icon={Activity}
@@ -938,26 +726,19 @@ export const Dashboard = () => {
 
         {/* Charts Grid - Column on mobile, Tile view on larger screens */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
-          <MonthlyChart data={monthlyData} />
-          <CategoryChart data={categoryData} />
+          <MonthlyChart />
+          {
+            categoryData.length > 0 ?
+              <CategoryChart data={categoryData} /> :
+              <OverviewLoadingBlock />
+          }
         </div>
 
         {/* Bottom Section - Column on mobile, Tile view on larger screens */}
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
           <div className="xl:col-span-3">
             {/* Performance Metrics */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200/50 p-6 hover:shadow-xl transition-all duration-300">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Performance Metrics</h3>
-              <ResponsiveContainer width="100%" height={200}>
-                <BarChart data={monthlyData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                  <XAxis dataKey="month" stroke="#64748b" />
-                  <YAxis stroke="#64748b" />
-                  <Tooltip />
-                  <Bar dataKey="users" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+            <TopSkillsChart />
           </div>
         </div>
       </div>
