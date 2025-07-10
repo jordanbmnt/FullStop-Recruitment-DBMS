@@ -1,56 +1,42 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { OverviewLoadingBlock } from '../overview_loading_block';
+import { ChartHeader } from '../../../components/chart_header';
+import { CustomTooltip } from '../../../components/custom_tooltip';
 
-const TopSkillsChart = ({ data = [] }) => {
-  // Sample data for demonstration
-  const sampleData = [
-    { skill: "JavaScript", count: 25 },
-    { skill: "React", count: 20 },
-    { skill: "Node.js", count: 18 },
-    { skill: "Python", count: 15 },
-    { skill: "CSS", count: 14 },
-    { skill: "HTML", count: 12 },
-    { skill: "Git", count: 11 },
-    { skill: "SQL", count: 10 },
-    { skill: "Java", count: 9 },
-    { skill: "TypeScript", count: 8 },
-    { skill: "AWS", count: 7 },
-    { skill: "Docker", count: 6 },
-    { skill: "MongoDB", count: 5 },
-    { skill: "Express.js", count: 4 },
-    { skill: "GraphQL", count: 3 }
-  ];
+export const TopSkillsChart = () => {
 
-  const chartData = data.length > 0 ? data : sampleData;
+  const [topSkills, setTopSkills] = useState(null);
+  const [isSearching, setIsSearching] = useState(false);
 
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
-          <p className="font-semibold text-gray-800">{label}</p>
-          <p className="text-blue-600">
-            {`Users: ${payload[0].value}`}
-          </p>
-        </div>
-      );
+  useEffect(() => {
+    try {
+      setIsSearching(true);
+      fetch(`/.netlify/functions/get_top_skills`).then(res => res.json()).then(value => {
+        if (value && value.body.length > 0) {
+          const skillsStats = value.body;
+          setTopSkills(skillsStats);
+          setIsSearching(false);
+        }
+      });
+      return;
+    } catch (e) {
+      setTopSkills([]);
+      setIsSearching(false);
+      console.warn("Error:", e)
+      return;
     }
-    return null;
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-  return (
-    <div className="w-full h-96 p-4 bg-white rounded-lg shadow-sm border border-gray-200">
-      <div className="mb-4">
-        <h3 className="text-lg font-semibold text-gray-800 mb-1">
-          Top Skills by Frequency
-        </h3>
-        <p className="text-sm text-gray-600">
-          Most common skills across all users
-        </p>
-      </div>
+  return isSearching ? (<OverviewLoadingBlock />) : (
+    //TODO: the padding bottom is not dynamic
+    <div className="w-full p-4 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200/50 hover:shadow-xl h-[460px] pb-20">
+      <ChartHeader title={"Top Skills by Frequency"} description={"Most common skills across all users"} />
 
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
-          data={chartData}
+          data={topSkills}
           margin={{
             top: 20,
             right: 30,
@@ -82,5 +68,3 @@ const TopSkillsChart = ({ data = [] }) => {
     </div>
   );
 };
-
-export default TopSkillsChart;

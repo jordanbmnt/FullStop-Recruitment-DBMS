@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { TrendingUp, Users, Activity, Search, Workflow } from 'lucide-react';
 import CandidateDetailsModal from '../../components/candidate_details_modal';
 import { Skeleton } from '../../components/skeleton';
@@ -8,7 +7,7 @@ import { SearchResult } from './search_result';
 import { StatCard } from './stat_card';
 import { MonthlyChart } from './monthly_chart';
 import { CategoryChart } from './category_chart';
-import TopSkillsChart from './top_skills_chart';
+import { TopSkillsChart } from './top_skills_chart';
 
 const categoryDataGenerator = (applicantData) => {
   // Object to store the counts of each field
@@ -45,89 +44,6 @@ const categoryDataGenerator = (applicantData) => {
   });
 
   return formattedData;
-}
-
-const monthlyApplicantData = (applicantData) => {
-  // Mapping for month numbers to short month names
-  const monthNames = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-  ];
-
-  // Object to store aggregated data by month
-  const monthlyData = {};
-
-  // Initialize monthlyData for the months we are interested in, to ensure all months appear
-  // assuming data for current year up to June based on provided sample data.
-  // In a real application, you might dynamically determine the range.
-  for (let i = 0; i < 6; i++) { // For Jan to Jun
-    monthlyData[monthNames[i]] = {
-      month: monthNames[i],
-      users: 0,
-      revenue: 0
-    };
-  }
-
-  applicantData.forEach(applicant => {
-    // Only consider available applicants for this aggregation
-    if (applicant.status === 'available' && applicant.lastUpdated) {
-      const date = new Date(applicant.lastUpdated);
-      const monthIndex = date.getMonth(); // 0 for Jan, 1 for Feb, etc.
-      const monthName = monthNames[monthIndex];
-
-      // Ensure the month exists in our initialized data structure
-      if (monthlyData[monthName]) {
-        monthlyData[monthName].users += 1;
-        // Simulate revenue: higher years of experience means higher simulated "value"
-        // Using 1000 as a base multiplier for yearsOfXp for revenue simulation
-        monthlyData[monthName].revenue += (applicant.yearsOfXp || 0) * 1000;
-      }
-    }
-  });
-
-  // Convert the aggregated object into an array
-  const formattedData = Object.values(monthlyData);
-  console.warn(formattedData)
-
-  // return formattedData;
-  return [
-    {
-      "month": "March",
-      "users": 2
-    },
-    {
-      "month": "April",
-      "users": 3
-    },
-    {
-      "month": "May",
-      "users": 12
-    },
-    {
-      "month": "June",
-      "users": 13
-    },
-    {
-      "month": "August",
-      "users": 1
-    },
-    {
-      "month": "September",
-      "users": 1
-    },
-    {
-      "month": "October",
-      "users": 1
-    },
-    {
-      "month": "November",
-      "users": 1
-    },
-    {
-      "month": "December",
-      "users": 1
-    }
-  ]
 }
 
 // Data Layer - Easy to replace with API calls
@@ -558,8 +474,6 @@ const useData = () => {
     }
   ];
 
-  const monthlyData = monthlyApplicantData(usersData);
-
   const statsData = {
     totalUsers: usersData.length,
     uniqueFields: [...new Set(usersData.map((d) => d.jobTitle))].length,
@@ -571,12 +485,12 @@ const useData = () => {
     conversionGrowth: 15.7
   };
 
-  return { statsData, monthlyData, usersData };
+  return { statsData, usersData };
 };
 
 // Main Dashboard Component
 export const Dashboard = () => {
-  const { statsData, monthlyData } = useData();
+  const { statsData } = useData();
   const [isSearching, setIsSearching] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchQueryTerm, setSearchQueryTerm] = useState('');
@@ -613,7 +527,6 @@ export const Dashboard = () => {
     try {
       fetch(`/.netlify/functions/get_fields?occurrence=true`).then(res => res.json()).then(value => {
         if (value && value.body.length > 0) {
-          console.warn(value.body)
           const fieldStats = categoryDataGenerator(value.body);
           setCategoryData(fieldStats);
         }

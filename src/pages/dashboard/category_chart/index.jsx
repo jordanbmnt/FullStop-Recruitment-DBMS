@@ -1,8 +1,11 @@
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
+import { ChartHeader } from "../../../components/chart_header";
+import { CustomTooltip } from "../../../components/custom_tooltip";
 
 export const CategoryChart = ({ data }) => (
   <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200/50 p-6 hover:shadow-xl transition-all duration-300">
-    <h3 className="text-lg font-semibold text-gray-900 mb-4">Career Type Overview ({data.length})</h3>
+    <ChartHeader title={`Career Type Overview (${data.length})`} description={"Most common careers across all users"} />
+
     <ResponsiveContainer width="100%" height={300}>
       <PieChart>
         <Pie
@@ -18,14 +21,7 @@ export const CategoryChart = ({ data }) => (
             <Cell key={`cell-${index}`} fill={entry.color} />
           ))}
         </Pie>
-        <Tooltip
-          contentStyle={{
-            backgroundColor: 'white',
-            border: '1px solid #e2e8f0',
-            borderRadius: '12px',
-            boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1)'
-          }}
-        />
+        <Tooltip content={<CustomTooltip type={"Careers"}/>} />
       </PieChart>
     </ResponsiveContainer>
     <div className="flex space-x-4 mt-4 m-w-max overflow-x-scroll scroll-px-50">
