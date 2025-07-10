@@ -8,6 +8,7 @@ import { SearchResult } from './search_result';
 import { StatCard } from './stat_card';
 import { MonthlyChart } from './monthly_chart';
 import { CategoryChart } from './category_chart';
+import TopSkillsChart from './top_skills_chart';
 
 const categoryDataGenerator = (applicantData) => {
   // Object to store the counts of each field
@@ -824,18 +825,7 @@ export const Dashboard = () => {
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
           <div className="xl:col-span-3">
             {/* Performance Metrics */}
-            <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200/50 p-6 hover:shadow-xl transition-all duration-300">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Performance Metrics</h3>
-              <ResponsiveContainer width="100%" height={200}>
-                <BarChart data={monthlyData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-                  <XAxis dataKey="month" stroke="#64748b" />
-                  <YAxis stroke="#64748b" />
-                  <Tooltip />
-                  <Bar dataKey="users" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+            <TopSkillsChart />
           </div>
         </div>
       </div>
