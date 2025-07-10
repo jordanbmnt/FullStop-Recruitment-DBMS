@@ -1,4 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
+import darkModeLogo from "../../assets/logos/darkModeLogoEmblem.png";
 
 const DashboardSidebar = () => {
   return (
@@ -29,14 +30,19 @@ const DashboardSidebar = () => {
                   ></path>
                 </svg>
               </button>
-              <a href='https://flowbite.com' className='flex ms-2 md:me-24'>
+              <a href='/' className='flex ms-2 md:me-24'>
                 <img
-                  src='https://flowbite.com/docs/images/logo.svg'
+                  src={darkModeLogo}
                   className='h-8 me-3'
-                  alt='FlowBite Logo'
+                  alt='ARSKIPOS Logo'
                 />
-                <span className='self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white'>
-                  Flowbite
+                <span style={{
+                  fontFamily: "EB Garamond",
+                  fontOpticalSizing: "auto",
+                  fontWeight: 500,
+                  fontStyle: "normal",
+                }} className='self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white'>
+                  ARSKIPOS
                 </span>
               </a>
             </div>
@@ -52,7 +58,7 @@ const DashboardSidebar = () => {
                     <span className='sr-only'>Open user menu</span>
                     <img
                       className='w-8 h-8 rounded-full'
-                      src='https://flowbite.com/docs/images/people/profile-picture-5.jpg'
+                      src='/'
                       alt='user'
                     />
                   </button>
@@ -72,7 +78,7 @@ const DashboardSidebar = () => {
                       className='text-sm font-medium text-gray-900 truncate dark:text-gray-300'
                       role='none'
                     >
-                      neil.sims@flowbite.com
+                      neil.sims@ARSKIPOS.com
                     </p>
                   </div>
                   <ul className='py-1' role='none'>
@@ -118,7 +124,7 @@ const DashboardSidebar = () => {
             </div>
           </div>
         </div>
-      </nav>
+      </nav >
 
       <aside
         id='logo-sidebar'
@@ -269,7 +275,7 @@ const DashboardSidebar = () => {
       <div className='p-4 sm:ml-64 mt-16'>
         <Outlet />
       </div>
-    </div>
+    </div >
   );
 };
 
