@@ -90,43 +90,43 @@ const monthlyApplicantData = (applicantData) => {
 
   // return formattedData;
   return [
-  {
-    "month": "March",
-    "users": 2
-  },
-  {
-    "month": "April",
-    "users": 3
-  },
-  {
-    "month": "May",
-    "users": 12
-  },
-  {
-    "month": "June",
-    "users": 13
-  },
-  {
-    "month": "August",
-    "users": 1
-  },
-  {
-    "month": "September",
-    "users": 1
-  },
-  {
-    "month": "October",
-    "users": 1
-  },
-  {
-    "month": "November",
-    "users": 1
-  },
-  {
-    "month": "December",
-    "users": 1
-  }
-]
+    {
+      "month": "March",
+      "users": 2
+    },
+    {
+      "month": "April",
+      "users": 3
+    },
+    {
+      "month": "May",
+      "users": 12
+    },
+    {
+      "month": "June",
+      "users": 13
+    },
+    {
+      "month": "August",
+      "users": 1
+    },
+    {
+      "month": "September",
+      "users": 1
+    },
+    {
+      "month": "October",
+      "users": 1
+    },
+    {
+      "month": "November",
+      "users": 1
+    },
+    {
+      "month": "December",
+      "users": 1
+    }
+  ]
 }
 
 // Data Layer - Easy to replace with API calls
@@ -812,11 +812,7 @@ export const Dashboard = () => {
 
         {/* Charts Grid - Column on mobile, Tile view on larger screens */}
         <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-8">
-          {
-            monthlyData.length > 0 ?
-              <MonthlyChart data={monthlyData} /> :
-              <OverviewLoadingBlock />
-          }
+          <MonthlyChart />
           {
             categoryData.length > 0 ?
               <CategoryChart data={categoryData} /> :
