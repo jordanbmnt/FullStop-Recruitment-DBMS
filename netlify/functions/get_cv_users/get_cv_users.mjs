@@ -14,10 +14,12 @@ const collectionQueryBuilder = ({ searchParams }) => {
     name: searchParams.get("name"),
     email: searchParams.get("email"),
     field: searchParams.get("field"),
-    jobTitle: searchParams.get("jobTitle"),
+    // jobTitle: searchParams.get("jobTitle"), //TODO
     skills: searchParams.get("skills"),
     status: searchParams.get("status"),
-    yearsOfXp: searchParams.get("yearsOfXp"),
+    //TODO: Account for min & max XP by using gte and lte
+    minExperience: searchParams.get("minExperience"),
+    maxExperience: searchParams.get("maxExperience"),
   };
 
   for (const param in searchParamsDict) {
