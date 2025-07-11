@@ -102,8 +102,35 @@ const CvLink = () => {
         formDataToSend.append('cvFile', formData.cvFile);
       }
 
-      console.warn(formDataToSend.get('cvType'), formDataToSend.get('cvFile'), formDataToSend.get('previousJobReasons'));
-      
+      console.warn(formDataToSend.get('cvType'), formDataToSend.get('cvFile'), formDataToSend.get('previousJobReasons'))
+
+      const response = await fetch('/.netlify/functions/cv_upload', {
+        method: 'POST',
+        body: formDataToSend
+      });
+
+      const result = await response.json();
+      console.warn(result)
+      if (result.success) {
+        setSubmitStatus('success');
+        setSubmitMessage('CV submitted successfully! Your application has been received.');
+
+        // Reset form after successful submission
+        setTimeout(() => {
+          setFormData({
+            cvType: "",
+            previousJobReasons: "",
+            cvFile: null,
+            cvFileName: "",
+            cvFileSize: 0,
+          });
+          setCurrentStep(1);
+          setSubmitStatus(null);
+          setSubmitMessage("");
+        }, 3000);
+      } else {
+        throw new Error(result.error || 'Submission failed');
+      }
     } catch (error) {
       console.error('Error submitting CV:', error);
       setSubmitStatus('error');
