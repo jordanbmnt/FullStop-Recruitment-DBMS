@@ -1,14 +1,17 @@
+import { dateFormat } from "../../../helpers/dateFormat";
+
 export const SearchResult = ({ searchResult, setSearchResult }) => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'available':
         return 'bg-green-100 text-green-800 border-green-200';
-      case 'not available':
+      case 'inactive':
         return 'bg-red-100 text-red-800 border-red-200';
       default:
         return 'bg-yellow-100 text-yellow-800 border-yellow-200';
     }
   };
+
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm hover:shadow-lg hover:shadow-blue-500/10 hover:-translate-y-1 hover:border-blue-200 transition-all duration-300 transform-gpu">
@@ -39,7 +42,7 @@ export const SearchResult = ({ searchResult, setSearchResult }) => {
         </div>
         <div className="flex justify-between items-center">
           <span className="text-gray-600 text-xs">Updated</span>
-          <span className="text-gray-600 text-right text-xs">{searchResult.lastUpdated}</span>
+          <span className="text-gray-600 text-right text-xs">{dateFormat(searchResult.lastUpdated, 'dd m yyyy')}</span>
         </div>
       </div>
 

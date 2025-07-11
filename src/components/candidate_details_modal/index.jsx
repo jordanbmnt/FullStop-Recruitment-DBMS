@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { X, Download, Eye, User, Mail, Calendar, Briefcase, Phone } from 'lucide-react';
+import { dateFormat } from '../../helpers/dateFormat';
 
 const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -10,7 +11,7 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
     switch (status) {
       case 'available':
         return 'bg-green-100 text-green-800 border-green-200';
-      case 'not available':
+      case 'inactive':
         return 'bg-red-100 text-red-800 border-red-200';
       default:
         return 'bg-yellow-100 text-yellow-800 border-yellow-200';
@@ -34,7 +35,7 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex items-end justify-center min-h-screen px-2 sm:px-4 pt-4 pb-4 sm:pb-20 text-center sm:block sm:p-0">
         {/* Background overlay */}
-        <div 
+        <div
           className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
           onClick={onClose}
         ></div>
@@ -72,21 +73,19 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
           <div className="flex space-x-1 mb-4 sm:mb-6 bg-gray-100 p-1 rounded-lg">
             <button
               onClick={() => setActiveTab('overview')}
-              className={`flex-1 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-colors ${
-                activeTab === 'overview'
-                  ? 'bg-white text-blue-600 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
+              className={`flex-1 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-colors ${activeTab === 'overview'
+                ? 'bg-white text-blue-600 shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+                }`}
             >
               Overview
             </button>
             <button
               onClick={() => setActiveTab('documents')}
-              className={`flex-1 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-colors ${
-                activeTab === 'documents'
-                  ? 'bg-white text-blue-600 shadow-sm'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
+              className={`flex-1 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-colors ${activeTab === 'documents'
+                ? 'bg-white text-blue-600 shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
+                }`}
             >
               Documents
             </button>
@@ -127,7 +126,7 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
                     <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 mt-0.5 sm:mt-0 flex-shrink-0" />
                     <div>
                       <p className="text-xs sm:text-sm text-gray-500">Last Updated</p>
-                      <p className="font-medium text-gray-900 text-sm sm:text-base">{candidate.lastUpdated}</p>
+                      <p className="font-medium text-gray-900 text-sm sm:text-base">{dateFormat(candidate.lastUpdated, 'dd m yyyy')}</p>
                     </div>
                   </div>
                 </div>
@@ -162,7 +161,7 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
           {activeTab === 'documents' && (
             <div className="space-y-3 sm:space-y-4">
               <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Available Documents</h3>
-              
+
               {/* CV Section */}
               <div className="border border-gray-200 rounded-lg p-3 sm:p-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-3 sm:space-y-0">
