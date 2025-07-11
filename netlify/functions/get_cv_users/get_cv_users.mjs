@@ -14,10 +14,8 @@ const collectionQueryBuilder = ({ searchParams }) => {
     name: searchParams.get("name"),
     email: searchParams.get("email"),
     field: searchParams.get("field"),
-    // jobTitle: searchParams.get("jobTitle"), //TODO
     skills: searchParams.get("skills"),
     status: searchParams.get("status"),
-    //TODO: Account for min & max XP by using gte and lte
     minExperience: searchParams.get("minExperience"),
     maxExperience: searchParams.get("maxExperience"),
   };
@@ -27,8 +25,6 @@ const collectionQueryBuilder = ({ searchParams }) => {
 
     if (paramValue) {
       if (param === "skills") {
-        // I will be using dashes as spaces and actual spaces(+) as separators for elements in the skills array
-        //! Always use lowercase skills especially in the db
         const paramArr = paramValue
           .split(" ")
           .map((p) => p.toLowerCase().replace("-", " "));
@@ -36,6 +32,16 @@ const collectionQueryBuilder = ({ searchParams }) => {
         query[param] = {
           $in: paramArr,
         };
+      } else if (param === "minExperience" || param === "maxExperience") {
+        if (!query.yearsOfXp) {
+          query.yearsOfXp = {};
+        }
+
+        if (param === "minExperience") {
+          query.yearsOfXp.$gte = parseInt(paramValue);
+        } else {
+          query.yearsOfXp.$lte = parseInt(paramValue);
+        }
       } else {
         const regExp = new RegExp(paramValue, "i");
 
