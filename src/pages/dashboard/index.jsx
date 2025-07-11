@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { TrendingUp, Users, Activity, Search, Workflow } from 'lucide-react';
-import CandidateDetailsModal from '../../components/candidate_details_modal';
-import { Skeleton } from '../../components/skeleton';
+import { TrendingUp, Users, Activity, Workflow } from 'lucide-react';
 import { OverviewLoadingBlock } from './overview_loading_block';
-import { SearchResult } from './search_result';
 import { StatCard } from './stat_card';
 import { MonthlyChart } from './monthly_chart';
 import { CategoryChart } from './category_chart';
 import { TopSkillsChart } from './top_skills_chart';
+import { SearchBar } from './search_bar';
 
 const categoryDataGenerator = (applicantData) => {
   // Object to store the counts of each field
@@ -491,37 +489,7 @@ const useData = () => {
 // Main Dashboard Component
 export const Dashboard = () => {
   const { statsData } = useData();
-  const [isSearching, setIsSearching] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchQueryTerm, setSearchQueryTerm] = useState('');
-  const [searchQueryMaxLength, setSearchQueryMaxLength] = useState(0);
-  const [searchQueryLimit, setSearchQueryLimit] = useState(3);
-  const [searchResult, setSearchResult] = useState(null);
   const [categoryData, setCategoryData] = useState([]);
-  const [activeSearchResult, setActiveSearchResult] = useState(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-
-  useEffect(() => {
-    if (searchQuery) {
-      try {
-        fetch(`/.netlify/functions/get_cv_users?name=${searchQuery.toLowerCase()}&email=${searchQuery.toLowerCase()}&limit=${searchQueryLimit}`).then(res => res.json()).then(value => {
-          if (value && value.body.length > 0) {
-            setSearchResult(value.body);
-            setSearchQueryMaxLength(value.maxLength);
-            setIsSearching(false);
-          }
-          setIsSearching(false);
-        });
-        return;
-      } catch (e) {
-        setSearchResult([]);
-        setIsSearching(false);
-        console.warn("Error:", e)
-        return;
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery, searchQueryLimit]);
 
   useEffect(() => {
     try {
@@ -533,165 +501,15 @@ export const Dashboard = () => {
       });
       return;
     } catch (e) {
-      setSearchResult([]);
-      setIsSearching(false);
       console.warn("Error:", e)
       return;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleShowMore = () => {
-    const nextIncrement = searchQueryLimit + 5;
-    if (nextIncrement <= searchQueryMaxLength) setSearchQueryLimit(nextIncrement);
-    else if (nextIncrement > searchQueryMaxLength && searchQueryLimit !== searchQueryMaxLength) setSearchQueryLimit(searchQueryMaxLength)
-  }
-
-  const handleSearch = (event) => {
-    if (event.code === "Enter") {
-      setIsSearching(true);
-      setSearchQuery(searchQueryTerm);
-      if (searchQueryLimit > 3) setSearchQueryLimit(3)
-      if (!searchQueryTerm.trim()) {
-        setSearchResult(null);
-        return;
-      }
-    }
-  };
-
   return (
     <div className="min-h-screen">
-      {/* Search Bar Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-3 pb-6">
-        <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200/50 p-6" onMouseLeave={() => {
-          if (searchResult && searchQueryTerm === "") {
-            setSearchQuery(null);
-            setSearchResult(null);
-          }
-        }}>
-          <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
-            <div className="relative flex-1 w-full">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-50">
-                <Search className="h-5 w-5 text-gray-400" />
-              </div>
-              <input
-                type="text"
-                value={searchQueryTerm}
-                onChange={(e) => setSearchQueryTerm(e.target.value)}
-                onKeyDownCapture={(e) => handleSearch(e)}
-                placeholder="Search for users by name or email..."
-                className="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm text-gray-900 placeholder-gray-500 transition-all duration-200"
-              />
-            </div>
-            <button
-              onClick={() => handleSearch({ code: "Enter" })}
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none font-medium  hover:shadow-md hover:scale-103 transition-all duration-300"
-            >
-              Submit
-            </button>
-          </div>
-
-          {/* Search Results */}
-          {searchQuery && (
-            <div className="mt-6 animate-in slide-in-from-top-2 fade-in-0 duration-500 ease-out">
-              {
-                isSearching ? (<Skeleton type="searchResult" searchQuery={searchQuery} />) : searchResult && !isSearching ? (
-                  <div className="space-y-4">
-                    {/* Results Header */}
-                    <div className="flex items-center justify-between animate-in fade-in-0 slide-in-from-top-1 duration-400 delay-200 ease-out">
-                      <div>
-                        <h2 className="text-lg font-semibold text-gray-900">
-                          Search Results
-                        </h2>
-                        <p className="text-sm text-gray-600 mt-1">
-                          Found {searchResult.length} {searchResult.length === 1 ? 'user' : 'users'} matching "{searchQuery}"
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Results List */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                      {searchResult.map((r, index) => (
-                        <div
-                          key={index}
-                          className="animate-in fade-in-0 slide-in-from-bottom-3 duration-400 ease-out"
-                          style={{
-                            animationDelay: `${300 + index * 100}ms`,
-                            animationFillMode: 'both'
-                          }}
-                        >
-                          <SearchResult searchResult={r} setSearchResult={() => {
-                            setActiveSearchResult(r);
-                            setIsModalVisible(true)
-                          }} />
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Load More Section */}
-                    {searchResult.length > 0 && (
-                      <div
-                        className="pt-6 border-t border-gray-200 animate-in fade-in-0 slide-in-from-bottom-2 duration-400 ease-out"
-                        style={{
-                          animationDelay: `${400 + searchResult.length * 100}ms`,
-                          animationFillMode: 'both'
-                        }}
-                      >
-                        <div className="text-center">
-                          <button
-                            onAuxClick={(e) => {
-                              // ask for increment and sort
-                              window.alert("MWAHAHAH")
-                            }}
-                            disabled={searchQueryLimit === searchQueryMaxLength}
-                            onClick={() => { handleShowMore() }}
-                            className={`group inline-flex items-center px-6 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md bg-white ${searchQueryLimit === searchQueryMaxLength ? 'text-gray-100' : 'text-gray-700 hover:bg-gray-50 hover:shadow-md hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-900 ease-out'}`}
-                          >
-                            <svg className="w-4 h-4 mr-2 transition-transform duration-200 group-hover:translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                            </svg>
-                            Show More Results
-                          </button>
-                          <p className="text-xs text-gray-500 mt-2">
-                            Showing {searchResult.length} results of {searchQueryMaxLength}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  /* No Results State */
-                  <div className="bg-white rounded-lg border border-gray-200 p-8 text-center animate-in fade-in-0 zoom-in-95 duration-500 delay-300 ease-out">
-                    <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center rounded-full bg-gray-100 animate-in fade-in-0 scale-in-0 duration-300 delay-600">
-                      <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                      </svg>
-                    </div>
-                    <div className="animate-in fade-in-0 slide-in-from-bottom-2 duration-400 delay-700 ease-out">
-                      <h3 className="text-lg font-medium text-gray-900 mb-2">
-                        No users found
-                      </h3>
-                      <p className="text-sm text-gray-500 mb-4">
-                        We couldn't find any users matching "{searchQuery}". Try adjusting your search terms.
-                      </p>
-                    </div>
-                    <div className="space-y-2 text-xs text-gray-400">
-                      <p className="opacity-0 animate-in fade-in-0 duration-300 delay-900" style={{ animationFillMode: 'forwards' }}>• Check for typos in your search</p>
-                      <p className="opacity-0 animate-in fade-in-0 duration-300 delay-1000" style={{ animationFillMode: 'forwards' }}>• Try using different keywords</p>
-                      <p className="opacity-0 animate-in fade-in-0 duration-300 delay-1100" style={{ animationFillMode: 'forwards' }}>• Use fewer words in your search</p>
-                    </div>
-                  </div>
-                )}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Modal */}
-      <CandidateDetailsModal candidate={activeSearchResult} isOpen={isModalVisible} onClose={() => {
-        setIsModalVisible(false);
-        setActiveSearchResult(null)
-      }} />
+      <SearchBar />
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
