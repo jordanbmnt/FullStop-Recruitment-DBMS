@@ -28,7 +28,7 @@ export const SearchBar = () => {
     try {
       const ROOT_PARAM = "/.netlify/functions/get_cv_users";
       const LIMIT_PARAM = `limit=${searchQueryLimit}`;
-      let url = `${ROOT_PARAM}?name=${searchQuery.toLowerCase()}&email=${searchQuery.toLowerCase()}&${LIMIT_PARAM}`;
+      let url = `${ROOT_PARAM}?name=${searchQuery.toLowerCase()}&${LIMIT_PARAM}`;
 
       if (searchQueryParams) {
         let modUrl = ROOT_PARAM + '?';
@@ -36,7 +36,10 @@ export const SearchBar = () => {
           modUrl += `${key}=${searchQueryParams[key]}&`
         }
 
+        if (searchQuery) modUrl += `name=${searchQuery.toLowerCase()}&`;
+
         url = modUrl + LIMIT_PARAM;
+        console.warn(searchQuery, url)
       }
 
       // isFetching is being used as a way of not allowing another call while fetching is in process
@@ -54,7 +57,7 @@ export const SearchBar = () => {
       });
       return;
     } catch (e) {
-      setSearchResult([]);
+      setSearchResult(null);
       setSearchQueryParams(null)
       setIsSearching(false);
       setIsFetching(false);
@@ -68,12 +71,14 @@ export const SearchBar = () => {
     if ((searchQuery || (searchQueryParams && Object.values(searchQueryParams).some(val => val))) && isSearching && !isFetching) {
       getData();
     }
+    return;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, isSearching]);
 
   // Because of the conditions in the initial UseEffect it would be too much of a logical hurdle to create a better condition
   useEffect(() => {
-    getData();
+    if (searchResult && searchResult.length > 0) getData();
+    return;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQueryLimit]);
 
@@ -85,11 +90,10 @@ export const SearchBar = () => {
 
 
   const handleSearch = (event) => {
-    setIsSearching(false);
-    setSearchResult([]);
-    setSearchQueryParams(null);
-
     if (event.code === "Enter" || event.type === "click") {
+      setIsSearching(false);
+      setSearchResult(null);
+      setSearchQueryParams(null);
       const searchParams = {
         field: fieldInput,
         skills: skillsInput.split(',').map(skill => skill.trim().toLowerCase().replace(' ', '-')).filter(skill => skill).join('+'),
@@ -113,7 +117,7 @@ export const SearchBar = () => {
       }
 
       //Reset on new searches
-      if (searchQueryLimit > 3) setSearchQueryLimit(3);
+      if (searchQueryLimit !== 3) setSearchQueryLimit(3);
       setIsSearching(true);
     }
   };
@@ -160,7 +164,7 @@ export const SearchBar = () => {
               value={searchQueryTerm}
               onChange={(e) => setSearchQueryTerm(e.target.value)}
               onKeyDownCapture={(e) => handleSearch(e)}
-              placeholder="Search by name, email, job title, or skills..."
+              placeholder="Search by name :)"
               className="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm text-gray-900 placeholder-gray-500 transition-all duration-200"
             />
           </div>
@@ -174,10 +178,32 @@ export const SearchBar = () => {
             <ChevronDown className={`h-4 w-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
           </button>
           <button
-            onClick={() => handleSearch({ code: "Enter" })}
+            onClick={() => {
+              if (searchResult &&
+                !searchQueryTerm &&
+                !fieldInput &&
+                !skillsInput &&
+                !minExperience &&
+                !maxExperience &&
+                !selectedStatus) {
+                setSearchResult(null);
+                setSearchQueryParams(null);
+              } else {
+                handleSearch({ code: "Enter" });
+              }
+            }}
             className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none font-medium hover:shadow-md hover:scale-105 transition-all duration-300"
           >
-            Search
+            {
+              searchResult &&
+                !searchQueryTerm &&
+                !fieldInput &&
+                !skillsInput &&
+                !minExperience &&
+                !maxExperience &&
+                !selectedStatus ?
+                'Clear Results' : 'Search'
+            }
           </button>
         </div>
 
@@ -326,7 +352,7 @@ export const SearchBar = () => {
                               Search Results
                             </h2>
                             <p className="text-sm text-gray-600 mt-1">
-                              Found {searchResult.length} {searchResult.length === 1 ? 'user' : 'users'} that match your requirements"
+                              Found {searchResult.length} {searchResult.length === 1 ? 'user' : 'users'} that match your requirements
                             </p>
                           </div>
                         </div>

@@ -2,7 +2,7 @@ export const ChartHeader = ({ title, description, badge }) => (
   <div className="mb-8">
     {
       badge ?
-        (<div className="flex items-start justify-between mb-3">
+        (<div className="flex items-start justify-between">
           <div className="flex-1 min-w-0 pr-2">
             <h3 className="text-lg font-semibold text-gray-800 mb-1">
               {title}
