@@ -103,7 +103,7 @@ const CvLink = () => {
       }
 
       console.warn(formDataToSend.get('cvType'), formDataToSend.get('cvFile'), formDataToSend.get('previousJobReasons'));
-      // }
+      
     } catch (error) {
       console.error('Error submitting CV:', error);
       setSubmitStatus('error');
