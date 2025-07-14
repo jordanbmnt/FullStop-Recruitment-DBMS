@@ -28,6 +28,7 @@ const CvLink = () => {
     field: "",
     jobTitle: "",
     yearsOfXp: "",
+    coverLetter: "",
     skills: [],
     summary: "",
     name: "",
@@ -111,6 +112,7 @@ const CvLink = () => {
 
       // Additional profile data
       formDataToSend.append('email', formData.email);
+      formDataToSend.append('coverLetter', formData.coverLetter);
       formDataToSend.append('status', formData.status);
       formDataToSend.append('field', formData.field);
       formDataToSend.append('jobTitle', formData.jobTitle);
@@ -368,6 +370,16 @@ const CvLink = () => {
                       </span>
                     ))}
                   </div>
+                </div>
+              )}
+
+              {/* Cover Letter */}
+              {formData.coverLetter && (
+                <div className="border-b border-gray-200 pb-4">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Cover Letter</h3>
+                  <p className="text-gray-600 bg-white p-3 rounded border">
+                    {formData.coverLetter}
+                  </p>
                 </div>
               )}
 

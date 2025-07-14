@@ -145,7 +145,7 @@ export default async (request, _context) => {
       skills: JSON.parse(formData.get("skills")),
       summary: formData.get("summary"),
       name: formData.get("name"),
-      coverLetter: null, // Come back to
+      coverLetter: formData.get("coverLetter"),
       cvType,
       previousJobReasons,
       fileInfo,

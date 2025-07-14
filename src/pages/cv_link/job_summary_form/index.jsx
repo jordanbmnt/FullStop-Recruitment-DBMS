@@ -1,9 +1,27 @@
 import { useState } from 'react';
 import { User, Mail, Briefcase, Clock, Code, FileText } from 'lucide-react';
 import { FIELDS, STATUSES } from '../../../helpers/constants';
+import { TextAreaSection } from './text_area_section';
 
 export const JobSummaryForm = ({ formData, onFormDataChange }) => {
   const [currentSkill, setCurrentSkill] = useState('');
+  const textAreaSections = [
+    {
+      field: "coverLetter",
+      heading: "Cover Letter",
+      placeholder: "Share your motivation for applying, highlight relevant skills, and explain how your experience aligns with this role...",
+    },
+    {
+      field: "summary",
+      heading: "Brief professional summary",
+      placeholder: "Describe your professional background, key achievements, and what you bring to the table...",
+    },
+    {
+      field: "previousJobReasons",
+      heading: "Reasons for leaving previous positions",
+      placeholder: "e.g., Seeking new challenges, career advancement, better work-life balance, company restructuring, etc.",
+    },
+  ];
 
   const handleInputChange = (field, value) => {
     onFormDataChange(field, value);
@@ -160,7 +178,7 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
               type="text"
               value={currentSkill}
               onChange={(e) => setCurrentSkill(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onKeyDown={handleKeyPress}
               placeholder="e.g., React, JavaScript, Python"
               className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
@@ -198,34 +216,18 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
           <FileText className="w-5 h-5 mr-2 text-blue-600" />
           Professional Summary
         </h3>
+
         <div className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Brief professional summary
-            </label>
-            <textarea
-              value={formData.summary || ''}
-              onChange={(e) => handleInputChange('summary', e.target.value)}
-              placeholder="Describe your professional background, key achievements, and what you bring to the table..."
-              className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-              rows={4}
+          {textAreaSections.map((section) => (
+            <TextAreaSection
+              key={section.field}
+              formData={formData[section.field]}
+              inputHandler={handleInputChange}
+              field={section.field}
+              heading={section.heading}
+              placeholder={section.placeholder}
             />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Reasons for leaving previous positions
-            </label>
-            <textarea
-              value={formData.previousJobReasons || ''}
-              onChange={(e) => handleInputChange('previousJobReasons', e.target.value)}
-              placeholder="e.g., Seeking new challenges, career advancement, better work-life balance, company restructuring, etc."
-              className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-              rows={4}
-            />
-            <p className="text-sm text-gray-500 mt-2">
-              This information helps us better understand your career motivations and goals.
-            </p>
-          </div>
+          ))}
         </div>
       </div>
     </div>
