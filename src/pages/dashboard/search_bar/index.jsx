@@ -40,7 +40,6 @@ export const SearchBar = () => {
         if (searchQuery) modUrl += `name=${searchQuery.toLowerCase()}&`;
 
         url = modUrl + LIMIT_PARAM;
-        console.warn(searchQuery, url)
       }
 
       // isFetching is being used as a way of not allowing another call while fetching is in process
