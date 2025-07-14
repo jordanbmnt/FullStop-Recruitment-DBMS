@@ -5,11 +5,11 @@ import {
   Upload,
   RefreshCw,
   FileText,
-  User,
   Loader2,
   CheckCircle,
   AlertCircle,
 } from "lucide-react";
+import { JobSummaryForm } from "./job_summary_form";
 
 const CvLink = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -22,6 +22,15 @@ const CvLink = () => {
     cvFile: null,
     cvFileName: "",
     cvFileSize: 0,
+    // Additional fields for JobSummaryForm
+    email: "",
+    status: "available",
+    field: "",
+    jobTitle: "",
+    yearsOfXp: "",
+    skills: [],
+    summary: "",
+    name: "",
   });
 
   // Step configuration
@@ -33,8 +42,8 @@ const CvLink = () => {
     },
     {
       id: 2,
-      title: "Previous Job Summary",
-      description: "Provide a summary of reasons for leaving previous positions",
+      title: "Job Profile Details",
+      description: "Complete your professional profile information",
     },
     {
       id: 3,
@@ -95,14 +104,26 @@ const CvLink = () => {
 
     try {
       const formDataToSend = new FormData();
+
+      // Original CV data
       formDataToSend.append('cvType', formData.cvType);
       formDataToSend.append('previousJobReasons', formData.previousJobReasons);
+
+      // Additional profile data
+      formDataToSend.append('email', formData.email);
+      formDataToSend.append('status', formData.status);
+      formDataToSend.append('field', formData.field);
+      formDataToSend.append('jobTitle', formData.jobTitle);
+      formDataToSend.append('yearsOfXp', formData.yearsOfXp);
+      formDataToSend.append('skills', JSON.stringify(formData.skills));
+      formDataToSend.append('summary', formData.summary);
+      formDataToSend.append('name', formData.name);
 
       if (formData.cvFile) {
         formDataToSend.append('cvFile', formData.cvFile);
       }
 
-      console.warn(formDataToSend.get('cvType'), formDataToSend.get('cvFile'), formDataToSend.get('previousJobReasons'))
+      console.warn('Submitting data:', formData);
 
       const response = await fetch('/.netlify/functions/cv_upload', {
         method: 'POST',
@@ -110,10 +131,9 @@ const CvLink = () => {
       });
 
       const result = await response.json();
-      console.warn(result)
       if (result.success) {
         setSubmitStatus('success');
-        setSubmitMessage('CV submitted successfully! Your application has been received.');
+        setSubmitMessage('CV and profile submitted successfully! Your application has been received.');
 
         // Reset form after successful submission
         setTimeout(() => {
@@ -123,6 +143,14 @@ const CvLink = () => {
             cvFile: null,
             cvFileName: "",
             cvFileSize: 0,
+            email: "",
+            status: "available",
+            field: "",
+            jobTitle: "",
+            yearsOfXp: "",
+            skills: [],
+            summary: "",
+            name: "",
           });
           setCurrentStep(1);
           setSubmitStatus(null);
@@ -145,7 +173,7 @@ const CvLink = () => {
       case 1:
         return formData.cvType !== "" && formData.cvFile !== null;
       case 2:
-        return formData.previousJobReasons.trim() !== "";
+        return formData.name.trim() !== "" && formData.email.trim() !== "" && formData.previousJobReasons.trim() !== "";
       case 3:
         return true;
       default:
@@ -195,7 +223,7 @@ const CvLink = () => {
                     </label>
                     <input
                       type="file"
-                      accept=".pdf,.doc,.docx"
+                      accept=".pdf"
                       onChange={handleFileUpload}
                       className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                     />
@@ -252,36 +280,10 @@ const CvLink = () => {
 
       case 2:
         return (
-          <div className="space-y-6">
-            <div className="text-center mb-8">
-              <User className="w-16 h-16 mx-auto text-green-600 mb-4" />
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                Previous Job Summary
-              </h2>
-              <p className="text-gray-600">
-                Help us understand your career journey
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              <label className="block text-sm font-medium text-gray-700">
-                Briefly summarize your reasons for leaving previous positions:
-              </label>
-              <textarea
-                value={formData.previousJobReasons}
-                onChange={(e) =>
-                  handleInputChange("previousJobReasons", e.target.value)
-                }
-                placeholder="e.g., Seeking new challenges, career advancement, better work-life balance, company restructuring, etc."
-                className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                rows={6}
-              />
-              <p className="text-sm text-gray-500">
-                This information helps us better understand your career
-                motivations and goals.
-              </p>
-            </div>
-          </div>
+          <JobSummaryForm
+            formData={formData}
+            onFormDataChange={handleInputChange}
+          />
         );
 
       case 3:
@@ -297,27 +299,91 @@ const CvLink = () => {
               </p>
             </div>
 
-            <div className="bg-gray-50 rounded-lg p-6 space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <h3 className="font-semibold text-gray-800 mb-2">CV Type:</h3>
-                  <p className="text-gray-600 capitalize">{formData.cvType}</p>
-                </div>
-
-                {formData.cvFile && (
+            <div className="bg-gray-50 rounded-lg p-6 space-y-6">
+              {/* CV Information */}
+              <div className="border-b border-gray-200 pb-4">
+                <h3 className="text-lg font-semibold text-gray-800 mb-3">CV Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <h3 className="font-semibold text-gray-800 mb-2">File:</h3>
-                    <p className="text-gray-600">
-                      {formData.cvFileName} ({formData.cvFileSize} KB)
-                    </p>
+                    <h4 className="font-medium text-gray-700 mb-1">CV Type:</h4>
+                    <p className="text-gray-600 capitalize">{formData.cvType}</p>
                   </div>
-                )}
+                  {formData.cvFile && (
+                    <div>
+                      <h4 className="font-medium text-gray-700 mb-1">File:</h4>
+                      <p className="text-gray-600">
+                        {formData.cvFileName} ({formData.cvFileSize} KB)
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
 
+              {/* Personal Information */}
+              <div className="border-b border-gray-200 pb-4">
+                <h3 className="text-lg font-semibold text-gray-800 mb-3">Personal Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <h4 className="font-medium text-gray-700 mb-1">Name:</h4>
+                    <p className="text-gray-600">{formData.name || 'Not provided'}</p>
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-700 mb-1">Email:</h4>
+                    <p className="text-gray-600">{formData.email || 'Not provided'}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Professional Information */}
+              <div className="border-b border-gray-200 pb-4">
+                <h3 className="text-lg font-semibold text-gray-800 mb-3">Professional Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <h4 className="font-medium text-gray-700 mb-1">Job Title:</h4>
+                    <p className="text-gray-600">{formData.jobTitle || 'Not provided'}</p>
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-700 mb-1">Field:</h4>
+                    <p className="text-gray-600">{formData.field || 'Not provided'}</p>
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-700 mb-1">Years of Experience:</h4>
+                    <p className="text-gray-600">{formData.yearsOfXp || 'Not provided'}</p>
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-gray-700 mb-1">Status:</h4>
+                    <p className="text-gray-600 capitalize">{formData.status}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Skills */}
+              {formData.skills && formData.skills.length > 0 && (
+                <div className="border-b border-gray-200 pb-4">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Skills</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {formData.skills.map((skill, index) => (
+                      <span key={index} className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Summary */}
+              {formData.summary && (
+                <div className="border-b border-gray-200 pb-4">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Professional Summary</h3>
+                  <p className="text-gray-600 bg-white p-3 rounded border">
+                    {formData.summary}
+                  </p>
+                </div>
+              )}
+
+              {/* Previous Job Reasons */}
               <div>
-                <h3 className="font-semibold text-gray-800 mb-2">
-                  Previous Job Reasons:
-                </h3>
+                <h3 className="text-lg font-semibold text-gray-800 mb-3">Previous Job Reasons</h3>
                 <p className="text-gray-600 bg-white p-3 rounded border">
                   {formData.previousJobReasons}
                 </p>
