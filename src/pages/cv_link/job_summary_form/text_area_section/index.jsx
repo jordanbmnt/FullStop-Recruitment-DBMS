@@ -1,8 +1,8 @@
-export const TextAreaSection = ({ formData, inputHandler, field, heading, placeholder }) => {
+export const TextAreaSection = ({ formData, inputHandler, field, heading, placeholder, isRequired }) => {
   return (
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-2">
-        {heading}
+        {heading} {isRequired && <span class='text-red-500'>*</span >}
       </label>
       <textarea
         value={formData || ''}

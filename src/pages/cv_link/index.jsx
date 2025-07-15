@@ -24,7 +24,7 @@ const CvLink = () => {
     cvFileSize: 0,
     // Additional fields for JobSummaryForm
     email: "",
-    status: "available",
+    status: "",
     field: "",
     jobTitle: "",
     yearsOfXp: "",
@@ -175,7 +175,7 @@ const CvLink = () => {
       case 1:
         return formData.cvType !== "" && formData.cvFile !== null;
       case 2:
-        return formData.name.trim() !== "" && formData.email.trim() !== "" && formData.previousJobReasons.trim() !== "";
+        return formData.name.trim() !== "" && formData.email.trim() !== "" && formData.summary.trim() !== "" && formData.jobTitle.trim() !== "" && formData.field.trim() !== "" && formData.skills.length > 0;
       case 3:
         return true;
       default:

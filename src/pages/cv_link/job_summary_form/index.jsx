@@ -1,7 +1,13 @@
 import { useState } from 'react';
-import { User, Mail, Briefcase, Clock, Code, FileText } from 'lucide-react';
+import { User, Mail, Briefcase, Clock, FileText, Brain } from 'lucide-react';
 import { FIELDS, STATUSES } from '../../../helpers/constants';
 import { TextAreaSection } from './text_area_section';
+
+const ResponsiveAsterisk = () => {
+  return (
+    <span class='text-red-500'>*</span >
+  );
+}
 
 export const JobSummaryForm = ({ formData, onFormDataChange }) => {
   const [currentSkill, setCurrentSkill] = useState('');
@@ -10,16 +16,19 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
       field: "coverLetter",
       heading: "Cover Letter",
       placeholder: "Share your motivation for applying, highlight relevant skills, and explain how your experience aligns with this role...",
+      isRequired: false
     },
     {
       field: "summary",
       heading: "Brief professional summary",
       placeholder: "Describe your professional background, key achievements, and what you bring to the table...",
+      isRequired: true
     },
     {
       field: "previousJobReasons",
       heading: "Reasons for leaving previous positions",
       placeholder: "e.g., Seeking new challenges, career advancement, better work-life balance, company restructuring, etc.",
+      isRequired: false
     },
   ];
 
@@ -68,7 +77,7 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Full Name
+              Full Name <ResponsiveAsterisk />
             </label>
             <input
               type="text"
@@ -81,7 +90,7 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               <Mail className="w-4 h-4 inline mr-1" />
-              Email Address
+              Email Address <ResponsiveAsterisk />
             </label>
             <input
               type="email"
@@ -103,7 +112,7 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Current Job Title
+              Current Job Title <ResponsiveAsterisk />
             </label>
             <input
               type="text"
@@ -115,7 +124,7 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Field/Industry
+              Field/Industry <ResponsiveAsterisk />
             </label>
             <select
               value={formData.field || ''}
@@ -147,7 +156,7 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Status
+              Status <ResponsiveAsterisk />
             </label>
             <select
               value={formData.status || ''}
@@ -166,12 +175,12 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
       {/* Skills */}
       <div className="bg-gray-50 p-6 rounded-lg">
         <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-          <Code className="w-5 h-5 mr-2 text-blue-600" />
+          <Brain className="w-5 h-5 mr-2 text-blue-600" />
           Skills
         </h3>
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Add your skills (press Enter to add each skill)
+            Add your skills (press Enter to add each skill) <ResponsiveAsterisk />
           </label>
           <div className="flex gap-2">
             <input
@@ -179,7 +188,7 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
               value={currentSkill}
               onChange={(e) => setCurrentSkill(e.target.value)}
               onKeyDown={handleKeyPress}
-              placeholder="e.g., React, JavaScript, Python"
+              placeholder="e.g., Problem Solving, Project Management, JavaScript"
               className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
             <button
@@ -226,6 +235,7 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
               field={section.field}
               heading={section.heading}
               placeholder={section.placeholder}
+              isRequired={section.isRequired}
             />
           ))}
         </div>
