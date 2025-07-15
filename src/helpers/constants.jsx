@@ -1,0 +1,45 @@
+
+export const FIELDS = [
+  "Aerospace",
+  "Agriculture",
+  "Arts and Culture",
+  "Automotive",
+  "Biotechnology",
+  "Construction",
+  "Consulting",
+  "Customer Service",
+  "Design",
+  "Education",
+  "Energy",
+  "Engineering",
+  "Environmental Services",
+  "Finance",
+  "Food and Beverage",
+  "Government",
+  "Healthcare",
+  "Hospitality",
+  "Human Resources",
+  "Information Technology",
+  "Legal",
+  "Logistics and Supply Chain",
+  "Manufacturing",
+  "Marketing",
+  "Media and Entertainment",
+  "Non-Profit",
+  "Pharmaceuticals",
+  "Real Estate",
+  "Retail",
+  "Science and Research",
+  "Sports and Recreation",
+  "Telecommunications",
+  "Transportation",
+  "Utilities"
+];
+
+export const STATUSES = [
+  { value: "available", display: "Available" },
+  { value: "employed", display: "Currently Employed" },
+  { value: "seeking", display: "Actively Seeking" },
+  { value: "open", display: "Open to Opportunities" },
+  { value: "casual", display: "Casually Looking" }
+];

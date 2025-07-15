@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Download, Eye, User, Mail, Calendar, Briefcase, Phone } from 'lucide-react';
+import { X, Download, Eye, User, Calendar, Briefcase, Phone, ExternalLink } from 'lucide-react';
 import { dateFormat } from '../../helpers/dateFormat';
 
 const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
@@ -11,10 +11,16 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
     switch (status) {
       case 'available':
         return 'bg-green-100 text-green-800 border-green-200';
-      case 'inactive':
-        return 'bg-red-100 text-red-800 border-red-200';
+      case 'employed':
+        return 'bg-blue-100 text-blue-800 border-blue-200';
+      case 'seeking':
+        return 'bg-purple-100 text-purple-800 border-purple-200';
+      case 'open':
+        return 'bg-indigo-100 text-indigo-800 border-indigo-200';
+      case 'casual':
+        return 'bg-orange-100 text-orange-800 border-orange-200';
       default:
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+        return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
@@ -50,10 +56,10 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
               </div>
               <div className="min-w-0 flex-1">
                 <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 truncate">{candidate.name}</h2>
-                <p className="text-gray-600 flex items-center mt-1 text-sm sm:text-base">
-                  <Mail className="w-3 h-3 sm:w-4 sm:h-4 mr-2 flex-shrink-0" />
+                <a href={`mailto:${candidate.email}`} className="text-blue-600 flex items-center mt-1 text-sm sm:text-base gap-1">
                   <span className="truncate">{candidate.email}</span>
-                </p>
+                  <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 mr-2 flex-shrink-0" />
+                </a>
                 <div className="mt-2">
                   <span className={`inline-flex items-center px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium border ${getStatusColor(candidate.status)}`}>
                     {candidate.status}
@@ -87,7 +93,7 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
                 : 'text-gray-600 hover:text-gray-900'
                 }`}
             >
-              Documents
+              Details
             </button>
           </div>
 
@@ -194,35 +200,32 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
               </div>
 
               {/* Cover Letter Section */}
-              <div className="border border-gray-200 rounded-lg p-3 sm:p-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-3 sm:space-y-0">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <span className="text-green-600 font-semibold text-xs sm:text-sm">CL</span>
+              <div className="space-y-3 sm:space-y-4">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Cover Letter</h3>
+                <div className="border border-gray-200 rounded-lg p-3 sm:p-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-3 sm:space-y-0">
+                    <div>
+                      {candidate.coverLetter && (
+                        <p className="text-gray-700 leading-relaxed text-sm sm:text-base">{candidate.coverLetter}</p>
+                      )}
                     </div>
-                    <div className="min-w-0">
-                      <h4 className="font-medium text-gray-900 text-sm sm:text-base">Cover Letter</h4>
-                      <p className="text-xs sm:text-sm text-gray-500">PDF Document</p>
-                    </div>
-                  </div>
-                  <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-                    <button
-                      onClick={() => handleView('coverLetter')}
-                      className="flex items-center justify-center space-x-2 px-3 py-2 text-xs sm:text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors"
-                    >
-                      <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
-                      <span>View Cover Letter</span>
-                    </button>
-                    <button
-                      onClick={() => handleDownload('coverLetter')}
-                      className="flex items-center justify-center space-x-2 px-3 py-2 text-xs sm:text-sm font-medium text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-md transition-colors"
-                    >
-                      <Download className="w-3 h-3 sm:w-4 sm:h-4" />
-                      <span>Download</span>
-                    </button>
                   </div>
                 </div>
               </div>
+
+              {/* Reasons for leaving Section */}
+              {candidate.previousJobReasons && (
+                <div className="space-y-3 sm:space-y-4">
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Reason for leaving last position</h3>
+                  <div className="border border-gray-200 rounded-lg p-3 sm:p-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-3 sm:space-y-0">
+                      <div>
+                        <p className="text-gray-700 leading-relaxed text-sm sm:text-base">{candidate.previousJobReasons}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
