@@ -1,5 +1,4 @@
 import { MongoClient } from "mongodb";
-require("@dotenvx/dotenvx").config();
 
 const today = new Date();
 const sixMonthsAgo = new Date(today);

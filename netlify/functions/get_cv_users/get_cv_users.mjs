@@ -1,5 +1,4 @@
 import { MongoClient } from "mongodb";
-require("@dotenvx/dotenvx").config();
 
 const mongoClient = new MongoClient(process.env.MONGODB_URI);
 const clientPromise = mongoClient.connect();
