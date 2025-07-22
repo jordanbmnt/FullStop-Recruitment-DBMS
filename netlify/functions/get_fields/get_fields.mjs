@@ -1,5 +1,4 @@
 import { MongoClient } from "mongodb";
-// require("@dotenvx/dotenvx").config();
 
 const FIELD_OCCURRENCES_AGG = [
   {
@@ -45,6 +44,7 @@ export default async (request, _context) => {
       })
     );
   } catch (e) {
+    console.warn(e, "AQUI");
     return { statusCode: 500, body: e.toString() };
   }
 };
