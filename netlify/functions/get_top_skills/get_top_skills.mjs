@@ -1,5 +1,5 @@
 import { MongoClient } from "mongodb";
-require("@dotenvx/dotenvx").config();
+// require("@dotenvx/dotenvx").config();
 
 const TOP_SKILLS_AGG = [
   {

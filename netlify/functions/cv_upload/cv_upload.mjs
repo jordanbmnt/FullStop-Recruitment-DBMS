@@ -1,6 +1,6 @@
 import { MongoClient, ObjectId } from "mongodb";
 const mongoose = require("mongoose");
-require("@dotenvx/dotenvx").config();
+// require("@dotenvx/dotenvx").config();
 
 const mongoClient = new MongoClient(process.env.MONGODB_URI);
 const clientPromise = mongoClient.connect();
