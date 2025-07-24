@@ -2,14 +2,13 @@ import React, { useState } from "react";
 import {
   ChevronLeft,
   ChevronRight,
-  Upload,
-  RefreshCw,
-  FileText,
   Loader2,
   CheckCircle,
-  AlertCircle,
 } from "lucide-react";
 import { JobSummaryForm } from "./job_summary_form";
+import { FormSummary } from "./form_summary";
+import { CvUploadOption } from "./cv_upload_option";
+import { ProgressBar } from "./progress_bar";
 
 const CvLink = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -191,278 +190,30 @@ const CvLink = () => {
     switch (currentStep) {
       case 1:
         return (
-          <div className="space-y-6">
-            <div className="text-center mb-8">
-              <FileText className="w-16 h-16 mx-auto text-blue-600 mb-4" />
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                CV Management
-              </h2>
-              <p className="text-gray-600">
-                Choose how you'd like to proceed with your CV
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div
-                className={`p-6 rounded-lg border-2 transition-all duration-200 cursor-pointer ${formData.cvType === "new"
-                  ? "border-blue-500 bg-blue-50 shadow-md"
-                  : "border-gray-200 hover:border-gray-300"
-                  }`}
-                onClick={() => handleInputChange("cvType", "new")}
-              >
-                <Upload className="w-8 h-8 text-blue-600 mb-3" />
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                  Upload New CV
-                </h3>
-                <p className="text-gray-600 text-sm">
-                  Start fresh with a completely new CV document
-                </p>
-
-                {formData.cvType === "new" && (
-                  <div className="mt-4 pt-4 border-t border-gray-200">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Choose your CV file:
-                    </label>
-                    <input
-                      type="file"
-                      accept=".pdf"
-                      onChange={handleFileUpload}
-                      className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                    />
-                    {formData.cvFile && (
-                      <div className="mt-2 p-2 bg-green-50 rounded-lg">
-                        <p className="text-sm text-green-700">
-                          ✓ {formData.cvFileName} ({formData.cvFileSize} KB)
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              <div
-                className={`p-6 rounded-lg border-2 transition-all duration-200 cursor-pointer ${formData.cvType === "update"
-                  ? "border-blue-500 bg-blue-50 shadow-md"
-                  : "border-gray-200 hover:border-gray-300"
-                  }`}
-                onClick={() => handleInputChange("cvType", "update")}
-              >
-                <RefreshCw className="w-8 h-8 text-green-600 mb-3" />
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                  Update Existing CV
-                </h3>
-                <p className="text-gray-600 text-sm">
-                  Upload an updated version of your CV document
-                </p>
-
-                {formData.cvType === "update" && (
-                  <div className="mt-4 pt-4 border-t border-gray-200">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Choose your updated CV file:
-                    </label>
-                    <input
-                      type="file"
-                      accept=".pdf"
-                      onChange={handleFileUpload}
-                      className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
-                    />
-                    {formData.cvFile && (
-                      <div className="mt-2 p-2 bg-green-50 rounded-lg">
-                        <p className="text-sm text-green-700">
-                          ✓ {formData.cvFileName} ({formData.cvFileSize} KB)
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+          <CvUploadOption
+            formData={formData}
+            handleInputChange={handleInputChange}
+            handleFileUpload={handleFileUpload} />
         );
 
       case 2:
         return (
           <JobSummaryForm
             formData={formData}
-            onFormDataChange={handleInputChange}
-          />
+            onFormDataChange={handleInputChange} />
         );
 
       case 3:
         return (
-          <div className="space-y-6">
-            <div className="text-center mb-8">
-              <CheckCircle className="w-16 h-16 mx-auto text-purple-600 mb-4" />
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                Review & Submit
-              </h2>
-              <p className="text-gray-600">
-                Please review your information before submitting
-              </p>
-            </div>
-
-            <div className="bg-gray-50 rounded-lg p-6 space-y-6">
-              {/* CV Information */}
-              <div className="border-b border-gray-200 pb-4">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">CV Information</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <h4 className="font-medium text-gray-700 mb-1">CV Type:</h4>
-                    <p className="text-gray-600 capitalize">{formData.cvType}</p>
-                  </div>
-                  {formData.cvFile && (
-                    <div>
-                      <h4 className="font-medium text-gray-700 mb-1">File:</h4>
-                      <p className="text-gray-600">
-                        {formData.cvFileName} ({formData.cvFileSize} KB)
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Personal Information */}
-              <div className="border-b border-gray-200 pb-4">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">Personal Information</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <h4 className="font-medium text-gray-700 mb-1">Name:</h4>
-                    <p className="text-gray-600">{formData.name || 'Not provided'}</p>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-700 mb-1">Email:</h4>
-                    <p className="text-gray-600">{formData.email || 'Not provided'}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Professional Information */}
-              <div className="border-b border-gray-200 pb-4">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">Professional Information</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <h4 className="font-medium text-gray-700 mb-1">Job Title:</h4>
-                    <p className="text-gray-600">{formData.jobTitle || 'Not provided'}</p>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-700 mb-1">Field:</h4>
-                    <p className="text-gray-600">{formData.field || 'Not provided'}</p>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-700 mb-1">Years of Experience:</h4>
-                    <p className="text-gray-600">{formData.yearsOfXp || 'Not provided'}</p>
-                  </div>
-                  <div>
-                    <h4 className="font-medium text-gray-700 mb-1">Status:</h4>
-                    <p className="text-gray-600 capitalize">{formData.status}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Skills */}
-              {formData.skills && formData.skills.length > 0 && (
-                <div className="border-b border-gray-200 pb-4">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Skills</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {formData.skills.map((skill, index) => (
-                      <span key={index} className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Cover Letter */}
-              {formData.coverLetter && (
-                <div className="border-b border-gray-200 pb-4">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Cover Letter</h3>
-                  <p className="text-gray-600 bg-white p-3 rounded border">
-                    {formData.coverLetter}
-                  </p>
-                </div>
-              )}
-
-              {/* Summary */}
-              {formData.summary && (
-                <div className="border-b border-gray-200 pb-4">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Professional Summary</h3>
-                  <p className="text-gray-600 bg-white p-3 rounded border">
-                    {formData.summary}
-                  </p>
-                </div>
-              )}
-
-              {/* Previous Job Reasons */}
-              <div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-3">Previous Job Reasons</h3>
-                <p className="text-gray-600 bg-white p-3 rounded border">
-                  {formData.previousJobReasons}
-                </p>
-              </div>
-            </div>
-
-            {submitStatus && (
-              <div className={`p-4 rounded-lg flex items-center space-x-2 ${submitStatus === 'success'
-                ? 'bg-green-50 text-green-700'
-                : 'bg-red-50 text-red-700'
-                }`}>
-                {submitStatus === 'success' ? (
-                  <CheckCircle className="w-5 h-5" />
-                ) : (
-                  <AlertCircle className="w-5 h-5" />
-                )}
-                <p>{submitMessage}</p>
-              </div>
-            )}
-          </div>
+          <FormSummary
+            formData={formData}
+            submitStatus={submitStatus}
+            submitMessage={submitMessage} />
         );
 
       default:
         return <div>Step content not found</div>;
     }
-  };
-
-  const renderProgressBar = () => {
-    return (
-      <div className="max-w-2xl mx-auto mb-8">
-        <div className="flex items-center mb-4 justify-between">
-          {steps.map((step, index) => {
-            const isCompleted = currentStep > step.id;
-            const isCurrent = currentStep === step.id;
-
-            return (
-              <div key={step.id} className={`flex items-center ${index === steps.length - 1 ? "w-fit" : "w-full"}`}>
-                <div
-                  className={`min-w-10 min-h-10 rounded-full flex items-center justify-center text-sm font-medium transition-colors shadow-md ${isCompleted
-                    ? "bg-green-600 text-white"
-                    : isCurrent
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-200 text-gray-600"
-                    }`}
-                >
-                  {isCompleted ? "✓" : step.id}
-                </div>
-                {index < steps.length - 1 && (
-                  <div
-                    className={`h-1 w-full mx-4 transition-colors shadow-sm ${isCompleted ? "bg-green-600" : "bg-gray-200"
-                      }`}
-                  />
-                )}
-              </div>
-            );
-          })}
-        </div>
-        <div className="text-center">
-          <h3 className="text-lg font-semibold text-gray-800">
-            Step {currentStep}: {getCurrentStep().title}
-          </h3>
-          <p className="text-sm text-gray-600 mt-1">
-            {getCurrentStep().description}
-          </p>
-        </div>
-      </div>
-    );
   };
 
   return (
@@ -476,7 +227,12 @@ const CvLink = () => {
         </p>
       </div>
 
-      {renderProgressBar()}
+      {
+        <ProgressBar
+          steps={steps}
+          currentStep={currentStep}
+          getCurrentStep={getCurrentStep} />
+      }
 
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
