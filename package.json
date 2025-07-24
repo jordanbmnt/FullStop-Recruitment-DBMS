@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@dotenvx/dotenvx": "^1.48.3",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
@@ -11,20 +10,17 @@
     "lucide-react": "^0.515.0",
     "mongodb": "^6.17.0",
     "mongoose": "^8.16.3",
-    "netlify-cli": "^22.2.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.2",
-    "react-scripts": "5.0.1",
+    "react-scripts": "^5.0.1",
     "recharts": "^2.15.3",
     "tailwindcss": "^4.1.10",
-    "to": "^0.2.9",
-    "update": "^0.7.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "dotenvx run -- react-scripts start",
-    "netlify": "dotenvx run -- netlify dev",
+    "start": "react-scripts start",
+    "netlify": "netlify dev",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
