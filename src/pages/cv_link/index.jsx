@@ -8,6 +8,7 @@ import {
 import { JobSummaryForm } from "./job_summary_form";
 import { FormSummary } from "./form_summary";
 import { CvUploadOption } from "./cv_upload_option";
+import { ProgressBar } from "./progress_bar";
 
 const CvLink = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -215,48 +216,6 @@ const CvLink = () => {
     }
   };
 
-  const renderProgressBar = () => {
-    return (
-      <div className="max-w-2xl mx-auto mb-8">
-        <div className="flex items-center mb-4 justify-between">
-          {steps.map((step, index) => {
-            const isCompleted = currentStep > step.id;
-            const isCurrent = currentStep === step.id;
-
-            return (
-              <div key={step.id} className={`flex items-center ${index === steps.length - 1 ? "w-fit" : "w-full"}`}>
-                <div
-                  className={`min-w-10 min-h-10 rounded-full flex items-center justify-center text-sm font-medium transition-colors shadow-md ${isCompleted
-                    ? "bg-green-600 text-white"
-                    : isCurrent
-                      ? "bg-blue-600 text-white"
-                      : "bg-gray-200 text-gray-600"
-                    }`}
-                >
-                  {isCompleted ? "✓" : step.id}
-                </div>
-                {index < steps.length - 1 && (
-                  <div
-                    className={`h-1 w-full mx-4 transition-colors shadow-sm ${isCompleted ? "bg-green-600" : "bg-gray-200"
-                      }`}
-                  />
-                )}
-              </div>
-            );
-          })}
-        </div>
-        <div className="text-center">
-          <h3 className="text-lg font-semibold text-gray-800">
-            Step {currentStep}: {getCurrentStep().title}
-          </h3>
-          <p className="text-sm text-gray-600 mt-1">
-            {getCurrentStep().description}
-          </p>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="text-center mb-8">
@@ -268,7 +227,12 @@ const CvLink = () => {
         </p>
       </div>
 
-      {renderProgressBar()}
+      {
+        <ProgressBar
+          steps={steps}
+          currentStep={currentStep}
+          getCurrentStep={getCurrentStep} />
+      }
 
       <div className="max-w-4xl mx-auto">
         <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
