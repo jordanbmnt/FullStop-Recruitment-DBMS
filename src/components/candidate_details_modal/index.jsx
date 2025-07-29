@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { X, Download, Eye, User, Calendar, Briefcase, Phone, ExternalLink } from 'lucide-react';
+import { X, Download, Eye, User, Calendar, Briefcase, Phone, ExternalLink, Annoyed } from 'lucide-react';
 import { dateFormat } from '../../helpers/dateFormat';
 
 const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
@@ -172,30 +172,45 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
               <div className="border border-gray-200 rounded-lg p-3 sm:p-4">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-3 sm:space-y-0">
                   <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <span className="text-red-600 font-semibold text-xs sm:text-sm">CV</span>
+                    <div className={`w-8 h-8 sm:w-10 sm:h-10 ${candidate.fileInfo ? "bg-red-100" : "bg-gray-100"} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                      <span className={`${candidate.fileInfo ? "text-red-600" : "text-gray-600"} font-semibold text-xs sm:text-sm`}>CV</span>
                     </div>
                     <div className="min-w-0">
                       <h4 className="font-medium text-gray-900 text-sm sm:text-base">Curriculum Vitae</h4>
                       <p className="text-xs sm:text-sm text-gray-500">PDF Document</p>
                     </div>
                   </div>
-                  <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-                    <button
-                      onClick={() => handleView('cv')}
-                      className="flex items-center justify-center space-x-2 px-3 py-2 text-xs sm:text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors"
-                    >
-                      <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
-                      <span>View CV</span>
-                    </button>
-                    <button
-                      onClick={() => handleDownload('cv')}
-                      className="flex items-center justify-center space-x-2 px-3 py-2 text-xs sm:text-sm font-medium text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-md transition-colors"
-                    >
-                      <Download className="w-3 h-3 sm:w-4 sm:h-4" />
-                      <span>Download</span>
-                    </button>
-                  </div>
+
+                  {
+                    candidate.fileInfo ? (
+                      <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                        <button
+                          onClick={() => handleView('cv')}
+                          className="flex items-center justify-center space-x-2 px-3 py-2 text-xs sm:text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors"
+                        >
+                          <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
+                          <span>View CV</span>
+                        </button>
+                        <button
+                          onClick={() => handleDownload('cv')}
+                          className="flex items-center justify-center space-x-2 px-3 py-2 text-xs sm:text-sm font-medium text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-md transition-colors"
+                        >
+                          <Download className="w-3 h-3 sm:w-4 sm:h-4" />
+                          <span>Download</span>
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                        <button
+                          onClick={() => { window.location = `mailto:${candidate.email}?subject=Missing+CV+in+our+database` }}
+                          className="flex items-center justify-center space-x-2 px-3 py-2 text-xs sm:text-sm font-medium text-gray-600 bg-blue-50 rounded-md hover:bg-gray-100 transition-colors"
+                        >
+                          <Annoyed className="w-3 h-3 sm:w-4 sm:h-4" />
+                          <span>NOT UPLOADED</span>
+                        </button>
+                      </div>
+                    )
+                  }
                 </div>
               </div>
 
@@ -238,7 +253,7 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
               Close
             </button>
             <button
-              onClick={() => console.log('Contact candidate:', candidate.name)}
+              onClick={() => { window.location = `mailto:${candidate.email}` }}
               className="w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
             >
               Contact Candidate
