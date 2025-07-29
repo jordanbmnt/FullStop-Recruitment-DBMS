@@ -4,8 +4,41 @@ import { dateFormat } from '../../helpers/dateFormat';
 
 const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
   const [activeTab, setActiveTab] = useState('overview');
+  const [isFetching, setIsFetching] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResult, setSearchResult] = useState(null);
 
   if (!isOpen || !candidate) return null;
+
+  const getData = ({user_id}) => {
+    try {
+      const ROOT_PARAM = `/.netlify/functions/get_users_cv_data`;
+      let url = `${ROOT_PARAM}?user_id=${user_id}`;
+
+      setIsFetching(true);
+
+      console.warn("1")
+      fetch(url).then(res => res.json()).then(value => {
+        console.warn("2")
+        if (value && value.body.length > 0) {
+          console.warn(value.body)
+          setSearchResult(value.body);
+          setIsSearching(false);
+        }
+        setIsSearching(false);
+        setIsFetching(false);
+      });
+      console.warn("3")
+      return;
+    } catch (e) {
+      setSearchResult(null);
+      setIsSearching(false);
+      setIsFetching(false);
+      console.warn("Error:", e)
+      return;
+    }
+
+  }
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -87,7 +120,14 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
               Overview
             </button>
             <button
-              onClick={() => setActiveTab('documents')}
+              onClick={() => {
+                setActiveTab('documents')
+
+                //show CV loading and display after thsii fetch
+                if(candidate.fileInfo) {
+                  getData({user_id: candidate.fileInfo.gridFsId});
+                }
+              }}
               className={`flex-1 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-colors ${activeTab === 'documents'
                 ? 'bg-white text-blue-600 shadow-sm'
                 : 'text-gray-600 hover:text-gray-900'

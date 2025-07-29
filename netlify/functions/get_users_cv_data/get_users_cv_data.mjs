@@ -1,13 +1,60 @@
-// Docs on request and context https://docs.netlify.com/functions/build/#code-your-function-2
-export default (request, context) => {
-  try {
-    const url = new URL(request.url)
-    const subject = url.searchParams.get('name') || 'World'
+import { clientPromise } from "../db_client/db_client.mjs";
+import { ObjectId } from "mongodb";
 
-    return new Response(`Hello ${subject}`)
-  } catch (error) {
-    return new Response(error.toString(), {
-      status: 500,
-    })
+/**
+ *
+ * @returns An "&&" query for searching MongoDB
+ */
+const collectionQueryBuilder = ({ searchParams, uploadsType }) => {
+  const userId = searchParams.get("user_id");
+
+  if (uploadsType === "meta") {
+    return { _id: new ObjectId(userId) };
+  } else if (uploadsType === "bin.") {
+    return { files_id: new ObjectId(userId) };
+  } else {
+    return {};
   }
-}
+};
+
+// eslint-disable-next-line import/no-anonymous-default-export
+export default async (request, _context) => {
+  try {
+    console.warn(1);
+    const { searchParams } = new URL(request.url);
+    const database = (await clientPromise).db(process.env.MONGODB_CV_DATABASE);
+    const metaDataCollection = database.collection(process.env.MONGODB_CV_META_COLLECTION);
+    console.warn(2);
+    const metaDataQuery = collectionQueryBuilder({
+      searchParams,
+      uploadsType: "meta",
+    });
+    const results = await metaDataCollection.find(metaDataQuery).toArray();
+    console.warn(3);
+
+    console.warn(results, "AQUI");
+
+    //! ERROR: MongoServerError: Expected 'find' to be string, but got <nil> instead. Doc = [{find <nil>} {filter [{_id ObjectID("687514c7ef891ba5e3fef44a")}]} {lsid [{id {4 [139 97 100 197 17 208 75 30 184 65 148 73 124 216 184 142]}}]} {$clusterTime [{clusterTime {1753824511 1}} {signature [{hash {0 [132 67 215 0 185 235 79 216 39 163 123 89 219 243 30 249 63 141 188 19]}} {keyId 7481352916712816647}]}]} {$db cv_data}]  
+    //TODO: Testing getting meta data
+
+    
+    // const binaryDataCollection = database.collection(
+    //   process.env.MONGODB_COLLECTION
+    // );
+    // const binaryDataQuery = collectionQueryBuilder({
+    //   searchParams,
+    //   uploadsType: "bin.",
+    // });
+    // const results = await metaDataCollection.find(metaDataQuery).toArray();
+
+    return new Response(
+      JSON.stringify({
+        statusCode: 200,
+        body: results,
+      })
+    );
+  } catch (e) {
+    console.warn(e.toString())
+    return { statusCode: 500, body: e.toString() };
+  }
+};
