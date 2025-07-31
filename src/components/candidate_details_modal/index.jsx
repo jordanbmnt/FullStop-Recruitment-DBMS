@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { X, Download, Eye, User, Calendar, Briefcase, Phone, ExternalLink, Annoyed } from 'lucide-react';
 import { dateFormat } from '../../helpers/dateFormat';
 
@@ -10,25 +10,52 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
 
   if (!isOpen || !candidate) return null;
 
-  const getData = ({user_id}) => {
+  const transformCVData = ([{ meta, binary }]) => {
+    let result = {};
+    if (meta) {
+      const { filename, uploadDate } = meta[0];
+      result = { ...result, filename, uploadDate };
+    }
+
+    if (binary) {
+      const { data } = binary[0];
+
+      // For display purposes
+      const pdfElement = document.createElement('object');
+      pdfElement.style.width = '100%';
+      pdfElement.style.height = '842pt';
+      pdfElement.type = 'application/pdf';
+      pdfElement.data = 'data:application/pdf;base64,' + data;
+
+      // use the click attribute and then remove it from the document
+      // document.body.appendChild(link);
+      // link.click();
+      // document.body.removeChild(link);
+      const downloadElement = document.createElement('a');
+      downloadElement.innerHTML = 'Download PDF file';
+      downloadElement.download = result.filename; // Change this to be more based on the info that is available 
+      downloadElement.href = 'data:application/octet-stream;base64,' + data;
+      result = { ...result, pdfElement, downloadElement };
+    }
+
+    return result
+  }
+
+  const getData = ({ user_id }) => {
     try {
       const ROOT_PARAM = `/.netlify/functions/get_users_cv_data`;
       let url = `${ROOT_PARAM}?user_id=${user_id}`;
 
       setIsFetching(true);
 
-      console.warn("1")
       fetch(url).then(res => res.json()).then(value => {
-        console.warn("2")
         if (value && value.body.length > 0) {
-          console.warn(value.body)
-          setSearchResult(value.body);
+          setSearchResult((transformCVData(value.body)));
           setIsSearching(false);
         }
         setIsSearching(false);
         setIsFetching(false);
       });
-      console.warn("3")
       return;
     } catch (e) {
       setSearchResult(null);
@@ -58,15 +85,28 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
   };
 
   const handleDownload = (type) => {
-    // Simulated download functionality
+    //TODO: Create loading animation and that sort of shandies
     const fileName = type === 'cv' ? `${candidate.name}_CV.pdf` : `${candidate.name}_CoverLetter.pdf`;
     console.log(`Downloading ${fileName}`);
-    // In a real application, this would trigger an actual download
+    if (searchResult) {
+      const { downloadElement } = searchResult;
+      document.body.appendChild(downloadElement);
+      downloadElement.click();
+      document.body.removeChild(downloadElement);
+    }
   };
 
-  const handleView = (type) => {
+  const handleView = (e) => {
     // Simulated view functionality
-    console.log(`Viewing ${type} for ${candidate.name}`);
+    if (searchResult) {
+      console.log(searchResult, 'Starting');
+      const { pdfElement } = searchResult;
+      // document.body.appendChild(pdfElement);
+      // TODO: create a housing compenent that only becomes visible when clicking then append this document into that component house using the id (or something similar)
+      setTimeout(() => {
+        // document.body.removeChild(pdfElement);
+      }, 2000)
+    }
     // In a real application, this would open the document in a viewer or new tab
   };
 
@@ -124,8 +164,8 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
                 setActiveTab('documents')
 
                 //show CV loading and display after thsii fetch
-                if(candidate.fileInfo) {
-                  getData({user_id: candidate.fileInfo.gridFsId});
+                if (candidate.fileInfo) {
+                  getData({ user_id: candidate.fileInfo.gridFsId });
                 }
               }}
               className={`flex-1 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-colors ${activeTab === 'documents'
@@ -225,7 +265,7 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
                     candidate.fileInfo ? (
                       <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                         <button
-                          onClick={() => handleView('cv')}
+                          onClick={(e) => handleView(e)}
                           className="flex items-center justify-center space-x-2 px-3 py-2 text-xs sm:text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors"
                         >
                           <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
