@@ -28,8 +28,8 @@ const DashboardSidebar = () => {
               <a href='/' className='flex ms-2 md:me-24'>
                 <img
                   src={darkModeLogo}
-                  className='h-8 me-3'
-                  alt='ARSKIPOS Logo'
+                  className='h-10 me-3'
+                  alt='Fullstop Recruitment Logo'
                 />
                 <span style={{
                   fontFamily: "EB Garamond",
@@ -37,7 +37,7 @@ const DashboardSidebar = () => {
                   fontWeight: 500,
                   fontStyle: "normal",
                 }} className='self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white'>
-                  ARSKIPOS
+                  Fullstop Recruitment
                 </span>
               </a>
             </div>
