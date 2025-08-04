@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { clientPromise } from "../db_client/db_client.mjs";
 
 const today = new Date();
 const sixMonthsAgo = new Date(today);
@@ -78,9 +78,6 @@ const processMonthlyData = (data) => {
 
   return result;
 };
-
-const mongoClient = new MongoClient(process.env.MONGODB_URI);
-const clientPromise = mongoClient.connect();
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default async (request, _context) => {

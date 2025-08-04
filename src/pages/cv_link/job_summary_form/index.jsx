@@ -28,7 +28,7 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
       field: "previousJobReasons",
       heading: "Reasons for leaving previous positions",
       placeholder: "e.g., Seeking new challenges, career advancement, better work-life balance, company restructuring, etc.",
-      isRequired: false
+      isRequired: true
     },
   ];
 

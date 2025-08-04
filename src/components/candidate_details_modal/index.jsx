@@ -1,11 +1,69 @@
 import { useState } from 'react';
-import { X, Download, Eye, User, Calendar, Briefcase, Phone, ExternalLink } from 'lucide-react';
+import { X, Download, Eye, User, Calendar, Briefcase, Phone, ExternalLink, Annoyed, EyeClosed } from 'lucide-react';
 import { dateFormat } from '../../helpers/dateFormat';
 
 const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
   const [activeTab, setActiveTab] = useState('overview');
+  const [isFetching, setIsFetching] = useState(false);
+  const [searchResult, setSearchResult] = useState(null);
+  const [isCvVisible, setIsCvVisible] = useState(null);
 
   if (!isOpen || !candidate) return null;
+
+  const transformCVData = ([{ meta, binary }]) => {
+    let result = {};
+    if (meta) {
+      const { filename, uploadDate } = meta[0];
+      result = { ...result, filename, uploadDate };
+    }
+
+    if (binary) {
+      const { data } = binary[0];
+
+      // For display purposes
+      const pdfElement = document.createElement('object');
+      pdfElement.style.width = '100%';
+      pdfElement.style.height = '842pt';
+      pdfElement.style.className = 'rounded-md';
+      pdfElement.type = 'application/pdf';
+      pdfElement.data = 'data:application/pdf;base64,' + data;
+
+      // use the click attribute and then remove it from the document
+      // document.body.appendChild(link);
+      // link.click();
+      // document.body.removeChild(link);
+      const downloadElement = document.createElement('a');
+      downloadElement.innerHTML = 'Download PDF file';
+      downloadElement.download = result.filename; // Change this to be more based on the info that is available 
+      downloadElement.href = 'data:application/octet-stream;base64,' + data;
+      result = { ...result, pdfElement, downloadElement };
+    }
+
+    return result
+  }
+
+  const getData = ({ user_id }) => {
+    try {
+      const ROOT_PARAM = `/.netlify/functions/get_users_cv_data`;
+      let url = `${ROOT_PARAM}?user_id=${user_id}`;
+
+      setIsFetching(true);
+
+      fetch(url).then(res => res.json()).then(value => {
+        if (value && value.body.length > 0) {
+          setSearchResult((transformCVData(value.body)));
+        }
+        setIsFetching(false);
+      });
+      return;
+    } catch (e) {
+      setSearchResult(null);
+      setIsFetching(false);
+      console.warn("Error:", e)
+      return;
+    }
+
+  }
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -25,16 +83,33 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
   };
 
   const handleDownload = (type) => {
-    // Simulated download functionality
-    const fileName = type === 'cv' ? `${candidate.name}_CV.pdf` : `${candidate.name}_CoverLetter.pdf`;
-    console.log(`Downloading ${fileName}`);
-    // In a real application, this would trigger an actual download
+    //TODO: Create loading animation and that sort of shandies
+    if (searchResult) {
+      const { downloadElement } = searchResult;
+      document.body.appendChild(downloadElement);
+      downloadElement.click();
+      document.body.removeChild(downloadElement);
+    }
   };
 
-  const handleView = (type) => {
+  const handleView = (e) => {
     // Simulated view functionality
-    console.log(`Viewing ${type} for ${candidate.name}`);
-    // In a real application, this would open the document in a viewer or new tab
+    if (searchResult) {
+      const { pdfElement } = searchResult;
+      const viewCV = document.getElementById('view-cv-section');
+
+      if (isCvVisible) {
+        viewCV.classList.remove("flex")
+        viewCV.classList.add("hidden")
+        viewCV.removeChild(pdfElement);
+        setIsCvVisible(false)
+      } else {
+        viewCV.classList.remove("hidden")
+        viewCV.classList.add("flex")
+        setIsCvVisible(true)
+        viewCV.appendChild(pdfElement);
+      }
+    }
   };
 
   return (
@@ -43,7 +118,10 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
         {/* Background overlay */}
         <div
           className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
-          onClick={onClose}
+          onClick={() => {
+            setActiveTab("overview");
+            onClose();
+          }}
         ></div>
 
         {/* Modal panel */}
@@ -68,7 +146,10 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
               </div>
             </div>
             <button
-              onClick={onClose}
+              onClick={() => {
+                setActiveTab("overview");
+                onClose();
+              }}
               className="text-gray-400 hover:text-gray-600 transition-colors self-start sm:self-auto"
             >
               <X className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -87,7 +168,14 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
               Overview
             </button>
             <button
-              onClick={() => setActiveTab('documents')}
+              onClick={() => {
+                setActiveTab('documents')
+                //TODO: Fix the bug where it calls the DB again even if it is the same user. It should check if we already have the user data and use that if we do.
+                //show CV loading and display after thsii fetch
+                if (candidate.fileInfo) {
+                  getData({ user_id: candidate.fileInfo.gridFsId });
+                }
+              }}
               className={`flex-1 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-colors ${activeTab === 'documents'
                 ? 'bg-white text-blue-600 shadow-sm'
                 : 'text-gray-600 hover:text-gray-900'
@@ -169,34 +257,77 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
               <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Available Documents</h3>
 
               {/* CV Section */}
-              <div className="border border-gray-200 rounded-lg p-3 sm:p-4">
+              <div className="border border-gray-200 rounded-lg p-3 sm:p-4 transition-all">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-3 sm:space-y-0">
                   <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <span className="text-red-600 font-semibold text-xs sm:text-sm">CV</span>
+                    <div className={`w-8 h-8 sm:w-10 sm:h-10 ${candidate.fileInfo ? "bg-red-100" : "bg-gray-100"} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                      <span className={`${candidate.fileInfo ? "text-red-600" : "text-gray-600"} font-semibold text-xs sm:text-sm`}>CV</span>
                     </div>
                     <div className="min-w-0">
                       <h4 className="font-medium text-gray-900 text-sm sm:text-base">Curriculum Vitae</h4>
                       <p className="text-xs sm:text-sm text-gray-500">PDF Document</p>
                     </div>
                   </div>
-                  <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-                    <button
-                      onClick={() => handleView('cv')}
-                      className="flex items-center justify-center space-x-2 px-3 py-2 text-xs sm:text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors"
-                    >
-                      <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
-                      <span>View CV</span>
-                    </button>
-                    <button
-                      onClick={() => handleDownload('cv')}
-                      className="flex items-center justify-center space-x-2 px-3 py-2 text-xs sm:text-sm font-medium text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-md transition-colors"
-                    >
-                      <Download className="w-3 h-3 sm:w-4 sm:h-4" />
-                      <span>Download</span>
-                    </button>
-                  </div>
+
+                  {
+                    candidate.fileInfo ? (
+                      <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                        <button
+                          disabled={isFetching}
+                          onClick={(e) => handleView(e)}
+                          className={`flex items-center justify-center space-x-2 px-3 py-2 text-xs sm:text-sm font-medium ${isCvVisible ?
+                            "text-red-600 bg-red-50 hover:bg-red-100" :
+                            isFetching ?
+                              "text-gray-700 bg-gray-100" :
+                              "text-blue-600 bg-blue-50 hover:bg-blue-100"
+                            } rounded-md transition-colors`}
+                        >
+                          {
+                            isCvVisible ?
+                              (
+                                <div className='w-max flex flex-row items-center justify-center'>
+                                  <EyeClosed className="w-3 h-3 mx-2 sm:w-4 sm:h-4" />
+                                  <span>Close View</span>
+                                </div>
+                              ) :
+                              (
+                                <div className='w-max flex flex-row items-center justify-center'>
+                                  <Eye className="w-3 h-3 mx-2 sm:w-4 sm:h-4" />
+                                  <span>View CV</span>
+                                </div>
+                              )
+                          }
+                        </button>
+                        <button
+                          disabled={isFetching}
+                          onClick={() => handleDownload('cv')}
+                          className={`flex items-center justify-center space-x-2 px-3 py-2 text-xs sm:text-sm font-medium ${isFetching ?
+                            "text-gray-700 bg-gray-100" :
+                            "text-gray-600 bg-gray-50 hover:bg-gray-100"
+                            } rounded-md transition-colors`}
+                        >
+                          <Download className="w-3 h-3 sm:w-4 sm:h-4" />
+                          <span>Download</span>
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+                        <button
+                          onClick={() => { window.location = `mailto:${candidate.email}?subject=Missing+CV+in+our+database` }}
+                          className="flex items-center justify-center space-x-2 px-3 py-2 text-xs sm:text-sm font-medium text-gray-600 bg-blue-50 rounded-md hover:bg-gray-100 transition-colors"
+                        >
+                          <Annoyed className="w-3 h-3 sm:w-4 sm:h-4" />
+                          <span>NOT UPLOADED</span>
+                        </button>
+                      </div>
+                    )
+                  }
                 </div>
+
+                <div
+                  id='view-cv-section'
+                  className='border border-gray-200 rounded-lg p-10 m-5 hidden'
+                />
               </div>
 
               {/* Cover Letter Section */}
@@ -232,13 +363,16 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
           {/* Footer Actions */}
           <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3 mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-gray-200">
             <button
-              onClick={onClose}
+              onClick={() => {
+                setActiveTab("overview");
+                onClose();
+              }}
               className="w-full sm:w-auto px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
             >
               Close
             </button>
             <button
-              onClick={() => console.log('Contact candidate:', candidate.name)}
+              onClick={() => { window.location = `mailto:${candidate.email}` }}
               className="w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-md transition-colors"
             >
               Contact Candidate
