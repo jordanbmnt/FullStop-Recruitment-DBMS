@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { clientPromise } from "../db_client/db_client.mjs";
 
 const FIELD_OCCURRENCES_AGG = [
   {
@@ -20,9 +20,6 @@ const EXISTING_FIELDS_AGG = [
     $count: "uniqueFieldsCount",
   },
 ];
-
-const mongoClient = new MongoClient(process.env.MONGODB_URI);
-const clientPromise = mongoClient.connect();
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default async (request, _context) => {

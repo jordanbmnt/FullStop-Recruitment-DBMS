@@ -1,7 +1,4 @@
-import { MongoClient } from "mongodb";
-
-const mongoClient = new MongoClient(process.env.MONGODB_URI);
-const clientPromise = mongoClient.connect();
+import { clientPromise } from "../db_client/db_client.mjs";
 
 /**
  *

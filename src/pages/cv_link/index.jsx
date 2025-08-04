@@ -174,7 +174,7 @@ const CvLink = () => {
       case 1:
         return formData.cvType !== "" && formData.cvFile !== null;
       case 2:
-        return formData.name.trim() !== "" && formData.email.trim() !== "" && formData.summary.trim() !== "" && formData.jobTitle.trim() !== "" && formData.field.trim() !== "" && formData.skills.length > 0;
+        return formData.name.trim() !== "" && formData.email.trim() !== "" && formData.summary.trim() !== "" && formData.jobTitle.trim() !== "" && formData.field.trim() !== "" && formData.skills.length > 0 && formData.previousJobReasons.trim() !== "";
       case 3:
         return true;
       default:

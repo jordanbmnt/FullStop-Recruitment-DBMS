@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import { clientPromise } from "../db_client/db_client.mjs";
 
 const TOP_SKILLS_AGG = [
   {
@@ -31,9 +31,6 @@ const TOP_SKILLS_AGG = [
     $limit: 15, // Top 15 skills
   },
 ];
-
-const mongoClient = new MongoClient(process.env.MONGODB_URI);
-const clientPromise = mongoClient.connect();
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default async (request, _context) => {

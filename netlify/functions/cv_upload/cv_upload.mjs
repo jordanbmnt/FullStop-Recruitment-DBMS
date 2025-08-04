@@ -1,8 +1,7 @@
-import { MongoClient, ObjectId } from "mongodb";
-const mongoose = require("mongoose");
+import { ObjectId } from "mongodb";
+import { clientPromise } from "../db_client/db_client.mjs";
 
-const mongoClient = new MongoClient(process.env.MONGODB_URI);
-const clientPromise = mongoClient.connect();
+const mongoose = require("mongoose");
 
 const validateFileType = (contentType) => {
   const allowedTypes = ["application/pdf"];
