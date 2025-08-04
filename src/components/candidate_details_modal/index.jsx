@@ -1,11 +1,10 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { X, Download, Eye, User, Calendar, Briefcase, Phone, ExternalLink, Annoyed, EyeClosed } from 'lucide-react';
 import { dateFormat } from '../../helpers/dateFormat';
 
 const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
   const [activeTab, setActiveTab] = useState('overview');
   const [isFetching, setIsFetching] = useState(false);
-  const [isSearching, setIsSearching] = useState(false);
   const [searchResult, setSearchResult] = useState(null);
   const [isCvVisible, setIsCvVisible] = useState(null);
 
@@ -53,15 +52,12 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
       fetch(url).then(res => res.json()).then(value => {
         if (value && value.body.length > 0) {
           setSearchResult((transformCVData(value.body)));
-          setIsSearching(false);
         }
-        setIsSearching(false);
         setIsFetching(false);
       });
       return;
     } catch (e) {
       setSearchResult(null);
-      setIsSearching(false);
       setIsFetching(false);
       console.warn("Error:", e)
       return;
@@ -88,8 +84,6 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
 
   const handleDownload = (type) => {
     //TODO: Create loading animation and that sort of shandies
-    const fileName = type === 'cv' ? `${candidate.name}_CV.pdf` : `${candidate.name}_CoverLetter.pdf`;
-    console.log(`Downloading ${fileName}`);
     if (searchResult) {
       const { downloadElement } = searchResult;
       document.body.appendChild(downloadElement);
@@ -101,7 +95,6 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
   const handleView = (e) => {
     // Simulated view functionality
     if (searchResult) {
-      console.log(searchResult, 'Starting');
       const { pdfElement } = searchResult;
       const viewCV = document.getElementById('view-cv-section');
 
@@ -125,7 +118,10 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
         {/* Background overlay */}
         <div
           className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
-          onClick={onClose}
+          onClick={() => {
+            setActiveTab("overview");
+            onClose();
+          }}
         ></div>
 
         {/* Modal panel */}
@@ -150,7 +146,10 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
               </div>
             </div>
             <button
-              onClick={onClose}
+              onClick={() => {
+                setActiveTab("overview");
+                onClose();
+              }}
               className="text-gray-400 hover:text-gray-600 transition-colors self-start sm:self-auto"
             >
               <X className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -171,7 +170,7 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
             <button
               onClick={() => {
                 setActiveTab('documents')
-
+                //TODO: Fix the bug where it calls the DB again even if it is the same user. It should check if we already have the user data and use that if we do.
                 //show CV loading and display after thsii fetch
                 if (candidate.fileInfo) {
                   getData({ user_id: candidate.fileInfo.gridFsId });
@@ -274,8 +273,14 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
                     candidate.fileInfo ? (
                       <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                         <button
+                          disabled={isFetching}
                           onClick={(e) => handleView(e)}
-                          className={`flex items-center justify-center space-x-2 px-3 py-2 text-xs sm:text-sm font-medium ${isCvVisible ? "text-red-600 bg-red-50 hover:bg-red-100" : "text-blue-600 bg-blue-50 hover:bg-blue-100"} rounded-md transition-colors`}
+                          className={`flex items-center justify-center space-x-2 px-3 py-2 text-xs sm:text-sm font-medium ${isCvVisible ?
+                            "text-red-600 bg-red-50 hover:bg-red-100" :
+                            isFetching ?
+                              "text-gray-700 bg-gray-100" :
+                              "text-blue-600 bg-blue-50 hover:bg-blue-100"
+                            } rounded-md transition-colors`}
                         >
                           {
                             isCvVisible ?
@@ -294,8 +299,12 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
                           }
                         </button>
                         <button
+                          disabled={isFetching}
                           onClick={() => handleDownload('cv')}
-                          className="flex items-center justify-center space-x-2 px-3 py-2 text-xs sm:text-sm font-medium text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-md transition-colors"
+                          className={`flex items-center justify-center space-x-2 px-3 py-2 text-xs sm:text-sm font-medium ${isFetching ?
+                            "text-gray-700 bg-gray-100" :
+                            "text-gray-600 bg-gray-50 hover:bg-gray-100"
+                            } rounded-md transition-colors`}
                         >
                           <Download className="w-3 h-3 sm:w-4 sm:h-4" />
                           <span>Download</span>
@@ -354,7 +363,10 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
           {/* Footer Actions */}
           <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3 mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-gray-200">
             <button
-              onClick={onClose}
+              onClick={() => {
+                setActiveTab("overview");
+                onClose();
+              }}
               className="w-full sm:w-auto px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
             >
               Close
