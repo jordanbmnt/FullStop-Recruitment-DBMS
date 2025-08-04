@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { X, Download, Eye, User, Calendar, Briefcase, Phone, ExternalLink, Annoyed } from 'lucide-react';
+import { X, Download, Eye, User, Calendar, Briefcase, Phone, ExternalLink, Annoyed, EyeClosed } from 'lucide-react';
 import { dateFormat } from '../../helpers/dateFormat';
 
 const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
@@ -7,6 +7,7 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
   const [isFetching, setIsFetching] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [searchResult, setSearchResult] = useState(null);
+  const [isCvVisible, setIsCvVisible] = useState(null);
 
   if (!isOpen || !candidate) return null;
 
@@ -24,6 +25,7 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
       const pdfElement = document.createElement('object');
       pdfElement.style.width = '100%';
       pdfElement.style.height = '842pt';
+      pdfElement.style.className = 'rounded-md';
       pdfElement.type = 'application/pdf';
       pdfElement.data = 'data:application/pdf;base64,' + data;
 
@@ -101,13 +103,20 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
     if (searchResult) {
       console.log(searchResult, 'Starting');
       const { pdfElement } = searchResult;
-      // document.body.appendChild(pdfElement);
-      // TODO: create a housing compenent that only becomes visible when clicking then append this document into that component house using the id (or something similar)
-      setTimeout(() => {
-        // document.body.removeChild(pdfElement);
-      }, 2000)
+      const viewCV = document.getElementById('view-cv-section');
+
+      if (isCvVisible) {
+        viewCV.classList.remove("flex")
+        viewCV.classList.add("hidden")
+        viewCV.removeChild(pdfElement);
+        setIsCvVisible(false)
+      } else {
+        viewCV.classList.remove("hidden")
+        viewCV.classList.add("flex")
+        setIsCvVisible(true)
+        viewCV.appendChild(pdfElement);
+      }
     }
-    // In a real application, this would open the document in a viewer or new tab
   };
 
   return (
@@ -249,7 +258,7 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
               <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Available Documents</h3>
 
               {/* CV Section */}
-              <div className="border border-gray-200 rounded-lg p-3 sm:p-4">
+              <div className="border border-gray-200 rounded-lg p-3 sm:p-4 transition-all">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between space-y-3 sm:space-y-0">
                   <div className="flex items-center space-x-3">
                     <div className={`w-8 h-8 sm:w-10 sm:h-10 ${candidate.fileInfo ? "bg-red-100" : "bg-gray-100"} rounded-lg flex items-center justify-center flex-shrink-0`}>
@@ -266,10 +275,23 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
                       <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
                         <button
                           onClick={(e) => handleView(e)}
-                          className="flex items-center justify-center space-x-2 px-3 py-2 text-xs sm:text-sm font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-md transition-colors"
+                          className={`flex items-center justify-center space-x-2 px-3 py-2 text-xs sm:text-sm font-medium ${isCvVisible ? "text-red-600 bg-red-50 hover:bg-red-100" : "text-blue-600 bg-blue-50 hover:bg-blue-100"} rounded-md transition-colors`}
                         >
-                          <Eye className="w-3 h-3 sm:w-4 sm:h-4" />
-                          <span>View CV</span>
+                          {
+                            isCvVisible ?
+                              (
+                                <div className='w-max flex flex-row items-center justify-center'>
+                                  <EyeClosed className="w-3 h-3 mx-2 sm:w-4 sm:h-4" />
+                                  <span>Close View</span>
+                                </div>
+                              ) :
+                              (
+                                <div className='w-max flex flex-row items-center justify-center'>
+                                  <Eye className="w-3 h-3 mx-2 sm:w-4 sm:h-4" />
+                                  <span>View CV</span>
+                                </div>
+                              )
+                          }
                         </button>
                         <button
                           onClick={() => handleDownload('cv')}
@@ -292,6 +314,11 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
                     )
                   }
                 </div>
+
+                <div
+                  id='view-cv-section'
+                  className='border border-gray-200 rounded-lg p-10 m-5 hidden'
+                />
               </div>
 
               {/* Cover Letter Section */}
