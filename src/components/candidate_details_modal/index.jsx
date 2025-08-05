@@ -112,16 +112,18 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
     }
   };
 
+  const handleClose = () => {
+    setActiveTab("overview");
+    onClose();
+  }
+
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex items-end justify-center min-h-screen px-2 sm:px-4 pt-4 pb-4 sm:pb-20 text-center sm:block sm:p-0">
         {/* Background overlay */}
         <div
           className="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75"
-          onClick={() => {
-            setActiveTab("overview");
-            onClose();
-          }}
+          onClick={handleClose}
         ></div>
 
         {/* Modal panel */}
@@ -146,10 +148,7 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
               </div>
             </div>
             <button
-              onClick={() => {
-                setActiveTab("overview");
-                onClose();
-              }}
+              onClick={handleClose}
               className="text-gray-400 hover:text-gray-600 transition-colors self-start sm:self-auto"
             >
               <X className="w-5 h-5 sm:w-6 sm:h-6" />
@@ -363,10 +362,7 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
           {/* Footer Actions */}
           <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3 mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-gray-200">
             <button
-              onClick={() => {
-                setActiveTab("overview");
-                onClose();
-              }}
+              onClick={handleClose}
               className="w-full sm:w-auto px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
             >
               Close
