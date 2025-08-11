@@ -3,7 +3,7 @@ export const CustomTooltip = ({ active, payload, label, type }) => {
     return (
       <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
         <p className="font-semibold text-gray-800">{label}</p>
-        <p className="text-blue-600">
+        <p className="text-[#a10808]">
           {`${type || "Users"}: ${payload[0].value}`}
         </p>
       </div>

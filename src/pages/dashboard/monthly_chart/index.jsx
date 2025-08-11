@@ -58,9 +58,9 @@ export const MonthlyChart = () => {
           <Line
             type="monotone"
             dataKey="users"
-            stroke="#3b82f6"
+            stroke="#a10808"
             strokeWidth={3}
-            dot={{ fill: '#3b82f6', strokeWidth: 2, r: 5 }}
+            dot={{ fill: '#a10808', strokeWidth: 2, r: 5 }}
           />
         </LineChart>
       </ResponsiveContainer>

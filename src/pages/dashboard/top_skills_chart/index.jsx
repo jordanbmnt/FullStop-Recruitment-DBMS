@@ -60,7 +60,7 @@ export const TopSkillsChart = () => {
           <Tooltip content={<CustomTooltip />} />
           <Bar
             dataKey="count"
-            fill="#3b82f6"
+            fill="#a10808"
             radius={[4, 4, 0, 0]}
           />
         </BarChart>
