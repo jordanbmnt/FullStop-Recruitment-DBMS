@@ -1,16 +1,15 @@
 import { Outlet } from "react-router-dom";
-import darkModeLogo from "../../assets/logos/darkModeLogoEmblem.png";
 import { useState } from "react";
-import { UserMenu } from "./user_menu";
 import { Sidebar } from "./sidebar";
-import { MenuIcon } from "lucide-react";
+// import { MenuIcon } from "lucide-react";
+import { STYLES } from "../../constants/styles";
 
 const DashboardSidebar = () => {
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);
 
   return (
-    <div>
-      <nav className='fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700'>
+    <div className={`${STYLES.dark.background.primary}`}>
+      {/* <nav className='fixed top-0 z-50'>
         <div className='px-3 py-3 lg:px-5 lg:pl-3'>
           <div className='flex items-center justify-between'>
             <div className='flex items-center justify-start rtl:justify-end'>
@@ -25,30 +24,14 @@ const DashboardSidebar = () => {
                 <span className='sr-only'>Open sidebar</span>
                 <MenuIcon />
               </button>
-              <a href='/' className='flex ms-2 md:me-24'>
-                <img
-                  src={darkModeLogo}
-                  className='h-10 me-3'
-                  alt='Fullstop Recruitment Logo'
-                />
-                <span style={{
-                  fontFamily: "EB Garamond",
-                  fontOpticalSizing: "auto",
-                  fontWeight: 500,
-                  fontStyle: "normal",
-                }} className='self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white'>
-                  Fullstop Recruitment
-                </span>
-              </a>
             </div>
-            <UserMenu />
           </div>
         </div>
-      </nav >
+      </nav > */}
 
-      <Sidebar isSideBarOpen={isSideBarOpen} setIsSideBarOpen={setIsSideBarOpen}/>
+      <Sidebar isSideBarOpen={isSideBarOpen} setIsSideBarOpen={setIsSideBarOpen} />
 
-      <div className='p-4 sm:ml-64 mt-16'>
+      <div className={`p-4 sm:ml-64 mt-0 ${STYLES.dark.background.primary}`}>
         <Outlet />
       </div>
     </div >
