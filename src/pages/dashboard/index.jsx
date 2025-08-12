@@ -3,7 +3,8 @@ import { OverviewLoadingBlock } from './overview_loading_block';
 import { MonthlyChart } from './monthly_chart';
 import { CategoryChart } from './category_chart';
 import { TopSkillsChart } from './top_skills_chart';
-import { SearchBar } from './search_bar';
+import { DashboardHeader } from './dashboard_header';
+import { STYLES } from '../../constants/styles';
 
 const categoryDataGenerator = (applicantData) => {
   const fieldCounts = {};
@@ -119,8 +120,8 @@ export const Dashboard = () => {
   }, []);
 
   return (
-    <div className="min-h-screen">
-      <SearchBar />
+    <div className={`min-h-screen ${STYLES.dark.background.primary}`}>
+      <DashboardHeader />
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

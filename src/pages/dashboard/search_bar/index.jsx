@@ -88,7 +88,6 @@ export const SearchBar = () => {
     else if (nextIncrement > searchQueryMaxLength && searchQueryLimit !== searchQueryMaxLength) setSearchQueryLimit(searchQueryMaxLength)
   }
 
-
   const handleSearch = (event) => {
     if (event.code === "Enter" || event.type === "click") {
       setIsSearching(false);
@@ -133,10 +132,8 @@ export const SearchBar = () => {
   const hasActiveFilters = fieldInput || skillsInput || minExperience || maxExperience || selectedStatus;
 
   return (
-    <div className="mx-auto p-6">
+    <div className="mx-auto p-6 pt-0 mt-6">
       <div className="bg-white rounded-xl shadow-lg p-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">Find the Perfect Candidate</h1>
-
         {/* Main Search Bar */}
         <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 mb-6"
         // onMouseLeave={() => {
