@@ -4,6 +4,7 @@ import { SearchResult } from '../search_result';
 import CandidateDetailsModal from '../../../components/candidate_details_modal';
 import { Skeleton } from '../../../components/skeleton';
 import { FIELDS, STATUSES } from '../../../helpers/constants';
+import { STYLES } from '../../../constants/styles';
 
 export const SearchBar = () => {
   const [searchQueryTerm, setSearchQueryTerm] = useState('');
@@ -132,81 +133,66 @@ export const SearchBar = () => {
   const hasActiveFilters = fieldInput || skillsInput || minExperience || maxExperience || selectedStatus;
 
   return (
-    <div className="mx-auto p-6 pt-0 mt-6">
-      <div className="bg-white rounded-xl shadow-lg p-8">
+    <div className="mx-auto p-6 pt-0 mt-0">
+      <div className={`${STYLES.dark.background.primary} rounded-xl shadow-lg p-8`}>
         {/* Main Search Bar */}
-        <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 mb-6"
-        // onMouseLeave={() => {
-        //   if (!searchResult &&
-        //     !searchQueryTerm &&
-        //     !showFilters &&
-        //     !fieldInput &&
-        //     !skillsInput &&
-        //     !minExperience &&
-        //     !maxExperience &&
-        //     !selectedStatus &&
-        //     !showFilters
-        //   ) {
-        //     setSearchQuery(null);
-        //     setSearchResult(null);
-        //   }
-        // }}
-        >
-          <div className="relative flex-1 w-full">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-50">
-              <Search className="h-5 w-5 text-gray-400" />
-            </div>
+        <div className="flex-row items-center justify-around space-y-6">
+          <div className={`w-[90%] m-auto flex justify-center items-center ${STYLES.dark.background.tertiary} ${STYLES.dark.border.medium} rounded-xl px-5 py-3 space-x-4`}>
+            <Search className="h-5 w-5 text-gray-300" />
             <input
               type="text"
               value={searchQueryTerm}
               onChange={(e) => setSearchQueryTerm(e.target.value)}
               onKeyDownCapture={(e) => handleSearch(e)}
               placeholder="Search by name, or email..."
-              className="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm text-gray-900 placeholder-gray-500 transition-all duration-200"
+              className={`block w-full pl-6 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] ${STYLES.dark.background.tertiary} focus:border-[${STYLES.dark.accent.color}] backdrop-blur-sm ${STYLES.dark.text.primary} border-transparent placeholder-gray-500 transition-all duration-200`}
             />
           </div>
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 ${showFilters ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-          >
-            <Filter className="h-5 w-5" />
-            <span>Filters</span>
-            <ChevronDown className={`h-4 w-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
-          </button>
-          <button
-            onClick={() => {
-              if (searchResult &&
-                !searchQueryTerm &&
-                !fieldInput &&
-                !skillsInput &&
-                !minExperience &&
-                !maxExperience &&
-                !selectedStatus) {
-                setSearchResult(null);
-                setSearchQueryParams(null);
-              } else {
-                handleSearch({ code: "Enter" });
+          <div className="w-full flex flex-row justify-around">
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 justify-center ${showFilters ?
+                `border-4 border-gray-200 bg-[${STYLES.dark.accent.color}] text-gray-200 ${STYLES.dark.accent.red}` :
+                `bg-gray-200 border-4 border-[${STYLES.dark.accent.color}] text-[${STYLES.dark.accent.color}] hover:bg-gray-100`} w-[200px] hover:shadow-md hover:scale-105 transition-all duration-300`}
+            >
+              <Filter className="h-5 w-5" />
+              <span>Filters</span>
+              <ChevronDown className={`h-4 w-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
+            </button>
+            <button
+              onClick={() => {
+                if (searchResult &&
+                  !searchQueryTerm &&
+                  !fieldInput &&
+                  !skillsInput &&
+                  !minExperience &&
+                  !maxExperience &&
+                  !selectedStatus) {
+                  setSearchResult(null);
+                  setSearchQueryParams(null);
+                } else {
+                  handleSearch({ code: "Enter" });
+                }
+              }}
+              className={`px-8 py-3 bg-[${STYLES.dark.accent.color}] text-white rounded-lg hover:bg-[${STYLES.dark.accent.red}] focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:outline-none font-medium hover:shadow-md hover:scale-105 transition-all duration-300 w-[200px]`}
+            >
+              {
+                searchResult &&
+                  !searchQueryTerm &&
+                  !fieldInput &&
+                  !skillsInput &&
+                  !minExperience &&
+                  !maxExperience &&
+                  !selectedStatus ?
+                  'Clear Results' : 'Search'
               }
-            }}
-            className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none font-medium hover:shadow-md hover:scale-105 transition-all duration-300"
-          >
-            {
-              searchResult &&
-                !searchQueryTerm &&
-                !fieldInput &&
-                !skillsInput &&
-                !minExperience &&
-                !maxExperience &&
-                !selectedStatus ?
-                'Clear Results' : 'Search'
-            }
-          </button>
+            </button>
+          </div>
         </div>
 
         {/* Filters Section */}
         {showFilters && (
-          <div className="bg-gray-50 rounded-lg p-6 mb-6 border border-gray-200">
+          <div className="bg-gray-50 rounded-lg p-6 mb-6 border border-gray-200 mt-6">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-gray-900">Advanced Filters</h3>
               {hasActiveFilters && (
