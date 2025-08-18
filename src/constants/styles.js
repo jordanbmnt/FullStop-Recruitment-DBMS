@@ -4,7 +4,8 @@ export const STYLES = {
       primary: "bg-[#131517]",
       secondary: "bg-[#1A1C20]",
       tertiary: "bg-[#202226]",
-      darkest: "bg-[#0F0F11]"
+      darkest: "bg-[#0F0F11]",
+      "sidebar-gradient": "bg-gradient-to-r from-[#1a1c20] to-[#131517]"
     },
     accent: {
       secondary: "bg-[#3F4148] hover:bg-[#4A4C52] active:bg-[#2C2E33]",
@@ -23,7 +24,7 @@ export const STYLES = {
     },
     border: {
       light: "border-[#2C2E33] hover:border-[#3A3C42]",
-      medium: "border-[#3A3C42] hover:border-[#4A4C52]",
+      medium: "border-[#3f4148] hover:border-[#4A4C52]",
       strong: "border-[#4A4C52] hover:border-[#5A5C62]"
     },
     shadow: {
