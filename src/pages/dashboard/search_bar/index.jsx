@@ -152,7 +152,7 @@ export const SearchBar = () => {
             <button
               onClick={() => setShowFilters(!showFilters)}
               className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 justify-center ${showFilters ?
-                `border-4 border-gray-200 bg-[${STYLES.dark.accent.color}] text-gray-200 ${STYLES.dark.accent.red}` :
+                `border-2 border-gray-200 bg-[${STYLES.dark.accent.color}] text-gray-200 ${STYLES.dark.accent.red}` :
                 `bg-gray-200 border-4 border-[${STYLES.dark.accent.color}] text-[${STYLES.dark.accent.color}] hover:bg-gray-100`} w-[200px] hover:shadow-md hover:scale-105 transition-all duration-300`}
             >
               <Filter className="h-5 w-5" />
