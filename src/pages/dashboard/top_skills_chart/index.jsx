@@ -3,6 +3,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { OverviewLoadingBlock } from '../overview_loading_block';
 import { ChartHeader } from '../../../components/chart_header';
 import { CustomTooltip } from '../../../components/custom_tooltip';
+import { STYLES } from '../../../constants/styles';
 
 export const TopSkillsChart = () => {
 
@@ -31,7 +32,7 @@ export const TopSkillsChart = () => {
 
   return isSearching ? (<OverviewLoadingBlock />) : (
     //TODO: the padding bottom is not dynamic
-    <div className="w-full p-4 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200/50 hover:shadow-xl h-[460px] pb-20">
+    <div className={`w-full p-4 ${STYLES.dark.background.secondary} backdrop-blur-sm rounded-xl shadow-lg border ${STYLES.dark.border.medium} hover:shadow-xl h-[460px] pb-20`}>
       <ChartHeader title={"Top Skills by Frequency"} description={"Most common skills across all users"} />
 
       <ResponsiveContainer width="100%" height="100%">
@@ -60,7 +61,7 @@ export const TopSkillsChart = () => {
           <Tooltip content={<CustomTooltip />} />
           <Bar
             dataKey="count"
-            fill="#a10808"
+            fill={STYLES.dark.accent.color}
             radius={[4, 4, 0, 0]}
           />
         </BarChart>
