@@ -11,13 +11,13 @@ export const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }) => {
     <aside
       id='logo-sidebar'
       className={`
-        fixed top-0 left-0 z-40 w-64 h-screen pt-20 border-r 
+        fixed top-0 left-0 z-40 w-content pr-6 h-screen m-auto border-r 
         ${isSideBarOpen ?
           "" :
           "sm:translate-x-0 transition-transform -translate-x-full"} ${STYLES.dark.background["sidebar-gradient"]} ${STYLES.dark.border.medium}`}
       aria-label='Sidebar'
     >
-      <div className='h-full px-3 pb-4 overflow-y-auto'>
+      <div className='flex h-full px-3 pb-4 overflow-y-auto items-center justify-start'>
         <ul className='space-y-2 font-medium'>
           <li>
             <Link
