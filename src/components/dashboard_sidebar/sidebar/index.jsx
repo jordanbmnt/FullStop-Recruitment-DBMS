@@ -1,11 +1,20 @@
 import { CheckCircleIcon, LayoutDashboardIcon, PenSquareIcon, SaveAllIcon, UserPenIcon } from "lucide-react"
 import { Link } from "react-router-dom"
 import { STYLES } from "../../../constants/styles"
+import { useState } from "react";
 
 export const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }) => {
-  const iconStyle = 'shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white';
+  const iconStyle = 'shrink-0 w-5 h-5 transition duration-75';
   const linkStyle = 'flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group';
   const spanStyle = 'flex-1 ms-3 whitespace-nowrap';
+  const [activeLink, setActiveLink] = useState('Dashboard');
+  const [DASHBOARD, USER_REVIEW, CONFIG_USERS, USER_MAN, EXPORT_DATA] = [
+    "Dashboard",
+    "User Reviews",
+    "Configure Users",
+    "User Management",
+    "Export Data"
+  ];
 
   return (
     <aside
@@ -21,52 +30,67 @@ export const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }) => {
         <ul className='space-y-2 font-medium'>
           <li>
             <Link
-              onClick={() => { setIsSideBarOpen(false) }}
+              onClick={() => {
+                setIsSideBarOpen(false)
+                setActiveLink(DASHBOARD)
+              }}
               to='/'
               className={linkStyle}
             >
-              <LayoutDashboardIcon className={iconStyle} />
-              <span className={spanStyle}>Dashboard</span>
+              <LayoutDashboardIcon color={activeLink === DASHBOARD ? STYLES.dark.accent.color : "grey"} className={iconStyle} />
+              <span className={spanStyle}>{DASHBOARD}</span>
             </Link>
           </li>
           <li>
             <Link
-              onClick={() => { setIsSideBarOpen(false) }}
+              onClick={() => {
+                setIsSideBarOpen(false)
+                setActiveLink(USER_REVIEW)
+              }}
               to='/'
               className={linkStyle}
             >
-              <CheckCircleIcon className={iconStyle} />
-              <span className={spanStyle}>User Reviews</span>
+              <CheckCircleIcon color={activeLink === USER_REVIEW ? STYLES.dark.accent.color : "grey"} className={iconStyle} />
+              <span className={spanStyle}>{USER_REVIEW}</span>
             </Link>
           </li>
           <li>
             <Link
               to='/cv-link'
-              onClick={() => { setIsSideBarOpen(false) }}
+              onClick={() => {
+                setIsSideBarOpen(false)
+                setActiveLink(CONFIG_USERS)
+              }}
               className={linkStyle}
             >
-              <PenSquareIcon className={iconStyle} />
-              <span className={spanStyle}>Configure Users</span>
+              <PenSquareIcon color={activeLink === CONFIG_USERS ? STYLES.dark.accent.color : "grey"} className={iconStyle} />
+              <span className={spanStyle}>{CONFIG_USERS}</span>
             </Link>
           </li>
           <li>
             <Link
-              onClick={() => { setIsSideBarOpen(false) }}
+              onClick={() => {
+                setIsSideBarOpen(false)
+                setActiveLink(USER_MAN)
+              }}
               to='/'
               className={linkStyle}
             >
-              <UserPenIcon className={iconStyle} />
-              <span className={spanStyle}>User Management</span>
+              <UserPenIcon color={activeLink === USER_MAN ? STYLES.dark.accent.color : "grey"} className={iconStyle} />
+              <span className={spanStyle}>{USER_MAN}</span>
             </Link>
           </li>
           <li>
             <Link
-              onClick={() => { setIsSideBarOpen(false) }}
+              onClick={() => {
+                setIsSideBarOpen(false)
+                setActiveLink(EXPORT_DATA)
+              }}
               to='/'
               className={linkStyle}
             >
-              <SaveAllIcon className={iconStyle} />
-              <span className={spanStyle}>Export Data</span>
+              <SaveAllIcon color={activeLink === EXPORT_DATA ? STYLES.dark.accent.color : "grey"} className={iconStyle} />
+              <span className={spanStyle}>{EXPORT_DATA}</span>
             </Link>
           </li>
         </ul>
