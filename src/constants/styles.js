@@ -9,7 +9,8 @@ export const STYLES = {
     },
     accent: {
       secondary: "bg-[#3F4148] hover:bg-[#4A4C52] active:bg-[#2C2E33]",
-      red: "bg-[#a10808] hover:bg-red-700 active:bg-red-800"
+      red: "bg-[#a10808] hover:bg-red-700 active:bg-red-800",
+      color: "[#a10808]"
     },
     text: {
       primary: "text-white hover:text-gray-200 active:text-gray-300",
