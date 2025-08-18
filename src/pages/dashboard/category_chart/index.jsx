@@ -1,8 +1,9 @@
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { ChartHeader } from "../../../components/chart_header";
+import { STYLES } from "../../../constants/styles";
 
 export const CategoryChart = ({ data }) => (
-  <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200/50 p-6 hover:shadow-xl transition-all duration-300">
+  <div className={`${STYLES.dark.background.secondary} backdrop-blur-sm rounded-xl shadow-lg border ${STYLES.dark.border.medium} p-6 hover:shadow-xl transition-all duration-300`}>
     <ChartHeader title={`Career Type Overview`} description={"Most common careers across all users"} badge={`Total: ${data.length}`} />
 
     <ResponsiveContainer width="100%" height={300}>
