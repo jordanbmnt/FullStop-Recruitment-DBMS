@@ -1,7 +1,6 @@
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
 import { ChartHeader } from "../../../components/chart_header";
 import { STYLES } from "../../../constants/styles";
-import { CustomTooltip } from "../../../components/custom_tooltip";
 
 export const CategoryChart = ({ data }) => (
   <div className={`${STYLES.dark.background.secondary} backdrop-blur-sm rounded-xl shadow-lg border ${STYLES.dark.border.medium} p-6 hover:shadow-xl transition-all duration-300`}>
@@ -22,7 +21,7 @@ export const CategoryChart = ({ data }) => (
             <Cell key={`cell-${index}`} fill={entry.color} />
           ))}
         </Pie>
-        <Tooltip content={<CustomTooltip />} />
+        <Tooltip />
       </PieChart>
     </ResponsiveContainer>
     <div className="flex space-x-4 mt-4 m-w-max overflow-x-scroll scroll-px-50">
