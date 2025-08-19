@@ -52,11 +52,11 @@ export const TopSkillsChart = () => {
             textAnchor="end"
             height={80}
             fontSize={12}
-            stroke="#666"
+            stroke="#b8b6b6"
           />
           <YAxis
             fontSize={12}
-            stroke="#666"
+            stroke="#b8b6b6"
           />
           <Tooltip content={<CustomTooltip />} />
           <Bar

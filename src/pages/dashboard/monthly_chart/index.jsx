@@ -53,8 +53,8 @@ export const MonthlyChart = () => {
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={monthlyUsers}>
           <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-          <XAxis dataKey="month" stroke="#64748b" />
-          <YAxis stroke="#64748b" />
+          <XAxis dataKey="month" stroke="#b8b6b6" />
+          <YAxis stroke="#b8b6b6" />
           <Tooltip content={<CustomTooltip />} />
           <Line
             type="monotone"
