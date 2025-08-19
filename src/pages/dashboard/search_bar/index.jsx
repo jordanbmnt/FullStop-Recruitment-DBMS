@@ -221,17 +221,17 @@ export const SearchBar = () => {
                 !searchResult && !isSearching ?
                   (
                     /* No Results State */
-                    <div className="bg-white rounded-lg border border-gray-200 p-8 text-center animate-in fade-in-0 zoom-in-95 duration-500 delay-300 ease-out">
-                      <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center rounded-full bg-gray-100 animate-in fade-in-0 scale-in-0 duration-300 delay-600">
+                    <div className={`${STYLES.dark.background.darkest} rounded-lg border ${STYLES.dark.border.strong} p-8 text-center animate-in fade-in-0 zoom-in-95 duration-500 delay-300 ease-out`}>
+                      <div className={`w-12 h-12 mx-auto mb-4 flex items-center justify-center rounded-full ${STYLES.dark.background.tertiary} animate-in fade-in-0 scale-in-0 duration-300 delay-600`}>
                         <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                       </div>
                       <div className="animate-in fade-in-0 slide-in-from-bottom-2 duration-400 delay-700 ease-out">
-                        <h3 className="text-lg font-medium text-gray-900 mb-2">
+                        <h3 className="text-lg font-medium text-gray-200 mb-2">
                           No users found
                         </h3>
-                        <p className="text-sm text-gray-500 mb-4">
+                        <p className="text-sm text-gray-400 mb-4">
                           We couldn't find any users matching "{searchQuery}". Try adjusting your search terms.
                         </p>
                       </div>
@@ -248,7 +248,7 @@ export const SearchBar = () => {
                         {/* Results Header */}
                         <div className="flex items-center justify-between animate-in fade-in-0 slide-in-from-top-1 duration-400 delay-200 ease-out">
                           <div>
-                            <h2 className="text-lg font-semibold text-gray-900">
+                            <h2 className="text-lg font-semibold text-gray-200">
                               Search Results
                             </h2>
                             <p className="text-sm text-gray-600 mt-1">
@@ -279,7 +279,7 @@ export const SearchBar = () => {
                         {/* Load More Section */}
                         {searchResult.length > 0 && (
                           <div
-                            className="pt-6 border-t border-gray-200 animate-in fade-in-0 slide-in-from-bottom-2 duration-400 ease-out"
+                            className={`pt-6 border-t ${STYLES.dark.border.light} animate-in fade-in-0 slide-in-from-bottom-2 duration-400 ease-out`}
                             style={{
                               animationDelay: `${400 + searchResult.length * 100}ms`,
                               animationFillMode: 'both'
@@ -293,14 +293,14 @@ export const SearchBar = () => {
                                 }}
                                 disabled={searchQueryLimit === searchQueryMaxLength}
                                 onClick={() => { handleShowMore() }}
-                                className={`group inline-flex items-center px-6 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md bg-white ${searchQueryLimit === searchQueryMaxLength ? 'text-gray-100' : `text-gray-700 hover:bg-gray-50 hover:shadow-md hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[${STYLES.dark.accent.color}] transition-all duration-900 ease-out`}`}
+                                className={`group inline-flex items-center px-6 py-2 border ${STYLES.dark.border.medium} shadow-sm text-sm font-medium rounded-md ${STYLES.dark.background.secondary} ${searchQueryLimit === searchQueryMaxLength ? 'text-gray-400' : `text-gray-400 hover:bg-gray-800 hover:shadow-md hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[${STYLES.dark.accent.color}] transition-all duration-900 ease-out`}`}
                               >
                                 <svg className="w-4 h-4 mr-2 transition-transform duration-200 group-hover:translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                 </svg>
                                 Show More Results
                               </button>
-                              <p className="text-xs text-gray-500 mt-2">
+                              <p className="text-xs text-gray-400 mt-2">
                                 Showing {searchResult.length} results of {searchQueryMaxLength}
                               </p>
                             </div>
