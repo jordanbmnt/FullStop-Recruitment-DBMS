@@ -1,3 +1,5 @@
+import { STYLES } from "../../../constants/styles";
+
 export const TabNavigation = ({ setActiveTab, candidate, getData, activeTab }) => {
 
   return (
@@ -5,8 +7,8 @@ export const TabNavigation = ({ setActiveTab, candidate, getData, activeTab }) =
       <button
         onClick={() => setActiveTab('overview')}
         className={`flex-1 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-colors ${activeTab === 'overview'
-          ? 'bg-white text-blue-600 shadow-sm'
-          : 'text-gray-600 hover:text-gray-900'
+          ? `${STYLES.dark.background.tertiary} text-[${STYLES.dark.accent.color}] shadow-sm`
+          : 'text-gray-400 hover:text-gray-900'
           }`}
       >
         Overview
@@ -21,8 +23,8 @@ export const TabNavigation = ({ setActiveTab, candidate, getData, activeTab }) =
           }
         }}
         className={`flex-1 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-colors ${activeTab === 'details'
-          ? 'bg-white text-blue-600 shadow-sm'
-          : 'text-gray-600 hover:text-gray-900'
+          ? `${STYLES.dark.background.tertiary} text-[${STYLES.dark.accent.color}] shadow-sm`
+          : 'text-gray-400 hover:text-gray-900'
           }`}
       >
         Details

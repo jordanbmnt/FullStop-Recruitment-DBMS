@@ -87,7 +87,7 @@ export const DetailsTab = ({ candidate, isFetching,
                   onClick={() => handleDownload('cv')}
                   className={`flex items-center justify-center space-x-2 px-3 py-2 text-xs sm:text-sm font-medium ${isFetching ?
                     `text-gray-100 ${STYLES.dark.background.tertiary}` :
-                    `text-gray-50 ${STYLES.dark.background.tertiary} hover:bg-gray-900`
+                    `text-gray-50 ${STYLES.dark.background.tertiary} hover:bg-black hover:${STYLES.dark.border.medium}`
                     } rounded-md transition-colors`}
                 >
                   <Download className="w-3 h-3 sm:w-4 sm:h-4" />
