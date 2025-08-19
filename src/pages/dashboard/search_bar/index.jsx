@@ -134,10 +134,10 @@ export const SearchBar = () => {
 
   return (
     <div className="mx-auto p-6 pt-0 mt-0">
-      <div className={`${STYLES.dark.background.primary} rounded-xl shadow-lg p-8`}>
+      <div className={`${STYLES.dark.background.primary} rounded-xl p-8`}>
         {/* Main Search Bar */}
         <div className="flex-row items-center justify-around space-y-6">
-          <div className={`w-[90%] m-auto flex justify-center items-center ${STYLES.dark.background.tertiary} ${STYLES.dark.border.medium} rounded-xl px-5 py-3 space-x-4`}>
+          <div className={`w-[90%] m-auto flex justify-center items-center ${STYLES.dark.background.tertiary} ${STYLES.dark.border.medium} rounded-xl px-5 py-3 space-x-4 shadow-lg`}>
             <Search className="h-5 w-5 text-gray-300" />
             <input
               type="text"
@@ -153,7 +153,7 @@ export const SearchBar = () => {
               onClick={() => setShowFilters(!showFilters)}
               className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 justify-center ${showFilters ?
                 `border-2 border-gray-200 bg-[${STYLES.dark.accent.color}] text-gray-200 ${STYLES.dark.accent.red}` :
-                `bg-gray-200 border-4 border-[${STYLES.dark.accent.color}] text-[${STYLES.dark.accent.color}] hover:bg-gray-100`} w-[200px] hover:shadow-md hover:scale-105 transition-all duration-300`}
+                `bg-gray-200 border-4 border-[${STYLES.dark.accent.color}] text-[${STYLES.dark.accent.color}] hover:bg-gray-100`} w-[200px] hover:shadow-md hover:scale-105 transition-all duration-300 shadow-lg`}
             >
               <Filter className="h-5 w-5" />
               <span>Filters</span>
@@ -174,7 +174,7 @@ export const SearchBar = () => {
                   handleSearch({ code: "Enter" });
                 }
               }}
-              className={`px-8 py-3 bg-[${STYLES.dark.accent.color}] text-white rounded-lg hover:bg-[${STYLES.dark.accent.red}] focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:outline-none font-medium hover:shadow-md hover:scale-105 transition-all duration-300 w-[200px]`}
+              className={`px-8 py-3 bg-[${STYLES.dark.accent.color}] text-white rounded-lg hover:bg-[${STYLES.dark.accent.red}] focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:outline-none font-medium hover:shadow-md hover:scale-105 transition-all duration-300 w-[200px] shadow-lg`}
             >
               {
                 searchResult &&
