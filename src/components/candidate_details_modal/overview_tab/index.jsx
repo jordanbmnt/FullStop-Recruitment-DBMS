@@ -1,5 +1,6 @@
 import { Briefcase, Calendar, Phone } from "lucide-react";
 import { dateFormat } from "../../../helpers/dateFormat";
+import { STYLES } from "../../../constants/styles";
 
 export const OverViewTab = ({ candidate }) => {
 
@@ -11,15 +12,15 @@ export const OverViewTab = ({ candidate }) => {
           <div className="flex items-start sm:items-center space-x-3">
             <Briefcase className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 mt-0.5 sm:mt-0 flex-shrink-0" />
             <div className="min-w-0">
-              <p className="text-xs sm:text-sm text-gray-500">Field of Expertise</p>
-              <p className="font-medium text-gray-900 text-sm sm:text-base break-words">{candidate.field}</p>
+              <p className="text-xs sm:text-sm text-gray-300">Field of Expertise</p>
+              <p className="font-medium text-gray-100 text-sm sm:text-base break-words">{candidate.field}</p>
             </div>
           </div>
           <div className="flex items-start sm:items-center space-x-3">
             <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 mt-0.5 sm:mt-0 flex-shrink-0" />
             <div>
-              <p className="text-xs sm:text-sm text-gray-500">Years of Experience</p>
-              <p className="font-medium text-gray-900 text-sm sm:text-base">{candidate.yearsOfXp} years</p>
+              <p className="text-xs sm:text-sm text-gray-300">Years of Experience</p>
+              <p className="font-medium text-gray-100 text-sm sm:text-base">{candidate.yearsOfXp} years</p>
             </div>
           </div>
         </div>
@@ -28,16 +29,16 @@ export const OverViewTab = ({ candidate }) => {
             <div className="flex items-start sm:items-center space-x-3">
               <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 mt-0.5 sm:mt-0 flex-shrink-0" />
               <div className="min-w-0">
-                <p className="text-xs sm:text-sm text-gray-500">Phone</p>
-                <p className="font-medium text-gray-900 text-sm sm:text-base break-all">{candidate.phone}</p>
+                <p className="text-xs sm:text-sm text-gray-300">Phone</p>
+                <p className="font-medium text-gray-100 text-sm sm:text-base break-all">{candidate.phone}</p>
               </div>
             </div>
           )}
           <div className="flex items-start sm:items-center space-x-3">
             <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 mt-0.5 sm:mt-0 flex-shrink-0" />
             <div>
-              <p className="text-xs sm:text-sm text-gray-500">Last Updated</p>
-              <p className="font-medium text-gray-900 text-sm sm:text-base">{dateFormat(candidate.lastUpdated, 'dd m yyyy')}</p>
+              <p className="text-xs sm:text-sm text-gray-300">Last Updated</p>
+              <p className="font-medium text-gray-100 text-sm sm:text-base">{dateFormat(candidate.lastUpdated, 'dd m yyyy')}</p>
             </div>
           </div>
         </div>
@@ -45,19 +46,19 @@ export const OverViewTab = ({ candidate }) => {
 
       {candidate.summary && (
         <div>
-          <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 sm:mb-3">Professional Summary</h3>
-          <p className="text-gray-700 leading-relaxed text-sm sm:text-base">{candidate.summary}</p>
+          <h3 className="text-base sm:text-lg font-semibold text-gray-100 mb-2 sm:mb-3">Professional Summary</h3>
+          <p className="text-gray-400 leading-relaxed text-sm sm:text-base">{candidate.summary}</p>
         </div>
       )}
 
       {candidate.skills && (
         <div>
-          <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-2 sm:mb-3">Key Skills</h3>
+          <h3 className="text-base sm:text-lg font-semibold text-gray-100 mb-2 sm:mb-3">Key Skills</h3>
           <div className="flex flex-wrap gap-1.5 sm:gap-2">
             {candidate.skills.map((skill, index) => (
               <span
                 key={index}
-                className="px-2 sm:px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-xs sm:text-sm font-medium"
+                className={`px-2 sm:px-3 py-1 bg-red-50 text-[${STYLES.dark.accent.color}] rounded-full text-xs sm:text-sm font-medium`}
               >
                 {skill}
               </span>
