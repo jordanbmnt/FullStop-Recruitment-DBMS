@@ -197,16 +197,16 @@ export const SearchBar = () => {
 
         {/* Active Filters Summary */}
         {hasActiveFilters && (
-          <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-            <div className="flex items-center space-x-2 text-sm text-blue-800">
+          <div className="mb-6 p-4 bg-red-50 rounded-lg border border-red-200">
+            <div className={`flex items-center space-x-2 text-sm text-[${STYLES.dark.accent.color}]`}>
               <Filter className="h-4 w-4" />
               <span className="font-medium">Active Filters:</span>
               <div className="flex flex-wrap gap-2">
-                {fieldInput && <span className="bg-blue-200 px-2 py-1 rounded text-xs">Field: {fieldInput}</span>}
-                {selectedStatus && <span className="bg-blue-200 px-2 py-1 rounded text-xs">Status: {selectedStatus}</span>}
-                {skillsInput && <span className="bg-blue-200 px-2 py-1 rounded text-xs">Skills: {skillsInput}</span>}
-                {minExperience && <span className="bg-blue-200 px-2 py-1 rounded text-xs">Min: {minExperience}y</span>}
-                {maxExperience && <span className="bg-blue-200 px-2 py-1 rounded text-xs">Max: {maxExperience}y</span>}
+                {fieldInput && <span className="bg-red-200 px-2 py-1 rounded text-xs">Field: {fieldInput}</span>}
+                {selectedStatus && <span className="bg-red-200 px-2 py-1 rounded text-xs">Status: {selectedStatus}</span>}
+                {skillsInput && <span className="bg-red-200 px-2 py-1 rounded text-xs">Skills: {skillsInput}</span>}
+                {minExperience && <span className="bg-red-200 px-2 py-1 rounded text-xs">Min: {minExperience}y</span>}
+                {maxExperience && <span className="bg-red-200 px-2 py-1 rounded text-xs">Max: {maxExperience}y</span>}
               </div>
             </div>
           </div>
@@ -293,7 +293,7 @@ export const SearchBar = () => {
                                 }}
                                 disabled={searchQueryLimit === searchQueryMaxLength}
                                 onClick={() => { handleShowMore() }}
-                                className={`group inline-flex items-center px-6 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md bg-white ${searchQueryLimit === searchQueryMaxLength ? 'text-gray-100' : 'text-gray-700 hover:bg-gray-50 hover:shadow-md hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-900 ease-out'}`}
+                                className={`group inline-flex items-center px-6 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md bg-white ${searchQueryLimit === searchQueryMaxLength ? 'text-gray-100' : `text-gray-700 hover:bg-gray-50 hover:shadow-md hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[${STYLES.dark.accent.color}] transition-all duration-900 ease-out`}`}
                               >
                                 <svg className="w-4 h-4 mr-2 transition-transform duration-200 group-hover:translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
