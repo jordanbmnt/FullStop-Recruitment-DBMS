@@ -31,7 +31,7 @@ export const CategoryChart = ({ data }) => (
             className="w-3 h-3 rounded-full mr-2"
             style={{ backgroundColor: entry.color }}
           ></div>
-          <span className="text-sm text-gray-600">{entry.name} ({entry.value.toFixed(2)}%)</span>
+          <span className="text-sm text-gray-400">{entry.name} ({entry.value.toFixed(2)}%)</span>
         </div>
       ))}
     </div>
