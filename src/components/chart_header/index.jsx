@@ -1,3 +1,5 @@
+import { STYLES } from "../../constants/styles";
+
 export const ChartHeader = ({ title, description, badge }) => (
   <div className="mb-8">
     {
@@ -8,7 +10,7 @@ export const ChartHeader = ({ title, description, badge }) => (
               {title}
             </h3>
           </div>
-          <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium border flex-shrink-0 bg-gray-50 text-gray-200 border-gray-200 hover:shadow-md transition-all duration-300`}>
+          <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium border flex-shrink-0 ${STYLES.dark.background.darkest} text-gray-200 border-gray-200 hover:shadow-md transition-all duration-300`}>
             {badge}
           </span>
         </div>) :

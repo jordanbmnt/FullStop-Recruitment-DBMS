@@ -197,7 +197,7 @@ export const SearchBar = () => {
 
         {/* Active Filters Summary */}
         {hasActiveFilters && (
-          <div className="mb-6 p-4 bg-red-50 rounded-lg border border-red-200">
+          <div className="mb-6 mt-6 p-4 bg-red-50 rounded-lg border border-red-200">
             <div className={`flex items-center space-x-2 text-sm text-[${STYLES.dark.accent.color}]`}>
               <Filter className="h-4 w-4" />
               <span className="font-medium">Active Filters:</span>

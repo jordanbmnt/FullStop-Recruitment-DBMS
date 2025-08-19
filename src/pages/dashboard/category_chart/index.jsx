@@ -26,7 +26,7 @@ export const CategoryChart = ({ data }) => (
     </ResponsiveContainer>
     <div className="flex space-x-4 mt-4 m-w-max overflow-x-scroll scroll-px-50">
       {data.map((entry, index) => (
-        <div key={index} className="flex items-center justify-center min-w-max bg-white rounded-lg border border-gray-200 px-3 py-1">
+        <div key={index} className={`flex items-center justify-center min-w-max ${STYLES.dark.background.secondary} rounded-lg border border-gray-200 px-3 py-1 mb-4`}>
           <div
             className="w-3 h-3 rounded-full mr-2"
             style={{ backgroundColor: entry.color }}
