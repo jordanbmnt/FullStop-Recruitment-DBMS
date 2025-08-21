@@ -133,7 +133,7 @@ export const SearchBar = () => {
   const hasActiveFilters = fieldInput || skillsInput || minExperience || maxExperience || selectedStatus;
 
   return (
-    <div className="mx-auto p-6 pt-0 mt-0">
+    <div className={`mx-auto rounded-xl p-6 pt-0 mt-0 transition-all duration-300 ease-in-out border ${(searchQuery || searchQueryParams) ? `${STYLES.dark.background.secondary} shadow-xl ${STYLES.dark.border.strong}` : `${STYLES.dark.background.primary} shadow-none border-transparent`}`}>
       <div className={`${STYLES.dark.background.primary} rounded-xl p-8`}>
         {/* Main Search Bar */}
         <div className="flex-row items-center justify-around space-y-6">
