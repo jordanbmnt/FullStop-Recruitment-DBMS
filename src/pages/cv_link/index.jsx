@@ -219,10 +219,10 @@ const CvLink = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">
+        <h1 className="text-3xl font-bold text-gray-100 mb-2">
           Full Stop Recruitment CV Form
         </h1>
-        <p className="text-gray-600">
+        <p className="text-gray-200">
           Complete the steps below to submit your CV
         </p>
       </div>
@@ -245,14 +245,14 @@ const CvLink = () => {
             disabled={currentStep === 1}
             className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-200 ${currentStep === 1
               ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              : "bg-gray-200 text-gray-300 hover:bg-gray-300"
               }`}
           >
             <ChevronLeft className="w-5 h-5 mr-2" />
             Previous
           </button>
 
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-gray-300">
             {currentStep} of {totalSteps}
           </div>
 
