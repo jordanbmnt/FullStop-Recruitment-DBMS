@@ -26,6 +26,17 @@ export const SearchBar = () => {
   const [activeSearchResult, setActiveSearchResult] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
+  //Ternary Conditionals
+  const CONTAINER_STYLE = (searchQuery || searchQueryParams || showFilters) ? `${STYLES.dark.background.secondary} shadow-xl ${STYLES.dark.border.strong}` : `${STYLES.dark.background.primary} shadow-none border-transparent`;
+  const SEARCH_BAR_STYLE = (searchQuery || searchQueryParams || showFilters) ? STYLES.dark.background.darkest : STYLES.dark.background.tertiary;
+  const FILTER_BUTTON_STYLE = showFilters ? `border-2 border-gray-200 bg-[${STYLES.dark.accent.color}] text-gray-200 ${STYLES.dark.accent.red}` : `bg-gray-200 border-4 border-[${STYLES.dark.accent.color}] text-[${STYLES.dark.accent.color}] hover:bg-gray-100`;
+  const CHEVRON_STYLE = showFilters ? 'rotate-180' : '';
+  const SHOW_MORE_BUTTON_STYLE = searchQueryLimit === searchQueryMaxLength ? 'text-gray-400' : `text-gray-400 hover:bg-gray-800 hover:shadow-md hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[${STYLES.dark.accent.color}] transition-all duration-900 ease-out`;
+
+  // Conditionals
+  const ACTIVE_SEARCH = searchResult && !searchQueryTerm && !fieldInput && !skillsInput && !minExperience && !maxExperience && !selectedStatus;
+  const HAS_ACTIVE_FILTERS = fieldInput || skillsInput || minExperience || maxExperience || selectedStatus;
+
   const getData = () => {
     try {
       const ROOT_PARAM = "/.netlify/functions/get_cv_users";
@@ -130,14 +141,12 @@ export const SearchBar = () => {
     setSelectedStatus('');
   };
 
-  const hasActiveFilters = fieldInput || skillsInput || minExperience || maxExperience || selectedStatus;
-
   return (
-    <div className={`mx-auto rounded-xl p-6 pt-0 mt-0 transition-all duration-300 ease-in-out border ${(searchQuery || searchQueryParams) ? `${STYLES.dark.background.secondary} shadow-xl ${STYLES.dark.border.strong}` : `${STYLES.dark.background.primary} shadow-none border-transparent`}`}>
-      <div className={`${STYLES.dark.background.primary} rounded-xl p-8`}>
+    <div className={`mx-auto rounded-xl p-6 pt-0 mt-0 transition-all duration-300 ease-in-out border ${CONTAINER_STYLE}`}>
+      <div className={`bg-transparent rounded-xl p-8`}>
         {/* Main Search Bar */}
         <div className="flex-row items-center justify-around space-y-6">
-          <div className={`w-[90%] m-auto flex justify-center items-center ${STYLES.dark.background.tertiary} ${STYLES.dark.border.medium} rounded-xl px-5 py-3 space-x-4 shadow-lg`}>
+          <div className={`w-[90%] m-auto flex justify-center items-center ${SEARCH_BAR_STYLE} ${STYLES.dark.border.medium} rounded-xl px-5 py-3 space-x-4 shadow-lg`}>
             <Search className="h-5 w-5 text-gray-300" />
             <input
               type="text"
@@ -145,29 +154,21 @@ export const SearchBar = () => {
               onChange={(e) => setSearchQueryTerm(e.target.value)}
               onKeyDownCapture={(e) => handleSearch(e)}
               placeholder="Search by name, or email..."
-              className={`block w-full pl-6 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] ${STYLES.dark.background.tertiary} focus:border-[${STYLES.dark.accent.color}] backdrop-blur-sm ${STYLES.dark.text.primary} border-transparent placeholder-gray-500 transition-all duration-200`}
+              className={`block w-full pl-6 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] ${SEARCH_BAR_STYLE} focus:border-[${STYLES.dark.accent.color}] backdrop-blur-sm ${STYLES.dark.text.primary} border-transparent placeholder-gray-500`}
             />
           </div>
           <div className="w-full flex flex-row justify-around">
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 justify-center ${showFilters ?
-                `border-2 border-gray-200 bg-[${STYLES.dark.accent.color}] text-gray-200 ${STYLES.dark.accent.red}` :
-                `bg-gray-200 border-4 border-[${STYLES.dark.accent.color}] text-[${STYLES.dark.accent.color}] hover:bg-gray-100`} w-[200px] hover:shadow-md hover:scale-105 transition-all duration-300 shadow-lg`}
+              className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 justify-center ${FILTER_BUTTON_STYLE} w-[200px] hover:shadow-md hover:scale-105 transition-all duration-300 shadow-lg`}
             >
               <Filter className="h-5 w-5" />
               <span>Filters</span>
-              <ChevronDown className={`h-4 w-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`h-4 w-4 transition-transform ${CHEVRON_STYLE}`} />
             </button>
             <button
               onClick={() => {
-                if (searchResult &&
-                  !searchQueryTerm &&
-                  !fieldInput &&
-                  !skillsInput &&
-                  !minExperience &&
-                  !maxExperience &&
-                  !selectedStatus) {
+                if (ACTIVE_SEARCH) {
                   setSearchResult(null);
                   setSearchQueryParams(null);
                 } else {
@@ -176,27 +177,18 @@ export const SearchBar = () => {
               }}
               className={`px-8 py-3 bg-[${STYLES.dark.accent.color}] text-white rounded-lg hover:bg-[${STYLES.dark.accent.red}] focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:outline-none font-medium hover:shadow-md hover:scale-105 transition-all duration-300 w-[200px] shadow-lg`}
             >
-              {
-                searchResult &&
-                  !searchQueryTerm &&
-                  !fieldInput &&
-                  !skillsInput &&
-                  !minExperience &&
-                  !maxExperience &&
-                  !selectedStatus ?
-                  'Clear Results' : 'Search'
-              }
+              {ACTIVE_SEARCH ? 'Clear Results' : 'Search'}
             </button>
           </div>
         </div>
 
         {/* Filters Section */}
         {showFilters && (
-          <FilterComponent hasActiveFilters={hasActiveFilters} clearFilters={clearFilters} fieldInput={fieldInput} setFieldInput={setFieldInput} selectedStatus={selectedStatus} setSelectedStatus={setSelectedStatus} skillsInput={skillsInput} setSkillsInput={setSkillsInput} minExperience={minExperience} setMinExperience={setMinExperience} maxExperience={maxExperience} setMaxExperience={setMaxExperience} />
+          <FilterComponent hasActiveFilters={HAS_ACTIVE_FILTERS} clearFilters={clearFilters} fieldInput={fieldInput} setFieldInput={setFieldInput} selectedStatus={selectedStatus} setSelectedStatus={setSelectedStatus} skillsInput={skillsInput} setSkillsInput={setSkillsInput} minExperience={minExperience} setMinExperience={setMinExperience} maxExperience={maxExperience} setMaxExperience={setMaxExperience} />
         )}
 
         {/* Active Filters Summary */}
-        {hasActiveFilters && (
+        {HAS_ACTIVE_FILTERS && (
           <div className="mb-6 mt-6 p-4 bg-red-50 rounded-lg border border-red-200">
             <div className={`flex items-center space-x-2 text-sm text-[${STYLES.dark.accent.color}]`}>
               <Filter className="h-4 w-4" />
@@ -293,7 +285,7 @@ export const SearchBar = () => {
                                 }}
                                 disabled={searchQueryLimit === searchQueryMaxLength}
                                 onClick={() => { handleShowMore() }}
-                                className={`group inline-flex items-center px-6 py-2 border ${STYLES.dark.border.medium} shadow-sm text-sm font-medium rounded-md ${STYLES.dark.background.secondary} ${searchQueryLimit === searchQueryMaxLength ? 'text-gray-400' : `text-gray-400 hover:bg-gray-800 hover:shadow-md hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[${STYLES.dark.accent.color}] transition-all duration-900 ease-out`}`}
+                                className={`group inline-flex items-center px-6 py-2 border ${STYLES.dark.border.medium} shadow-sm text-sm font-medium rounded-md ${STYLES.dark.background.secondary} ${SHOW_MORE_BUTTON_STYLE}`}
                               >
                                 <svg className="w-4 h-4 mr-2 transition-transform duration-200 group-hover:translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
