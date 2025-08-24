@@ -9,6 +9,7 @@ import { JobSummaryForm } from "./job_summary_form";
 import { FormSummary } from "./form_summary";
 import { CvUploadOption } from "./cv_upload_option";
 import { ProgressBar } from "./progress_bar";
+import { STYLES } from '../../constants/styles';
 
 const CvLink = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -235,7 +236,7 @@ const CvLink = () => {
       }
 
       <div className="max-w-4xl mx-auto">
-        <div className="bg-white rounded-lg shadow-lg p-8 mb-8">
+        <div className={`${STYLES.dark.background.darkest} border ${STYLES.dark.border.strong} rounded-lg shadow-lg p-8 mb-8`}>
           {renderStepContent()}
         </div>
 
@@ -244,8 +245,8 @@ const CvLink = () => {
             onClick={handlePrevious}
             disabled={currentStep === 1}
             className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-200 ${currentStep === 1
-              ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-              : "bg-gray-200 text-gray-300 hover:bg-gray-300"
+              ? `${STYLES.dark.background.tertiary} text-gray-400 cursor-not-allowed`
+              : `${STYLES.dark.background.secondary} border ${STYLES.dark.border.light} text-gray-300 hover:${STYLES.dark.background.tertiary}`
               }`}
           >
             <ChevronLeft className="w-5 h-5 mr-2" />
@@ -261,8 +262,8 @@ const CvLink = () => {
               onClick={handleSubmit}
               disabled={!canProceed() || isSubmitting || submitStatus === 'success'}
               className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-200 ${!canProceed() || isSubmitting || submitStatus === 'success'
-                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                : "bg-green-600 text-white hover:bg-green-700"
+                ? `${STYLES.dark.background.tertiary} text-gray-400 cursor-not-allowed`
+                : `bg-[${STYLES.dark.accent.color}] text-white hover:bg-red-900 border ${STYLES.dark.border.light}`
                 }`}
             >
               {isSubmitting ? (
@@ -287,8 +288,8 @@ const CvLink = () => {
               onClick={handleNext}
               disabled={!canProceed()}
               className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-200 ${canProceed()
-                ? "bg-blue-600 text-white hover:bg-blue-700"
-                : "bg-gray-100 text-gray-400 cursor-not-allowed"
+                ? `bg-[${STYLES.dark.accent.color}] text-white hover:bg-red-900 border ${STYLES.dark.border.light}`
+                : `${STYLES.dark.background.tertiary} text-gray-400 cursor-not-allowed`
                 }`}
             >
               Next
