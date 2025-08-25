@@ -1,4 +1,5 @@
 import { FileText, RefreshCw, Upload } from "lucide-react"
+import { STYLES } from '../../../constants/styles';
 
 export const CvUploadOption = ({ formData, handleInputChange, handleFileUpload }) => {
 
@@ -6,10 +7,10 @@ export const CvUploadOption = ({ formData, handleInputChange, handleFileUpload }
     <div className="space-y-6">
       <div className="text-center mb-8">
         <FileText className="w-16 h-16 mx-auto text-blue-600 mb-4" />
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">
+        <h2 className="text-2xl font-bold text-gray-100 mb-2">
           CV Management
         </h2>
-        <p className="text-gray-600">
+        <p className="text-gray-400">
           Choose how you'd like to proceed with your CV
         </p>
       </div>
@@ -23,23 +24,23 @@ export const CvUploadOption = ({ formData, handleInputChange, handleFileUpload }
           onClick={() => handleInputChange("cvType", "new")}
         >
           <Upload className="w-8 h-8 text-blue-600 mb-3" />
-          <h3 className="text-lg font-semibold text-gray-800 mb-2">
+          <h3 className="text-lg font-semibold text-gray-100 mb-2">
             Upload New CV
           </h3>
-          <p className="text-gray-600 text-sm">
+          <p className="text-gray-400 text-sm">
             Start fresh with a completely new CV document
           </p>
 
           {formData.cvType === "new" && (
             <div className="mt-4 pt-4 border-t border-gray-200">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Choose your CV file:
               </label>
               <input
                 type="file"
                 accept=".pdf"
                 onChange={handleFileUpload}
-                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                className="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
               />
               {formData.cvFile && (
                 <div className="mt-2 p-2 bg-green-50 rounded-lg">
@@ -60,23 +61,23 @@ export const CvUploadOption = ({ formData, handleInputChange, handleFileUpload }
           onClick={() => handleInputChange("cvType", "update")}
         >
           <RefreshCw className="w-8 h-8 text-green-600 mb-3" />
-          <h3 className="text-lg font-semibold text-gray-800 mb-2">
+          <h3 className="text-lg font-semibold text-gray-100 mb-2">
             Update Existing CV
           </h3>
-          <p className="text-gray-600 text-sm">
+          <p className="text-gray-400 text-sm">
             Upload an updated version of your CV document
           </p>
 
           {formData.cvType === "update" && (
             <div className="mt-4 pt-4 border-t border-gray-200">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-300 mb-2">
                 Choose your updated CV file:
               </label>
               <input
                 type="file"
                 accept=".pdf"
                 onChange={handleFileUpload}
-                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+                className="block w-full text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
               />
               {formData.cvFile && (
                 <div className="mt-2 p-2 bg-green-50 rounded-lg">
