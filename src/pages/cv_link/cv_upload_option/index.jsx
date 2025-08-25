@@ -43,8 +43,8 @@ export const CvUploadOption = ({ formData, handleInputChange, handleFileUpload }
                 className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-red-50 file:text-red-700 hover:file:bg-red-100"
               />
               {formData.cvFile && (
-                <div className="mt-2 p-2 bg-yellow-50 rounded-lg">
-                  <p className="text-sm text-yellow-700">
+                <div className="mt-2 p-2 bg-red-50 rounded-lg">
+                  <p className="text-sm text-red-700">
                     ✓ {formData.cvFileName} ({formData.cvFileSize} KB)
                   </p>
                 </div>
