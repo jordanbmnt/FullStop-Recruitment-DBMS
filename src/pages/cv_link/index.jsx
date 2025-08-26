@@ -95,6 +95,13 @@ const CvLink = () => {
         alert("Please upload a PDF");
         event.target.value = "";
       }
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        cvFile: null,
+        cvFileName: null,
+        cvFileSize: null,
+      }));
     }
   };
 
