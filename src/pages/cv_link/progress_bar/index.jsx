@@ -13,7 +13,7 @@ export const ProgressBar = ({ steps, currentStep, getCurrentStep }) => {
                   ? "bg-green-600 text-white"
                   : isCurrent
                     ? "bg-blue-600 text-white"
-                    : "bg-gray-200 text-gray-600"
+                    : "bg-gray-200 text-gray-500"
                   }`}
               >
                 {isCompleted ? "✓" : step.id}
@@ -29,10 +29,10 @@ export const ProgressBar = ({ steps, currentStep, getCurrentStep }) => {
         })}
       </div>
       <div className="text-center">
-        <h3 className="text-lg font-semibold text-gray-800">
+        <h3 className="text-lg font-semibold text-gray-400">
           Step {currentStep}: {getCurrentStep().title}
         </h3>
-        <p className="text-sm text-gray-600 mt-1">
+        <p className="text-sm text-gray-500 mt-1">
           {getCurrentStep().description}
         </p>
       </div>
