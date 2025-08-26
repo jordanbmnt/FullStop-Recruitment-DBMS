@@ -1,4 +1,5 @@
 import { AlertCircle, CheckCircle } from "lucide-react";
+import { STYLES } from "../../../constants/styles";
 
 export const FormSummary = ({ formData, submitStatus, submitMessage }) => {
 
@@ -14,9 +15,9 @@ export const FormSummary = ({ formData, submitStatus, submitMessage }) => {
         </p>
       </div>
 
-      <div className="bg-gray-50 rounded-lg p-6 space-y-6">
+      <div className={`${STYLES.dark.background.secondary} rounded-lg p-6 space-y-6`}>
         {/* CV Information */}
-        <div className="border-b border-gray-200 pb-4">
+        <div className={`border-b ${STYLES.dark.border.medium} pb-4`}>
           <h3 className="text-lg font-semibold text-gray-800 mb-3">CV Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -35,7 +36,7 @@ export const FormSummary = ({ formData, submitStatus, submitMessage }) => {
         </div>
 
         {/* Personal Information */}
-        <div className="border-b border-gray-200 pb-4">
+        <div className={`border-b ${STYLES.dark.border.medium} pb-4`}>
           <h3 className="text-lg font-semibold text-gray-800 mb-3">Personal Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -50,7 +51,7 @@ export const FormSummary = ({ formData, submitStatus, submitMessage }) => {
         </div>
 
         {/* Professional Information */}
-        <div className="border-b border-gray-200 pb-4">
+        <div className={`border-b ${STYLES.dark.border.medium} pb-4`}>
           <h3 className="text-lg font-semibold text-gray-800 mb-3">Professional Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -74,11 +75,11 @@ export const FormSummary = ({ formData, submitStatus, submitMessage }) => {
 
         {/* Skills */}
         {formData.skills && formData.skills.length > 0 && (
-          <div className="border-b border-gray-200 pb-4">
+          <div className={`border-b ${STYLES.dark.border.medium} pb-4`}>
             <h3 className="text-lg font-semibold text-gray-800 mb-3">Skills</h3>
             <div className="flex flex-wrap gap-2">
               {formData.skills.map((skill, index) => (
-                <span key={index} className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                <span key={index} className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm">
                   {skill}
                 </span>
               ))}
@@ -88,9 +89,9 @@ export const FormSummary = ({ formData, submitStatus, submitMessage }) => {
 
         {/* Cover Letter */}
         {formData.coverLetter && (
-          <div className="border-b border-gray-200 pb-4">
+          <div className={`border-b ${STYLES.dark.border.medium} pb-4`}>
             <h3 className="text-lg font-semibold text-gray-800 mb-3">Cover Letter</h3>
-            <p className="text-gray-600 bg-white p-3 rounded border">
+            <p className={`text-gray-600 ${STYLES.dark.background.tertiary} p-3 rounded border ${STYLES.dark.border.medium}`}>
               {formData.coverLetter}
             </p>
           </div>
@@ -98,9 +99,9 @@ export const FormSummary = ({ formData, submitStatus, submitMessage }) => {
 
         {/* Summary */}
         {formData.summary && (
-          <div className="border-b border-gray-200 pb-4">
+          <div className={`border-b ${STYLES.dark.border.medium} pb-4`}>
             <h3 className="text-lg font-semibold text-gray-800 mb-3">Professional Summary</h3>
-            <p className="text-gray-600 bg-white p-3 rounded border">
+            <p className={`text-gray-600 ${STYLES.dark.background.tertiary} p-3 rounded border ${STYLES.dark.border.medium}`}>
               {formData.summary}
             </p>
           </div>
@@ -109,7 +110,7 @@ export const FormSummary = ({ formData, submitStatus, submitMessage }) => {
         {/* Previous Job Reasons */}
         <div>
           <h3 className="text-lg font-semibold text-gray-800 mb-3">Previous Job Reasons</h3>
-          <p className="text-gray-600 bg-white p-3 rounded border">
+          <p className={`text-gray-600 ${STYLES.dark.background.tertiary} p-3 rounded border ${STYLES.dark.border.medium}`}>
             {formData.previousJobReasons}
           </p>
         </div>
@@ -118,7 +119,7 @@ export const FormSummary = ({ formData, submitStatus, submitMessage }) => {
       {submitStatus && (
         <div className={`p-4 rounded-lg flex items-center space-x-2 ${submitStatus === 'success'
           ? 'bg-green-50 text-green-700'
-          : 'bg-red-50 text-red-700'
+          : 'bg-red-50 text-red-900'
           }`}>
           {submitStatus === 'success' ? (
             <CheckCircle className="w-5 h-5" />
