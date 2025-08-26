@@ -13,9 +13,11 @@ export const STYLES = {
       color: "#a10808"
     },
     text: {
-      primary: "text-white hover:text-gray-200 active:text-gray-300",
-      secondary: "text-gray-400 hover:text-gray-300 active:text-gray-200",
-      inverse: "text-black hover:text-gray-800 active:text-gray-700"
+      primary: "text-gray-100 hover:text-gray-50 active:text-gray-50",
+      secondary: "text-gray-300 hover:text-gray-200 active:text-gray-200",
+      tertiary: "text-gray-400 hover:text-gray-300 active:text-gray-300",
+      paragraph: "text-gray-500 hover:text-gray-400 active:text-gray-400",
+      placeholder: "placeholder-gray-500",
     },
     alert: {
       success: "text-green-500 hover:text-green-400",
