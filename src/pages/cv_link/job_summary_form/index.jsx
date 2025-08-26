@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { User, Mail, Briefcase, Clock, FileText, Brain } from 'lucide-react';
 import { FIELDS, STATUSES } from '../../../helpers/constants';
 import { TextAreaSection } from './text_area_section';
+import { STYLES } from '../../../constants/styles';
 
 const ResponsiveAsterisk = () => {
   return (
@@ -69,9 +70,9 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
       </div>
 
       {/* Personal Information */}
-      <div className="bg-gray-50 p-6 rounded-lg">
+      <div className={`${STYLES.dark.background.secondary} p-6 rounded-lg`}>
         <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-          <User className="w-5 h-5 mr-2 text-blue-600" />
+          <User className={`w-5 h-5 mr-2 text-[${STYLES.dark.accent.color}]`} />
           Personal Information
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -84,7 +85,7 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
               value={formData.name || ''}
               onChange={(e) => handleInputChange('name', e.target.value)}
               placeholder="Enter your full name"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className={`w-full p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary}`}
             />
           </div>
           <div>
@@ -97,16 +98,16 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
               value={formData.email || ''}
               onChange={(e) => handleInputChange('email', e.target.value)}
               placeholder="your.email@example.com"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className={`w-full p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary}`}
             />
           </div>
         </div>
       </div>
 
       {/* Professional Information */}
-      <div className="bg-gray-50 p-6 rounded-lg">
+      <div className={`${STYLES.dark.background.secondary} p-6 rounded-lg`}>
         <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-          <Briefcase className="w-5 h-5 mr-2 text-blue-600" />
+          <Briefcase className={`w-5 h-5 mr-2 text-[${STYLES.dark.accent.color}]`} />
           Professional Details
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -119,7 +120,7 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
               value={formData.jobTitle || ''}
               onChange={(e) => handleInputChange('jobTitle', e.target.value)}
               placeholder="e.g., Frontend Developer"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className={`w-full p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary}`}
             />
           </div>
           <div>
@@ -129,7 +130,7 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
             <select
               value={formData.field || ''}
               onChange={(e) => handleInputChange('field', e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className={`w-full p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary}`}
             >
               <option value="">Select an Industry</option>
               {
@@ -151,7 +152,7 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
               placeholder="5"
               min="0"
               max="50"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className={`w-full p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary}`}
             />
           </div>
           <div>
@@ -161,7 +162,7 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
             <select
               value={formData.status || ''}
               onChange={(e) => handleInputChange('status', e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className={`w-full p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary}`}
             >
               <option value="">Select a Status</option>
               {
@@ -173,9 +174,9 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
       </div>
 
       {/* Skills */}
-      <div className="bg-gray-50 p-6 rounded-lg">
+      <div className={`${STYLES.dark.background.secondary} p-6 rounded-lg`}>
         <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-          <Brain className="w-5 h-5 mr-2 text-blue-600" />
+          <Brain className={`w-5 h-5 mr-2 text-[${STYLES.dark.accent.color}]`} />
           Skills
         </h3>
         <div className="mb-4">
@@ -189,12 +190,12 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
               onChange={(e) => setCurrentSkill(e.target.value)}
               onKeyDown={handleKeyPress}
               placeholder="e.g., Problem Solving, Project Management, JavaScript"
-              className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className={`flex-1 p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary}`}
             />
             <button
               type="button"
               onClick={addSkill}
-              className="px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
             >
               Add
             </button>
@@ -204,13 +205,13 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
           {(formData.skills || []).map((skill, index) => (
             <span
               key={index}
-              className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-800"
+              className="inline-flex items-center px-3 py-1 rounded-full text-sm bg-red-100 text-red-800"
             >
               {skill}
               <button
                 type="button"
                 onClick={() => removeSkill(skill)}
-                className="ml-2 text-blue-600 hover:text-blue-800"
+                className="ml-2 text-red-600 hover:text-red-800"
               >
                 ×
               </button>
@@ -220,9 +221,9 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
       </div>
 
       {/* Professional Summary */}
-      <div className="bg-gray-50 p-6 rounded-lg">
+      <div className={`${STYLES.dark.background.secondary} p-6 rounded-lg`}>
         <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
-          <FileText className="w-5 h-5 mr-2 text-blue-600" />
+          <FileText className={`w-5 h-5 mr-2 text-[${STYLES.dark.accent.color}]`} />
           Professional Summary
         </h3>
 
