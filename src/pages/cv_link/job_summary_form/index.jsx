@@ -17,7 +17,7 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
       field: "coverLetter",
       heading: "Cover Letter",
       placeholder: "Share your motivation for applying, highlight relevant skills, and explain how your experience aligns with this role...",
-      isRequired: false
+      isRequired: true
     },
     {
       field: "summary",
@@ -61,23 +61,23 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
     <div className="space-y-8">
       <div className="text-center mb-8">
         <User className="w-16 h-16 mx-auto text-green-600 mb-4" />
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">
+        <h2 className="text-2xl font-bold text-gray-100 mb-2">
           Complete Job Profile
         </h2>
-        <p className="text-gray-600">
+        <p className="text-gray-300">
           Tell us about yourself and your career journey
         </p>
       </div>
 
       {/* Personal Information */}
       <div className={`${STYLES.dark.background.secondary} p-6 rounded-lg`}>
-        <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+        <h3 className="text-lg font-semibold text-gray-100 mb-4 flex items-center">
           <User className={`w-5 h-5 mr-2 text-[${STYLES.dark.accent.color}]`} />
           Personal Information
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-400 mb-2">
               Full Name <ResponsiveAsterisk />
             </label>
             <input
@@ -85,11 +85,11 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
               value={formData.name || ''}
               onChange={(e) => handleInputChange('name', e.target.value)}
               placeholder="Enter your full name"
-              className={`w-full p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary}`}
+              className={`w-full p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary} text-gray-400 placeholder:text-gray-600`}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-400 mb-2">
               <Mail className="w-4 h-4 inline mr-1" />
               Email Address <ResponsiveAsterisk />
             </label>
@@ -98,7 +98,7 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
               value={formData.email || ''}
               onChange={(e) => handleInputChange('email', e.target.value)}
               placeholder="your.email@example.com"
-              className={`w-full p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary}`}
+              className={`w-full p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary} text-gray-400 placeholder:text-gray-600`}
             />
           </div>
         </div>
@@ -106,13 +106,13 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
 
       {/* Professional Information */}
       <div className={`${STYLES.dark.background.secondary} p-6 rounded-lg`}>
-        <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+        <h3 className="text-lg font-semibold text-gray-100 mb-4 flex items-center">
           <Briefcase className={`w-5 h-5 mr-2 text-[${STYLES.dark.accent.color}]`} />
           Professional Details
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-400 mb-2">
               Current Job Title <ResponsiveAsterisk />
             </label>
             <input
@@ -120,19 +120,19 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
               value={formData.jobTitle || ''}
               onChange={(e) => handleInputChange('jobTitle', e.target.value)}
               placeholder="e.g., Frontend Developer"
-              className={`w-full p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary}`}
+              className={`w-full p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary} text-gray-400 placeholder:text-gray-600`}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-400 mb-2">
               Field/Industry <ResponsiveAsterisk />
             </label>
             <select
               value={formData.field || ''}
               onChange={(e) => handleInputChange('field', e.target.value)}
-              className={`w-full p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary}`}
+              className={`w-full p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary} text-gray-600 placeholder:text-gray-600`}
             >
-              <option value="">Select an Industry</option>
+              <option value="" className='text-gray-700'>Select an Industry</option>
               {
                 FIELDS.map(f => (<option value={`${f.toLowerCase()}`}>{f}</option>))
               }
@@ -141,7 +141,7 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-400 mb-2">
               <Clock className="w-4 h-4 inline mr-1" />
               Years of Experience
             </label>
@@ -152,19 +152,19 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
               placeholder="5"
               min="0"
               max="50"
-              className={`w-full p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary}`}
+              className={`w-full p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary} text-gray-400 placeholder:text-gray-600`}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-400 mb-2">
               Status <ResponsiveAsterisk />
             </label>
             <select
               value={formData.status || ''}
               onChange={(e) => handleInputChange('status', e.target.value)}
-              className={`w-full p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary}`}
+              className={`w-full p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary} text-gray-600 placeholder:text-gray-600`}
             >
-              <option value="">Select a Status</option>
+              <option value="" className='text-gray-700'>Select a Status</option>
               {
                 STATUSES.map(f => (<option value={`${f.value}`}>{f.display}</option>))
               }
@@ -175,12 +175,12 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
 
       {/* Skills */}
       <div className={`${STYLES.dark.background.secondary} p-6 rounded-lg`}>
-        <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+        <h3 className="text-lg font-semibold text-gray-100 mb-4 flex items-center">
           <Brain className={`w-5 h-5 mr-2 text-[${STYLES.dark.accent.color}]`} />
           Skills
         </h3>
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-400 mb-2">
             Add your skills (press Enter to add each skill) <ResponsiveAsterisk />
           </label>
           <div className="flex gap-2">
@@ -190,7 +190,7 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
               onChange={(e) => setCurrentSkill(e.target.value)}
               onKeyDown={handleKeyPress}
               placeholder="e.g., Problem Solving, Project Management, JavaScript"
-              className={`flex-1 p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary}`}
+              className={`flex-1 p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary} text-gray-400 placeholder:text-gray-600`}
             />
             <button
               type="button"
@@ -222,7 +222,7 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
 
       {/* Professional Summary */}
       <div className={`${STYLES.dark.background.secondary} p-6 rounded-lg`}>
-        <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center">
+        <h3 className="text-lg font-semibold text-gray-100 mb-4 flex items-center">
           <FileText className={`w-5 h-5 mr-2 text-[${STYLES.dark.accent.color}]`} />
           Professional Summary
         </h3>
