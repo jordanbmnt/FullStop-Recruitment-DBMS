@@ -2,15 +2,18 @@ import { AlertCircle, CheckCircle } from "lucide-react";
 import { STYLES } from "../../../constants/styles";
 
 export const FormSummary = ({ formData, submitStatus, submitMessage }) => {
+  const SECONDARY_HEADING_STYLE = `text-lg font-semibold mb-4 ${STYLES.dark.text.secondary}`;
+  const TERTIARY_HEADING_STYLE = `font-medium ${STYLES.dark.text.tertiary} mb-1`
+  const PARAGRAPH_STYLE = `${STYLES.dark.text.paragraph} capitalize`;
 
   return (
     <div className="space-y-6">
       <div className="text-center mb-8">
         <CheckCircle className="w-16 h-16 mx-auto text-purple-600 mb-4" />
-        <h2 className="text-2xl font-bold text-gray-100 mb-2">
+        <h2 className={`text-2xl font-bold ${STYLES.dark.text.primary} mb-2`}>
           Review & Submit
         </h2>
-        <p className="text-gray-500">
+        <p className={STYLES.dark.text.paragraph}>
           Please review your information before submitting
         </p>
       </div>
@@ -18,16 +21,16 @@ export const FormSummary = ({ formData, submitStatus, submitMessage }) => {
       <div className={`${STYLES.dark.background.secondary} rounded-lg p-6 space-y-6`}>
         {/* CV Information */}
         <div className={`border-b ${STYLES.dark.border.medium} pb-4`}>
-          <h3 className="text-lg font-semibold text-gray-100 mb-3">CV Information</h3>
+          <h3 className={SECONDARY_HEADING_STYLE}>CV Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <h4 className="font-medium text-gray-400 mb-1">CV Type:</h4>
-              <p className="text-gray-500 capitalize">{formData.cvType}</p>
+              <h4 className={TERTIARY_HEADING_STYLE}>CV Type:</h4>
+              <p className={PARAGRAPH_STYLE}>{formData.cvType}</p>
             </div>
             {formData.cvFile && (
               <div>
-                <h4 className="font-medium text-gray-400 mb-1">File:</h4>
-                <p className="text-gray-500">
+                <h4 className={TERTIARY_HEADING_STYLE}>File:</h4>
+                <p className={STYLES.dark.text.paragraph}>
                   {formData.cvFileName} ({formData.cvFileSize} KB)
                 </p>
               </div>
@@ -37,38 +40,38 @@ export const FormSummary = ({ formData, submitStatus, submitMessage }) => {
 
         {/* Personal Information */}
         <div className={`border-b ${STYLES.dark.border.medium} pb-4`}>
-          <h3 className="text-lg font-semibold text-gray-100 mb-3">Personal Information</h3>
+          <h3 className={SECONDARY_HEADING_STYLE}>Personal Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <h4 className="font-medium text-gray-400 mb-1">Name:</h4>
-              <p className="text-gray-500">{formData.name || 'Not provided'}</p>
+              <h4 className={TERTIARY_HEADING_STYLE}>Name:</h4>
+              <p className={STYLES.dark.text.paragraph}>{formData.name || 'Not provided'}</p>
             </div>
             <div>
-              <h4 className="font-medium text-gray-400 mb-1">Email:</h4>
-              <p className="text-gray-500">{formData.email || 'Not provided'}</p>
+              <h4 className={TERTIARY_HEADING_STYLE}>Email:</h4>
+              <p className={STYLES.dark.text.paragraph}>{formData.email || 'Not provided'}</p>
             </div>
           </div>
         </div>
 
         {/* Professional Information */}
         <div className={`border-b ${STYLES.dark.border.medium} pb-4`}>
-          <h3 className="text-lg font-semibold text-gray-100 mb-3">Professional Information</h3>
+          <h3 className={SECONDARY_HEADING_STYLE}>Professional Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <h4 className="font-medium text-gray-400 mb-1">Job Title:</h4>
-              <p className="text-gray-500">{formData.jobTitle || 'Not provided'}</p>
+              <h4 className={TERTIARY_HEADING_STYLE}>Job Title:</h4>
+              <p className={STYLES.dark.text.paragraph}>{formData.jobTitle || 'Not provided'}</p>
             </div>
             <div>
-              <h4 className="font-medium text-gray-400 mb-1">Field:</h4>
-              <p className="text-gray-500">{formData.field || 'Not provided'}</p>
+              <h4 className={TERTIARY_HEADING_STYLE}>Field:</h4>
+              <p className={STYLES.dark.text.paragraph}>{formData.field || 'Not provided'}</p>
             </div>
             <div>
-              <h4 className="font-medium text-gray-400 mb-1">Years of Experience:</h4>
-              <p className="text-gray-500">{formData.yearsOfXp || 'Not provided'}</p>
+              <h4 className={TERTIARY_HEADING_STYLE}>Years of Experience:</h4>
+              <p className={STYLES.dark.text.paragraph}>{formData.yearsOfXp || 'Not provided'}</p>
             </div>
             <div>
-              <h4 className="font-medium text-gray-400 mb-1">Status:</h4>
-              <p className="text-gray-500 capitalize">{formData.status}</p>
+              <h4 className={TERTIARY_HEADING_STYLE}>Status:</h4>
+              <p className={PARAGRAPH_STYLE}>{formData.status}</p>
             </div>
           </div>
         </div>
@@ -76,7 +79,7 @@ export const FormSummary = ({ formData, submitStatus, submitMessage }) => {
         {/* Skills */}
         {formData.skills && formData.skills.length > 0 && (
           <div className={`border-b ${STYLES.dark.border.medium} pb-4`}>
-            <h3 className="text-lg font-semibold text-gray-100 mb-3">Skills</h3>
+            <h3 className={SECONDARY_HEADING_STYLE}>Skills</h3>
             <div className="flex flex-wrap gap-2">
               {formData.skills.map((skill, index) => (
                 <span key={index} className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm">
@@ -90,7 +93,7 @@ export const FormSummary = ({ formData, submitStatus, submitMessage }) => {
         {/* Cover Letter */}
         {formData.coverLetter && (
           <div className={`border-b ${STYLES.dark.border.medium} pb-4`}>
-            <h3 className="text-lg font-semibold text-gray-100 mb-3">Cover Letter</h3>
+            <h3 className={SECONDARY_HEADING_STYLE}>Cover Letter</h3>
             <p className={`text-gray-500 ${STYLES.dark.background.tertiary} p-3 rounded border ${STYLES.dark.border.medium}`}>
               {formData.coverLetter}
             </p>
@@ -100,7 +103,7 @@ export const FormSummary = ({ formData, submitStatus, submitMessage }) => {
         {/* Summary */}
         {formData.summary && (
           <div className={`border-b ${STYLES.dark.border.medium} pb-4`}>
-            <h3 className="text-lg font-semibold text-gray-100 mb-3">Professional Summary</h3>
+            <h3 className={SECONDARY_HEADING_STYLE}>Professional Summary</h3>
             <p className={`text-gray-500 ${STYLES.dark.background.tertiary} p-3 rounded border ${STYLES.dark.border.medium}`}>
               {formData.summary}
             </p>
@@ -109,8 +112,8 @@ export const FormSummary = ({ formData, submitStatus, submitMessage }) => {
 
         {/* Previous Job Reasons */}
         <div>
-          <h3 className="text-lg font-semibold text-gray-100 mb-3">Previous Job Reasons</h3>
-          <p className={`text-gray-500 ${STYLES.dark.background.tertiary} p-3 rounded border ${STYLES.dark.border.medium}`}>
+          <h3 className={SECONDARY_HEADING_STYLE}>Previous Job Reasons</h3>
+          <p className={`${STYLES.dark.text.paragraph} ${STYLES.dark.background.tertiary} p-3 rounded border ${STYLES.dark.border.medium}`}>
             {formData.previousJobReasons}
           </p>
         </div>
