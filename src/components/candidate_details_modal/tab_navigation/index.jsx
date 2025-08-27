@@ -1,12 +1,14 @@
+import { STYLES } from "../../../constants/styles";
+
 export const TabNavigation = ({ setActiveTab, candidate, getData, activeTab }) => {
 
   return (
-    <div className="flex space-x-1 mb-4 sm:mb-6 bg-gray-100 p-1 rounded-lg">
+    <div className={`flex space-x-1 mb-4 sm:mb-6 ${STYLES.dark.background.secondary} p-1 rounded-lg`}>
       <button
         onClick={() => setActiveTab('overview')}
         className={`flex-1 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-colors ${activeTab === 'overview'
-          ? 'bg-white text-blue-600 shadow-sm'
-          : 'text-gray-600 hover:text-gray-900'
+          ? `${STYLES.dark.background.tertiary} text-[${STYLES.dark.accent.color}] shadow-sm hover:${STYLES.dark.background.primary}`
+          : STYLES.dark.text.primary
           }`}
       >
         Overview
@@ -21,8 +23,8 @@ export const TabNavigation = ({ setActiveTab, candidate, getData, activeTab }) =
           }
         }}
         className={`flex-1 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-colors ${activeTab === 'details'
-          ? 'bg-white text-blue-600 shadow-sm'
-          : 'text-gray-600 hover:text-gray-900'
+          ? `${STYLES.dark.background.tertiary} text-[${STYLES.dark.accent.color}] shadow-sm hover:${STYLES.dark.background.primary}`
+          : STYLES.dark.text.primary
           }`}
       >
         Details

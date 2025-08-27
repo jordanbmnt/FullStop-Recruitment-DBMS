@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { Search, Filter, X, ChevronDown } from 'lucide-react';
+import { Search, Filter, ChevronDown } from 'lucide-react';
 import { SearchResult } from '../search_result';
 import CandidateDetailsModal from '../../../components/candidate_details_modal';
 import { Skeleton } from '../../../components/skeleton';
-import { FIELDS, STATUSES } from '../../../helpers/constants';
+import { STYLES } from '../../../constants/styles';
+import { FilterComponent } from './filter_component';
 
 export const SearchBar = () => {
   const [searchQueryTerm, setSearchQueryTerm] = useState('');
@@ -24,6 +25,17 @@ export const SearchBar = () => {
   const [searchQueryMaxLength, setSearchQueryMaxLength] = useState(0);
   const [activeSearchResult, setActiveSearchResult] = useState(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  //Ternary Conditionals
+  const CONTAINER_STYLE = (searchQuery || searchQueryParams || showFilters) ? `${STYLES.dark.background.secondary} shadow-xl ${STYLES.dark.border.strong}` : `${STYLES.dark.background.primary} shadow-none border-transparent`;
+  const SEARCH_BAR_STYLE = (searchQuery || searchQueryParams || showFilters) ? STYLES.dark.background.darkest : STYLES.dark.background.tertiary;
+  const FILTER_BUTTON_STYLE = showFilters ? `border ${STYLES.dark.border.medium} bg-[${STYLES.dark.accent.color}] ${STYLES.dark.text.secondary} ${STYLES.dark.accent.red}` : `bg-gray-200 border-4 border-[${STYLES.dark.accent.color}] text-[${STYLES.dark.accent.color}] hover:bg-gray-100`;
+  const CHEVRON_STYLE = showFilters ? 'rotate-180' : '';
+  const SHOW_MORE_BUTTON_STYLE = searchQueryLimit === searchQueryMaxLength ? STYLES.dark.text.paragraph : `${STYLES.dark.text.paragraph} hover:bg-gray-800 hover:shadow-md hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[${STYLES.dark.accent.color}] transition-all duration-900 ease-out`;
+
+  // Conditionals
+  const ACTIVE_SEARCH = searchResult && !searchQueryTerm && !fieldInput && !skillsInput && !minExperience && !maxExperience && !selectedStatus;
+  const HAS_ACTIVE_FILTERS = fieldInput || skillsInput || minExperience || maxExperience || selectedStatus;
 
   const getData = () => {
     try {
@@ -88,7 +100,6 @@ export const SearchBar = () => {
     else if (nextIncrement > searchQueryMaxLength && searchQueryLimit !== searchQueryMaxLength) setSearchQueryLimit(searchQueryMaxLength)
   }
 
-
   const handleSearch = (event) => {
     if (event.code === "Enter" || event.type === "click") {
       setIsSearching(false);
@@ -130,186 +141,64 @@ export const SearchBar = () => {
     setSelectedStatus('');
   };
 
-  const hasActiveFilters = fieldInput || skillsInput || minExperience || maxExperience || selectedStatus;
-
   return (
-    <div className="mx-auto p-6">
-      <div className="bg-white rounded-xl shadow-lg p-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">Find the Perfect Candidate</h1>
-
+    <div className={`mx-auto rounded-xl p-6 pt-0 mt-0 transition-all duration-300 ease-in-out border ${CONTAINER_STYLE}`}>
+      <div className={`bg-transparent rounded-xl p-8`}>
         {/* Main Search Bar */}
-        <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 mb-6"
-        // onMouseLeave={() => {
-        //   if (!searchResult &&
-        //     !searchQueryTerm &&
-        //     !showFilters &&
-        //     !fieldInput &&
-        //     !skillsInput &&
-        //     !minExperience &&
-        //     !maxExperience &&
-        //     !selectedStatus &&
-        //     !showFilters
-        //   ) {
-        //     setSearchQuery(null);
-        //     setSearchResult(null);
-        //   }
-        // }}
-        >
-          <div className="relative flex-1 w-full">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-50">
-              <Search className="h-5 w-5 text-gray-400" />
-            </div>
+        <div className="flex-row items-center justify-around space-y-6">
+          <div className={`w-[90%] m-auto flex justify-center items-center ${SEARCH_BAR_STYLE} ${STYLES.dark.border.medium} rounded-xl px-5 py-3 space-x-4 shadow-lg`}>
+            <Search className={`h-5 w-5 ${STYLES.dark.text.paragraph}`} />
             <input
               type="text"
               value={searchQueryTerm}
               onChange={(e) => setSearchQueryTerm(e.target.value)}
               onKeyDownCapture={(e) => handleSearch(e)}
               placeholder="Search by name, or email..."
-              className="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm text-gray-900 placeholder-gray-500 transition-all duration-200"
+              className={`block w-full pl-6 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] ${SEARCH_BAR_STYLE} focus:border-[${STYLES.dark.accent.color}] backdrop-blur-sm ${STYLES.dark.text.primary} border-transparent placeholder-gray-500`}
             />
           </div>
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 ${showFilters ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-              }`}
-          >
-            <Filter className="h-5 w-5" />
-            <span>Filters</span>
-            <ChevronDown className={`h-4 w-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
-          </button>
-          <button
-            onClick={() => {
-              if (searchResult &&
-                !searchQueryTerm &&
-                !fieldInput &&
-                !skillsInput &&
-                !minExperience &&
-                !maxExperience &&
-                !selectedStatus) {
-                setSearchResult(null);
-                setSearchQueryParams(null);
-              } else {
-                handleSearch({ code: "Enter" });
-              }
-            }}
-            className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none font-medium hover:shadow-md hover:scale-105 transition-all duration-300"
-          >
-            {
-              searchResult &&
-                !searchQueryTerm &&
-                !fieldInput &&
-                !skillsInput &&
-                !minExperience &&
-                !maxExperience &&
-                !selectedStatus ?
-                'Clear Results' : 'Search'
-            }
-          </button>
+          <div className="w-full flex flex-row justify-around">
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 justify-center ${FILTER_BUTTON_STYLE} w-[200px] hover:shadow-md hover:scale-105 transition-all duration-300 shadow-lg`}
+            >
+              <Filter className="h-5 w-5" />
+              <span>Filters</span>
+              <ChevronDown className={`h-4 w-4 transition-transform ${CHEVRON_STYLE}`} />
+            </button>
+            <button
+              onClick={() => {
+                if (ACTIVE_SEARCH) {
+                  setSearchResult(null);
+                  setSearchQueryParams(null);
+                } else {
+                  handleSearch({ code: "Enter" });
+                }
+              }}
+              className={`px-8 py-3 bg-[${STYLES.dark.accent.color}] ${STYLES.dark.text.primary} rounded-lg hover:bg-[${STYLES.dark.accent.red}] focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:outline-none font-medium hover:shadow-md hover:scale-105 transition-all duration-300 w-[200px] shadow-lg`}
+            >
+              {ACTIVE_SEARCH ? 'Clear Results' : 'Search'}
+            </button>
+          </div>
         </div>
 
         {/* Filters Section */}
         {showFilters && (
-          <div className="bg-gray-50 rounded-lg p-6 mb-6 border border-gray-200">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">Advanced Filters</h3>
-              {hasActiveFilters && (
-                <button
-                  onClick={clearFilters}
-                  className="text-red-600 hover:text-red-800 font-medium text-sm flex items-center space-x-1"
-                >
-                  <X className="h-4 w-4" />
-                  <span>Clear All</span>
-                </button>
-              )}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Field Filter */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Field</label>
-                <select
-                  value={fieldInput}
-                  onChange={(e) => setFieldInput(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="">Select a Field</option>
-                  {
-                    FIELDS.map(f => (<option value={`${f.toLowerCase()}`}>{f}</option>))
-                  }
-                </select>
-              </div>
-
-              {/* Status Filter */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
-                <select
-                  value={selectedStatus}
-                  onChange={(e) => setSelectedStatus(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="">Select a Status</option>
-                  {
-                    STATUSES.map(f => (<option value={`${f.value}`}>{f.display}</option>))
-                  }
-                </select>
-              </div>
-
-              {/* Skills Filter */}
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Skills</label>
-                <input
-                  type="text"
-                  value={skillsInput}
-                  onChange={(e) => setSkillsInput(e.target.value)}
-                  placeholder="e.g., React, JavaScript, Python (comma-separated)"
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-                <p className="text-xs text-gray-500 mt-1">Separate multiple skills with commas</p>
-              </div>
-
-              {/* Experience Range */}
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Years of Experience</label>
-                <div className="flex space-x-4 items-center">
-                  <div className="flex-1">
-                    <input
-                      type="number"
-                      value={minExperience}
-                      onChange={(e) => setMinExperience(e.target.value)}
-                      placeholder="Min years"
-                      min="0"
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    />
-                  </div>
-                  <span className="text-gray-500">to</span>
-                  <div className="flex-1">
-                    <input
-                      type="number"
-                      value={maxExperience}
-                      onChange={(e) => setMaxExperience(e.target.value)}
-                      placeholder="Max years"
-                      min="0"
-                      className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <FilterComponent hasActiveFilters={HAS_ACTIVE_FILTERS} clearFilters={clearFilters} fieldInput={fieldInput} setFieldInput={setFieldInput} selectedStatus={selectedStatus} setSelectedStatus={setSelectedStatus} skillsInput={skillsInput} setSkillsInput={setSkillsInput} minExperience={minExperience} setMinExperience={setMinExperience} maxExperience={maxExperience} setMaxExperience={setMaxExperience} />
         )}
 
         {/* Active Filters Summary */}
-        {hasActiveFilters && (
-          <div className="mb-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-            <div className="flex items-center space-x-2 text-sm text-blue-800">
+        {HAS_ACTIVE_FILTERS && (
+          <div className="mb-6 mt-6 p-4 bg-red-50 rounded-lg border border-red-200">
+            <div className={`flex items-center space-x-2 text-sm text-[${STYLES.dark.accent.color}]`}>
               <Filter className="h-4 w-4" />
               <span className="font-medium">Active Filters:</span>
               <div className="flex flex-wrap gap-2">
-                {fieldInput && <span className="bg-blue-200 px-2 py-1 rounded text-xs">Field: {fieldInput}</span>}
-                {selectedStatus && <span className="bg-blue-200 px-2 py-1 rounded text-xs">Status: {selectedStatus}</span>}
-                {skillsInput && <span className="bg-blue-200 px-2 py-1 rounded text-xs">Skills: {skillsInput}</span>}
-                {minExperience && <span className="bg-blue-200 px-2 py-1 rounded text-xs">Min: {minExperience}y</span>}
-                {maxExperience && <span className="bg-blue-200 px-2 py-1 rounded text-xs">Max: {maxExperience}y</span>}
+                {fieldInput && <span className="bg-red-200 px-2 py-1 rounded text-xs">Field: {fieldInput}</span>}
+                {selectedStatus && <span className="bg-red-200 px-2 py-1 rounded text-xs">Status: {selectedStatus}</span>}
+                {skillsInput && <span className="bg-red-200 px-2 py-1 rounded text-xs">Skills: {skillsInput}</span>}
+                {minExperience && <span className="bg-red-200 px-2 py-1 rounded text-xs">Min: {minExperience}y</span>}
+                {maxExperience && <span className="bg-red-200 px-2 py-1 rounded text-xs">Max: {maxExperience}y</span>}
               </div>
             </div>
           </div>
@@ -324,21 +213,21 @@ export const SearchBar = () => {
                 !searchResult && !isSearching ?
                   (
                     /* No Results State */
-                    <div className="bg-white rounded-lg border border-gray-200 p-8 text-center animate-in fade-in-0 zoom-in-95 duration-500 delay-300 ease-out">
-                      <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center rounded-full bg-gray-100 animate-in fade-in-0 scale-in-0 duration-300 delay-600">
-                        <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className={`${STYLES.dark.background.darkest} rounded-lg border ${STYLES.dark.border.strong} p-8 text-center animate-in fade-in-0 zoom-in-95 duration-500 delay-300 ease-out`}>
+                      <div className={`w-12 h-12 mx-auto mb-4 flex items-center justify-center rounded-full ${STYLES.dark.background.tertiary} animate-in fade-in-0 scale-in-0 duration-300 delay-600`}>
+                        <svg className={`w-6 h-6 ${STYLES.dark.text.paragraph}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                       </div>
                       <div className="animate-in fade-in-0 slide-in-from-bottom-2 duration-400 delay-700 ease-out">
-                        <h3 className="text-lg font-medium text-gray-900 mb-2">
+                        <h3 className={`text-lg font-medium ${STYLES.dark.text.secondary} mb-2`}>
                           No users found
                         </h3>
-                        <p className="text-sm text-gray-500 mb-4">
+                        <p className={`text-sm ${STYLES.dark.text.paragraph} mb-4`}>
                           We couldn't find any users matching "{searchQuery}". Try adjusting your search terms.
                         </p>
                       </div>
-                      <div className="space-y-2 text-xs text-gray-400">
+                      <div className={`space-y-2 text-xs ${STYLES.dark.text.paragraph}`}>
                         <p className="opacity-0 animate-in fade-in-0 duration-300 delay-900" style={{ animationFillMode: 'forwards' }}>• Check for typos in your search</p>
                         <p className="opacity-0 animate-in fade-in-0 duration-300 delay-1000" style={{ animationFillMode: 'forwards' }}>• Try using different keywords</p>
                         <p className="opacity-0 animate-in fade-in-0 duration-300 delay-1100" style={{ animationFillMode: 'forwards' }}>• Use fewer words in your search</p>
@@ -351,10 +240,10 @@ export const SearchBar = () => {
                         {/* Results Header */}
                         <div className="flex items-center justify-between animate-in fade-in-0 slide-in-from-top-1 duration-400 delay-200 ease-out">
                           <div>
-                            <h2 className="text-lg font-semibold text-gray-900">
+                            <h2 className={`text-lg font-semibold ${STYLES.dark.text.secondary}`}>
                               Search Results
                             </h2>
-                            <p className="text-sm text-gray-600 mt-1">
+                            <p className={`text-sm ${STYLES.dark.text.paragraph} mt-1`}>
                               Found {searchResult.length} {searchResult.length === 1 ? 'user' : 'users'} that match your requirements
                             </p>
                           </div>
@@ -382,7 +271,7 @@ export const SearchBar = () => {
                         {/* Load More Section */}
                         {searchResult.length > 0 && (
                           <div
-                            className="pt-6 border-t border-gray-200 animate-in fade-in-0 slide-in-from-bottom-2 duration-400 ease-out"
+                            className={`pt-6 border-t ${STYLES.dark.border.light} animate-in fade-in-0 slide-in-from-bottom-2 duration-400 ease-out`}
                             style={{
                               animationDelay: `${400 + searchResult.length * 100}ms`,
                               animationFillMode: 'both'
@@ -396,14 +285,14 @@ export const SearchBar = () => {
                                 }}
                                 disabled={searchQueryLimit === searchQueryMaxLength}
                                 onClick={() => { handleShowMore() }}
-                                className={`group inline-flex items-center px-6 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md bg-white ${searchQueryLimit === searchQueryMaxLength ? 'text-gray-100' : 'text-gray-700 hover:bg-gray-50 hover:shadow-md hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-900 ease-out'}`}
+                                className={`group inline-flex items-center px-6 py-2 border ${STYLES.dark.border.medium} shadow-sm text-sm font-medium rounded-md ${STYLES.dark.background.secondary} ${SHOW_MORE_BUTTON_STYLE}`}
                               >
                                 <svg className="w-4 h-4 mr-2 transition-transform duration-200 group-hover:translate-y-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                                 </svg>
                                 Show More Results
                               </button>
-                              <p className="text-xs text-gray-500 mt-2">
+                              <p className={`text-xs ${STYLES.dark.text.paragraph} mt-2`}>
                                 Showing {searchResult.length} results of {searchQueryMaxLength}
                               </p>
                             </div>

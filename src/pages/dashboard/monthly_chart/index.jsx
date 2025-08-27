@@ -3,6 +3,7 @@ import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YA
 import { OverviewLoadingBlock } from "../overview_loading_block";
 import { ChartHeader } from "../../../components/chart_header";
 import { CustomTooltip } from "../../../components/custom_tooltip";
+import { STYLES } from "../../../constants/styles";
 
 const monthlyUserStatsGenerator = (data) => {
   const monthNames = [
@@ -46,21 +47,21 @@ export const MonthlyChart = () => {
   }, []);
 
   return isSearching ? (<OverviewLoadingBlock />) : (
-    <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border border-gray-200/50 p-6 hover:shadow-xl transition-all duration-300">
+    <div className={`${STYLES.dark.background.secondary} backdrop-blur-sm rounded-xl shadow-lg border ${STYLES.dark.border.medium} p-6 hover:shadow-xl transition-all duration-300`}>
       <ChartHeader title={"Monthly User Activity (Last 6 Months)"} description={"Users that joined or updated their information in the last 6 months"} />
 
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={monthlyUsers}>
           <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
-          <XAxis dataKey="month" stroke="#64748b" />
-          <YAxis stroke="#64748b" />
+          <XAxis dataKey="month" stroke="#b8b6b6" />
+          <YAxis stroke="#b8b6b6" />
           <Tooltip content={<CustomTooltip />} />
           <Line
             type="monotone"
             dataKey="users"
-            stroke="#3b82f6"
+            stroke={STYLES.dark.accent.color}
             strokeWidth={3}
-            dot={{ fill: '#3b82f6', strokeWidth: 2, r: 5 }}
+            dot={{ fill: STYLES.dark.accent.color, strokeWidth: 2, r: 5 }}
           />
         </LineChart>
       </ResponsiveContainer>
