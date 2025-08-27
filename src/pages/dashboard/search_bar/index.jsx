@@ -29,9 +29,9 @@ export const SearchBar = () => {
   //Ternary Conditionals
   const CONTAINER_STYLE = (searchQuery || searchQueryParams || showFilters) ? `${STYLES.dark.background.secondary} shadow-xl ${STYLES.dark.border.strong}` : `${STYLES.dark.background.primary} shadow-none border-transparent`;
   const SEARCH_BAR_STYLE = (searchQuery || searchQueryParams || showFilters) ? STYLES.dark.background.darkest : STYLES.dark.background.tertiary;
-  const FILTER_BUTTON_STYLE = showFilters ? `border-2 border-gray-200 bg-[${STYLES.dark.accent.color}] text-gray-200 ${STYLES.dark.accent.red}` : `bg-gray-200 border-4 border-[${STYLES.dark.accent.color}] text-[${STYLES.dark.accent.color}] hover:bg-gray-100`;
+  const FILTER_BUTTON_STYLE = showFilters ? `border ${STYLES.dark.border.medium} bg-[${STYLES.dark.accent.color}] ${STYLES.dark.text.secondary} ${STYLES.dark.accent.red}` : `bg-gray-200 border-4 border-[${STYLES.dark.accent.color}] text-[${STYLES.dark.accent.color}] hover:bg-gray-100`;
   const CHEVRON_STYLE = showFilters ? 'rotate-180' : '';
-  const SHOW_MORE_BUTTON_STYLE = searchQueryLimit === searchQueryMaxLength ? 'text-gray-400' : `text-gray-400 hover:bg-gray-800 hover:shadow-md hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[${STYLES.dark.accent.color}] transition-all duration-900 ease-out`;
+  const SHOW_MORE_BUTTON_STYLE = searchQueryLimit === searchQueryMaxLength ? STYLES.dark.text.paragraph : `${STYLES.dark.text.paragraph} hover:bg-gray-800 hover:shadow-md hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[${STYLES.dark.accent.color}] transition-all duration-900 ease-out`;
 
   // Conditionals
   const ACTIVE_SEARCH = searchResult && !searchQueryTerm && !fieldInput && !skillsInput && !minExperience && !maxExperience && !selectedStatus;
@@ -147,7 +147,7 @@ export const SearchBar = () => {
         {/* Main Search Bar */}
         <div className="flex-row items-center justify-around space-y-6">
           <div className={`w-[90%] m-auto flex justify-center items-center ${SEARCH_BAR_STYLE} ${STYLES.dark.border.medium} rounded-xl px-5 py-3 space-x-4 shadow-lg`}>
-            <Search className="h-5 w-5 text-gray-300" />
+            <Search className={`h-5 w-5 ${STYLES.dark.text.paragraph}`} />
             <input
               type="text"
               value={searchQueryTerm}
@@ -175,7 +175,7 @@ export const SearchBar = () => {
                   handleSearch({ code: "Enter" });
                 }
               }}
-              className={`px-8 py-3 bg-[${STYLES.dark.accent.color}] text-white rounded-lg hover:bg-[${STYLES.dark.accent.red}] focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:outline-none font-medium hover:shadow-md hover:scale-105 transition-all duration-300 w-[200px] shadow-lg`}
+              className={`px-8 py-3 bg-[${STYLES.dark.accent.color}] ${STYLES.dark.text.primary} rounded-lg hover:bg-[${STYLES.dark.accent.red}] focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:outline-none font-medium hover:shadow-md hover:scale-105 transition-all duration-300 w-[200px] shadow-lg`}
             >
               {ACTIVE_SEARCH ? 'Clear Results' : 'Search'}
             </button>
@@ -215,19 +215,19 @@ export const SearchBar = () => {
                     /* No Results State */
                     <div className={`${STYLES.dark.background.darkest} rounded-lg border ${STYLES.dark.border.strong} p-8 text-center animate-in fade-in-0 zoom-in-95 duration-500 delay-300 ease-out`}>
                       <div className={`w-12 h-12 mx-auto mb-4 flex items-center justify-center rounded-full ${STYLES.dark.background.tertiary} animate-in fade-in-0 scale-in-0 duration-300 delay-600`}>
-                        <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className={`w-6 h-6 ${STYLES.dark.text.paragraph}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
                       </div>
                       <div className="animate-in fade-in-0 slide-in-from-bottom-2 duration-400 delay-700 ease-out">
-                        <h3 className="text-lg font-medium text-gray-200 mb-2">
+                        <h3 className={`text-lg font-medium ${STYLES.dark.text.secondary} mb-2`}>
                           No users found
                         </h3>
-                        <p className="text-sm text-gray-400 mb-4">
+                        <p className={`text-sm ${STYLES.dark.text.paragraph} mb-4`}>
                           We couldn't find any users matching "{searchQuery}". Try adjusting your search terms.
                         </p>
                       </div>
-                      <div className="space-y-2 text-xs text-gray-400">
+                      <div className={`space-y-2 text-xs ${STYLES.dark.text.paragraph}`}>
                         <p className="opacity-0 animate-in fade-in-0 duration-300 delay-900" style={{ animationFillMode: 'forwards' }}>• Check for typos in your search</p>
                         <p className="opacity-0 animate-in fade-in-0 duration-300 delay-1000" style={{ animationFillMode: 'forwards' }}>• Try using different keywords</p>
                         <p className="opacity-0 animate-in fade-in-0 duration-300 delay-1100" style={{ animationFillMode: 'forwards' }}>• Use fewer words in your search</p>
@@ -240,10 +240,10 @@ export const SearchBar = () => {
                         {/* Results Header */}
                         <div className="flex items-center justify-between animate-in fade-in-0 slide-in-from-top-1 duration-400 delay-200 ease-out">
                           <div>
-                            <h2 className="text-lg font-semibold text-gray-200">
+                            <h2 className={`text-lg font-semibold ${STYLES.dark.text.secondary}`}>
                               Search Results
                             </h2>
-                            <p className="text-sm text-gray-600 mt-1">
+                            <p className={`text-sm ${STYLES.dark.text.paragraph} mt-1`}>
                               Found {searchResult.length} {searchResult.length === 1 ? 'user' : 'users'} that match your requirements
                             </p>
                           </div>
@@ -292,7 +292,7 @@ export const SearchBar = () => {
                                 </svg>
                                 Show More Results
                               </button>
-                              <p className="text-xs text-gray-400 mt-2">
+                              <p className={`text-xs ${STYLES.dark.text.paragraph} mt-2`}>
                                 Showing {searchResult.length} results of {searchQueryMaxLength}
                               </p>
                             </div>
