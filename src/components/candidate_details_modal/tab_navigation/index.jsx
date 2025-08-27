@@ -8,7 +8,7 @@ export const TabNavigation = ({ setActiveTab, candidate, getData, activeTab }) =
         onClick={() => setActiveTab('overview')}
         className={`flex-1 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-colors ${activeTab === 'overview'
           ? `${STYLES.dark.background.tertiary} text-[${STYLES.dark.accent.color}] shadow-sm hover:${STYLES.dark.background.primary}`
-          : 'text-gray-400 hover:text-gray-200'
+          : STYLES.dark.text.primary
           }`}
       >
         Overview
@@ -24,7 +24,7 @@ export const TabNavigation = ({ setActiveTab, candidate, getData, activeTab }) =
         }}
         className={`flex-1 px-2 sm:px-4 py-2 text-xs sm:text-sm font-medium rounded-md transition-colors ${activeTab === 'details'
           ? `${STYLES.dark.background.tertiary} text-[${STYLES.dark.accent.color}] shadow-sm hover:${STYLES.dark.background.primary}`
-          : 'text-gray-400 hover:text-gray-200'
+          : STYLES.dark.text.primary
           }`}
       >
         Details
