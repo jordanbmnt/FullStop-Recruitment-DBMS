@@ -44,16 +44,16 @@ const CVOptionCard = ({ type, icon, title, description, color, isSelected, onSel
       {
         icon === 'upload' ? <Upload className={`w-8 h-8 ${colorClasses[color].text} mb-3`} /> : <RefreshCw className={`w-8 h-8 ${colorClasses[color].text} mb-3`} />
       }
-      <h3 className="text-lg font-semibold text-gray-200 mb-2">
+      <h3 className={`text-lg font-semibold ${STYLES.dark.text.secondary} mb-2`}>
         {title}
       </h3>
-      <p className="text-gray-500 text-sm">
+      <p className={`${STYLES.dark.text.paragraph} text-sm`}>
         {description}
       </p>
 
       {isSelected && (
-        <div className="mt-4 pt-4 border-t border-gray-400">
-          <label className="block text-sm font-medium text-gray-400 mb-2">
+        <div className={`mt-4 pt-4 border-t ${STYLES.dark.border.medium}`}>
+          <label className={`block text-sm font-medium ${STYLES.dark.text.tertiary} mb-2`}>
             Choose your {type === 'update' ? 'updated ' : ''}CV file:
           </label>
           <input
