@@ -111,8 +111,8 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
                 <User className={`w-6 h-6 sm:w-8 sm:h-8 text-[${STYLES.dark.accent.color}]`} />
               </div>
               <div className="min-w-0 flex-1">
-                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-100 truncate">{candidate.name}</h2>
-                <a href={`mailto:${candidate.email}`} className={`text-[${STYLES.dark.accent.color}] flex items-center mt-1 text-sm sm:text-base gap-1`}>
+                <h2 className={`text-lg sm:text-xl lg:text-2xl font-bold ${STYLES.dark.text.primary} truncate`}>{candidate.name}</h2>
+                <a href={`mailto:${candidate.email}`} className={`text-red-600 flex items-center mt-1 text-sm sm:text-base gap-1`}>
                   <span className="truncate">{candidate.email}</span>
                   <ExternalLink className="w-3 h-3 sm:w-4 sm:h-4 mr-2 flex-shrink-0" />
                 </a>
@@ -125,7 +125,7 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
             </div>
             <button
               onClick={handleClose}
-              className="text-gray-400 hover:text-gray-600 transition-colors self-start sm:self-auto"
+              className={`${STYLES.dark.text.paragraph} transition-colors self-start sm:self-auto`}
             >
               <X className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
@@ -147,13 +147,13 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
           <div className={`flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-3 mt-6 sm:mt-8 pt-4 sm:pt-6 border-t ${STYLES.dark.border.light}`}>
             <button
               onClick={handleClose}
-              className={`w-full sm:w-auto px-4 py-2 text-sm font-medium text-gray-100 ${STYLES.dark.background.secondary} border ${STYLES.dark.border.medium} rounded-md hover:${STYLES.dark.background.tertiary}transition-colors`}
+              className={`w-full sm:w-auto px-4 py-2 text-sm font-medium ${STYLES.dark.text.primary} ${STYLES.dark.background.secondary} border ${STYLES.dark.border.medium} rounded-md hover:${STYLES.dark.background.tertiary}transition-colors`}
             >
               Close
             </button>
             <button
               onClick={handleContact}
-              className={`w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-[${STYLES.dark.accent.color}] hover:bg-red-700 rounded-md transition-colors`}
+              className={`w-full sm:w-auto px-4 py-2 text-sm font-medium ${STYLES.dark.text.primary} bg-[${STYLES.dark.accent.color}] hover:bg-red-700 rounded-md transition-colors`}
             >
               Contact Candidate
             </button>
