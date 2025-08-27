@@ -57,27 +57,32 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
     }
   };
 
+  const HEADING_STYLE = `text-lg font-semibold ${STYLES.dark.text.primary} mb-4 flex items-center`;
+  const LABEL_STYLE = `block text-sm font-medium ${STYLES.dark.text.secondary} mb-2`;
+  const INPUT_STYLE = `w-full p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary} ${STYLES.dark.text.paragraph} placeholder:text-gray-600`;
+  const SELECT_STYLE = `w-full p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary} ${STYLES.dark.text.paragraph} placeholder:text-gray-600`;
+
   return (
     <div className="space-y-8">
       <div className="text-center mb-8">
         <User className="w-16 h-16 mx-auto text-green-600 mb-4" />
-        <h2 className="text-2xl font-bold text-gray-100 mb-2">
+        <h2 className={`text-2xl font-bold ${STYLES.dark.text.primary} mb-2`}>
           Complete Job Profile
         </h2>
-        <p className="text-gray-300">
+        <p className={STYLES.dark.text.paragraph}>
           Tell us about yourself and your career journey
         </p>
       </div>
 
       {/* Personal Information */}
       <div className={`${STYLES.dark.background.secondary} p-6 rounded-lg`}>
-        <h3 className="text-lg font-semibold text-gray-100 mb-4 flex items-center">
+        <h3 className={HEADING_STYLE}>
           <User className={`w-5 h-5 mr-2 text-[${STYLES.dark.accent.color}]`} />
           Personal Information
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-400 mb-2">
+            <label className={LABEL_STYLE}>
               Full Name <ResponsiveAsterisk />
             </label>
             <input
@@ -85,11 +90,11 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
               value={formData.name || ''}
               onChange={(e) => handleInputChange('name', e.target.value)}
               placeholder="Enter your full name"
-              className={`w-full p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary} text-gray-400 placeholder:text-gray-600`}
+              className={INPUT_STYLE}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-400 mb-2">
+            <label className={LABEL_STYLE}>
               <Mail className="w-4 h-4 inline mr-1" />
               Email Address <ResponsiveAsterisk />
             </label>
@@ -98,7 +103,7 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
               value={formData.email || ''}
               onChange={(e) => handleInputChange('email', e.target.value)}
               placeholder="your.email@example.com"
-              className={`w-full p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary} text-gray-400 placeholder:text-gray-600`}
+              className={INPUT_STYLE}
             />
           </div>
         </div>
@@ -106,13 +111,13 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
 
       {/* Professional Information */}
       <div className={`${STYLES.dark.background.secondary} p-6 rounded-lg`}>
-        <h3 className="text-lg font-semibold text-gray-100 mb-4 flex items-center">
+        <h3 className={HEADING_STYLE}>
           <Briefcase className={`w-5 h-5 mr-2 text-[${STYLES.dark.accent.color}]`} />
           Professional Details
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
-            <label className="block text-sm font-medium text-gray-400 mb-2">
+            <label className={LABEL_STYLE}>
               Current Job Title <ResponsiveAsterisk />
             </label>
             <input
@@ -120,19 +125,19 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
               value={formData.jobTitle || ''}
               onChange={(e) => handleInputChange('jobTitle', e.target.value)}
               placeholder="e.g., Frontend Developer"
-              className={`w-full p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary} text-gray-400 placeholder:text-gray-600`}
+              className={INPUT_STYLE}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-400 mb-2">
+            <label className={LABEL_STYLE}>
               Field/Industry <ResponsiveAsterisk />
             </label>
             <select
               value={formData.field || ''}
               onChange={(e) => handleInputChange('field', e.target.value)}
-              className={`w-full p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary} text-gray-600 placeholder:text-gray-600`}
+              className={SELECT_STYLE}
             >
-              <option value="" className='text-gray-700'>Select an Industry</option>
+              <option value="" className={STYLES.dark.text.paragraph}>Select an Industry</option>
               {
                 FIELDS.map(f => (<option value={`${f.toLowerCase()}`}>{f}</option>))
               }
@@ -141,7 +146,7 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-400 mb-2">
+            <label className={LABEL_STYLE}>
               <Clock className="w-4 h-4 inline mr-1" />
               Years of Experience
             </label>
@@ -152,19 +157,19 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
               placeholder="5"
               min="0"
               max="50"
-              className={`w-full p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary} text-gray-400 placeholder:text-gray-600`}
+              className={INPUT_STYLE}
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-400 mb-2">
+            <label className={LABEL_STYLE}>
               Status <ResponsiveAsterisk />
             </label>
             <select
               value={formData.status || ''}
               onChange={(e) => handleInputChange('status', e.target.value)}
-              className={`w-full p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary} text-gray-600 placeholder:text-gray-600`}
+              className={SELECT_STYLE}
             >
-              <option value="" className='text-gray-700'>Select a Status</option>
+              <option value="" className={STYLES.dark.text.paragraph}>Select a Status</option>
               {
                 STATUSES.map(f => (<option value={`${f.value}`}>{f.display}</option>))
               }
@@ -175,12 +180,12 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
 
       {/* Skills */}
       <div className={`${STYLES.dark.background.secondary} p-6 rounded-lg`}>
-        <h3 className="text-lg font-semibold text-gray-100 mb-4 flex items-center">
+        <h3 className={HEADING_STYLE}>
           <Brain className={`w-5 h-5 mr-2 text-[${STYLES.dark.accent.color}]`} />
           Skills
         </h3>
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-400 mb-2">
+          <label className={LABEL_STYLE}>
             Add your skills (press Enter to add each skill) <ResponsiveAsterisk />
           </label>
           <div className="flex gap-2">
@@ -190,12 +195,12 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
               onChange={(e) => setCurrentSkill(e.target.value)}
               onKeyDown={handleKeyPress}
               placeholder="e.g., Problem Solving, Project Management, JavaScript"
-              className={`flex-1 p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary} text-gray-400 placeholder:text-gray-600`}
+              className={`flex-1 p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary} ${STYLES.dark.text.paragraph} placeholder:text-gray-600`}
             />
             <button
               type="button"
               onClick={addSkill}
-              className="px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              className={`px-4 py-3 bg-red-600 ${STYLES.dark.text.primary} rounded-lg hover:bg-red-700 transition-colors`}
             >
               Add
             </button>
@@ -222,7 +227,7 @@ export const JobSummaryForm = ({ formData, onFormDataChange }) => {
 
       {/* Professional Summary */}
       <div className={`${STYLES.dark.background.secondary} p-6 rounded-lg`}>
-        <h3 className="text-lg font-semibold text-gray-100 mb-4 flex items-center">
+        <h3 className={HEADING_STYLE}>
           <FileText className={`w-5 h-5 mr-2 text-[${STYLES.dark.accent.color}]`} />
           Professional Summary
         </h3>
