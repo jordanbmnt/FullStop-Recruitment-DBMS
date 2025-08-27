@@ -93,10 +93,10 @@ export const CvUploadOption = ({ formData, handleInputChange, handleFileUpload }
     <div className="space-y-6">
       <div className="text-center mb-8">
         <FileText className="w-16 h-16 mx-auto text-red-600 mb-4" />
-        <h2 className="text-2xl font-bold text-gray-200 mb-2">
+        <h2 className={`text-2xl font-bold ${STYLES.dark.text.secondary} mb-2`}>
           CV Management
         </h2>
-        <p className="text-gray-500">
+        <p className={STYLES.dark.text.paragraph}>
           Choose how you'd like to proceed with your CV
         </p>
       </div>
