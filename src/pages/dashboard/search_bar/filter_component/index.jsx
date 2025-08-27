@@ -3,12 +3,13 @@ import { FIELDS, STATUSES } from "../../../../helpers/constants"
 import { STYLES } from "../../../../constants/styles"
 
 export const FilterComponent = ({ hasActiveFilters, clearFilters, fieldInput, setFieldInput, selectedStatus, setSelectedStatus, skillsInput, setSkillsInput, minExperience, setMinExperience, maxExperience, setMaxExperience }) => {
-  const INPUT_STYLE = `w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-[${STYLES.dark.accent.color}] accent-pink-500` 
+  const INPUT_STYLE = `w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-[${STYLES.dark.accent.color}] accent-pink-500` ;
+  const LABEL_STYLE = `block text-sm font-medium ${STYLES.dark.text.secondary} mb-2`;
 
   return (
     <div className="p-6 mb-6">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold text-gray-100">Advanced Filters</h3>
+        <h3 className={`text-lg font-semibold ${STYLES.dark.text.primary}`}>Advanced Filters</h3>
         {hasActiveFilters && (
           <button
             onClick={clearFilters}
@@ -23,7 +24,7 @@ export const FilterComponent = ({ hasActiveFilters, clearFilters, fieldInput, se
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Field Filter */}
         <div>
-          <label className="block text-sm font-medium text-gray-200 mb-2">Field</label>
+          <label className={LABEL_STYLE}>Field</label>
           <select
             value={fieldInput}
             onChange={(e) => setFieldInput(e.target.value)}
@@ -38,7 +39,7 @@ export const FilterComponent = ({ hasActiveFilters, clearFilters, fieldInput, se
 
         {/* Status Filter */}
         <div>
-          <label className="block text-sm font-medium text-gray-200 mb-2">Status</label>
+          <label className={LABEL_STYLE}>Status</label>
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
@@ -53,7 +54,7 @@ export const FilterComponent = ({ hasActiveFilters, clearFilters, fieldInput, se
 
         {/* Skills Filter */}
         <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-200 mb-2">Skills</label>
+          <label className={LABEL_STYLE}>Skills</label>
           <input
             type="text"
             value={skillsInput}
@@ -61,12 +62,12 @@ export const FilterComponent = ({ hasActiveFilters, clearFilters, fieldInput, se
             placeholder="e.g., React, JavaScript, Python (comma-separated)"
             className={INPUT_STYLE}
           />
-          <p className="text-xs text-gray-500 mt-1">Separate multiple skills with commas</p>
+          <p className={`text-xs ${STYLES.dark.text.paragraph} mt-1`}>Separate multiple skills with commas</p>
         </div>
 
         {/* Experience Range */}
         <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-200 mb-2">Years of Experience</label>
+          <label className={LABEL_STYLE}>Years of Experience</label>
           <div className="flex space-x-4 items-center">
             <div className="flex-1">
               <input
@@ -78,7 +79,7 @@ export const FilterComponent = ({ hasActiveFilters, clearFilters, fieldInput, se
                 className={INPUT_STYLE}
               />
             </div>
-            <span className="text-gray-500">to</span>
+            <span className={STYLES.dark.text.paragraph}>to</span>
             <div className="flex-1">
               <input
                 type="number"
