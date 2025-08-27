@@ -5,8 +5,9 @@ import { useState } from "react";
 
 export const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }) => {
   const iconStyle = 'shrink-0 w-5 h-5 transition duration-75';
-  const linkStyle = 'flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group';
+  const linkStyle = `flex items-center p-2 ${STYLES.dark.text.paragraph} rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group`;
   const spanStyle = 'flex-1 ms-3 whitespace-nowrap';
+
   const [activeLink, setActiveLink] = useState('Dashboard');
   const [DASHBOARD, USER_REVIEW, CONFIG_USERS, USER_MAN, EXPORT_DATA] = [
     "Dashboard",
@@ -15,6 +16,11 @@ export const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }) => {
     "User Management",
     "Export Data"
   ];
+
+  const linkOnClick = (linkName) => {
+    setIsSideBarOpen(false)
+    setActiveLink(linkName)
+  }
 
   return (
     <aside
@@ -31,8 +37,7 @@ export const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }) => {
           <li>
             <Link
               onClick={() => {
-                setIsSideBarOpen(false)
-                setActiveLink(DASHBOARD)
+                linkOnClick(DASHBOARD)
               }}
               to='/'
               className={linkStyle}
@@ -44,8 +49,7 @@ export const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }) => {
           <li>
             <Link
               onClick={() => {
-                setIsSideBarOpen(false)
-                setActiveLink(USER_REVIEW)
+                linkOnClick(USER_REVIEW)
               }}
               to='/'
               className={linkStyle}
@@ -58,8 +62,7 @@ export const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }) => {
             <Link
               to='/cv-link'
               onClick={() => {
-                setIsSideBarOpen(false)
-                setActiveLink(CONFIG_USERS)
+                linkOnClick(CONFIG_USERS)
               }}
               className={linkStyle}
             >
@@ -70,8 +73,7 @@ export const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }) => {
           <li>
             <Link
               onClick={() => {
-                setIsSideBarOpen(false)
-                setActiveLink(USER_MAN)
+                linkOnClick(USER_MAN)
               }}
               to='/'
               className={linkStyle}
@@ -83,8 +85,7 @@ export const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }) => {
           <li>
             <Link
               onClick={() => {
-                setIsSideBarOpen(false)
-                setActiveLink(EXPORT_DATA)
+                linkOnClick(EXPORT_DATA)
               }}
               to='/'
               className={linkStyle}
