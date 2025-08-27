@@ -9,10 +9,10 @@ export const Skeleton = ({ type, searchQuery }) => {
         <div role="status" className="space-y-2.5 animate-pulse max-w-full">
           <div className="flex items-center justify-between animate-in fade-in-0 slide-in-from-top-1 duration-400 delay-200 ease-out">
             <div>
-              <h2 className="text-lg font-semibold text-gray-200">
+              <h2 className={`text-lg font-semibold ${STYLES.dark.text.secondary}`}>
                 Search Results
               </h2>
-              <p className="text-sm text-gray-400 mt-1">
+              <p className={`text-sm ${STYLES.dark.text.paragraph} mt-1`}>
                 Found users matching "{searchQuery}"
               </p>
             </div>
