@@ -26,12 +26,12 @@ export const CategoryChart = ({ data }) => (
     </ResponsiveContainer>
     <div className="flex space-x-4 mt-4 m-w-max overflow-x-scroll scroll-px-50">
       {data.map((entry, index) => (
-        <div key={index} className={`flex items-center justify-center min-w-max ${STYLES.dark.background.secondary} rounded-lg border border-gray-200 px-3 py-1 mb-4`}>
+        <div key={index} className={`flex items-center justify-center min-w-max ${STYLES.dark.background.secondary} rounded-lg border ${STYLES.dark.border.medium} px-3 py-1 mb-4`}>
           <div
             className="w-3 h-3 rounded-full mr-2"
             style={{ backgroundColor: entry.color }}
           ></div>
-          <span className="text-sm text-gray-400">{entry.name} ({entry.value.toFixed(2)}%)</span>
+          <span className={`text-sm ${STYLES.dark.text.paragraph}`}>{entry.name} ({entry.value.toFixed(2)}%)</span>
         </div>
       ))}
     </div>
