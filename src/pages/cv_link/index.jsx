@@ -227,10 +227,10 @@ const CvLink = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-100 mb-2">
+        <h1 className={`text-3xl font-bold ${STYLES.dark.text.primary} mb-2`}>
           Full Stop Recruitment CV Form
         </h1>
-        <p className="text-gray-200">
+        <p className={STYLES.dark.text.secondary}>
           Complete the steps below to submit your CV
         </p>
       </div>
@@ -252,15 +252,15 @@ const CvLink = () => {
             onClick={handlePrevious}
             disabled={currentStep === 1}
             className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-200 ${currentStep === 1
-              ? `${STYLES.dark.background.darkest} text-gray-400 cursor-not-allowed`
-              : `${STYLES.dark.background.secondary} border ${STYLES.dark.border.light} text-gray-300 hover:${STYLES.dark.background.darkest}`
+              ? `${STYLES.dark.background.darkest} ${STYLES.dark.text.paragraph} cursor-not-allowed`
+              : `${STYLES.dark.background.secondary} border ${STYLES.dark.border.light} ${STYLES.dark.text.primary} hover:${STYLES.dark.background.darkest}`
               }`}
           >
             <ChevronLeft className="w-5 h-5 mr-2" />
             Previous
           </button>
 
-          <div className="text-sm text-gray-300">
+          <div className={`text-sm ${STYLES.dark.text.tertiary}`}>
             {currentStep} of {totalSteps}
           </div>
 
@@ -269,8 +269,8 @@ const CvLink = () => {
               onClick={handleSubmit}
               disabled={!canProceed() || isSubmitting || submitStatus === 'success'}
               className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-200 ${!canProceed() || isSubmitting || submitStatus === 'success'
-                ? `${STYLES.dark.background.darkest} text-gray-400 cursor-not-allowed`
-                : `bg-[${STYLES.dark.accent.color}] text-white hover:bg-red-900 border ${STYLES.dark.border.light}`
+                ? `${STYLES.dark.background.darkest} ${STYLES.dark.text.paragraph} cursor-not-allowed`
+                : `bg-[${STYLES.dark.accent.color}] ${STYLES.dark.text.primary} hover:bg-red-900 border ${STYLES.dark.border.light}`
                 }`}
             >
               {isSubmitting ? (
@@ -295,8 +295,8 @@ const CvLink = () => {
               onClick={handleNext}
               disabled={!canProceed()}
               className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-200 ${canProceed()
-                ? `bg-[${STYLES.dark.accent.color}] text-white hover:bg-red-900 border ${STYLES.dark.border.light}`
-                : `${STYLES.dark.background.darkest} text-gray-400 cursor-not-allowed`
+                ? `bg-[${STYLES.dark.accent.color}] ${STYLES.dark.text.primary} hover:bg-red-900 border ${STYLES.dark.border.light}`
+                : `${STYLES.dark.background.darkest} ${STYLES.dark.text.paragraph} cursor-not-allowed`
                 }`}
             >
               Next
