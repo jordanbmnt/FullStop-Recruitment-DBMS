@@ -18,10 +18,10 @@ const CVOptionCard = ({
   const PdfPreview = ({ formData, color }) => {
     return (
       <div
-        className={`mt-2 p-2 bg-${color}-50 rounded-lg flex items-center justify-between space-x-4 border border-${color}-200`}
+        className={`w-full p-1 px-2 bg-${color}-50 rounded-lg flex items-center justify-between space-x-4 border border-${color}-200`}
       >
         <p className={`text-sm text-${color}-700`}>
-          {formData.cvFileName} ({formData.cvFileSize} KB)
+          {`${formData.cvFileName.slice(0, 13)}...`} ({formData.cvFileSize} KB)
         </p>
         <DeleteIcon
           className={`w-5 text-${color}-700`}
@@ -82,31 +82,41 @@ const CVOptionCard = ({
               >
                 Choose your {type === "update" ? "updated " : ""} CV file:
               </label>
-              <input
-                type='file'
-                accept='.pdf'
-                onChange={onFileUpload}
-                className={`block w-full text-sm text-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium ${colorClasses[color].file}`}
-              />
+              <div className='flex w-full space-x-4'>
+                {formData.cvFile && formData.cvType === type && (
+                  <PdfPreview formData={formData} color={color} />
+                )}
+                <input
+                  type='file'
+                  accept='.pdf'
+                  onChange={onFileUpload}
+                  className={`flex max-w-min text-sm text-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium ${colorClasses[color].file} self-center w-[105px] cursor-pointer`}
+                />
+              </div>
             </div>
           ) : (
-            <div className='flex space-x-4'>
-              <input
-                value={updateVale}
-                onChange={(e) => setUpdateVale(e.target.value)}
-                type='text'
-                placeholder='e.g test@gmail.com'
-                className={`flex-1 p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-yellow-600 focus:border-transparent ${STYLES.dark.background.tertiary} ${STYLES.dark.text.paragraph} placeholder:text-gray-600 w-70`}
-              />
-              <button
-                className={`px-6 py-3 rounded-lg ${STYLES.dark.text.paragraph} font-medium transition-all duration-300 flex items-center space-x-2 justify-center w-20 hover:shadow-md hover:scale-105 transition-all duration-300 shadow-lg bg-yellow-50 text-yellow-700 hover:bg-yellow-100`}
+            <div>
+              <label
+                className={`block text-sm font-medium ${STYLES.dark.text.tertiary} mb-2`}
               >
-                Submit
-              </button>
+                Who would you like to update?:
+              </label>
+
+              <div className='flex w-full space-x-4'>
+                <input
+                  value={updateVale}
+                  onChange={(e) => setUpdateVale(e.target.value)}
+                  type='text'
+                  placeholder='e.g test@gmail.com'
+                  className={`flex-1 p-2 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-yellow-600 focus:border-transparent ${STYLES.dark.background.tertiary} ${STYLES.dark.text.paragraph} placeholder:text-gray-600 w-70`}
+                />
+                <button
+                  className={`px-6 py-2 rounded-lg ${STYLES.dark.text.paragraph} font-medium transition-all duration-300 flex items-center space-x-2 justify-center w-20 bg-yellow-50 text-yellow-700 hover:bg-yellow-100 cursor-pointer`}
+                >
+                  Submit
+                </button>
+              </div>
             </div>
-          )}
-          {formData.cvFile && formData.cvType === type && (
-            <PdfPreview formData={formData} color={color} />
           )}
         </div>
       )}
@@ -123,15 +133,15 @@ export const CvUploadOption = ({
     {
       type: "new",
       icon: "upload",
-      title: "Upload New CV",
+      title: "Add New User",
       description: "Start fresh with a completely new CV document",
       color: "red",
     },
     {
       type: "update",
       icon: "update",
-      title: "Update Existing CV",
-      description: "Upload an updated version of your CV document",
+      title: "Update Existing User",
+      description: "Update an existing user with new information",
       color: "yellow",
     },
   ];
