@@ -1,15 +1,10 @@
 import React, { useState } from "react";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Loader2,
-  CheckCircle,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2, CheckCircle } from "lucide-react";
 import { JobSummaryForm } from "./job_summary_form";
 import { FormSummary } from "./form_summary";
 import { CvUploadOption } from "./cv_upload_option";
 import { ProgressBar } from "./progress_bar";
-import { STYLES } from '../../constants/styles';
+import { STYLES } from "../../constants/styles";
 
 const CvLink = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -39,7 +34,8 @@ const CvLink = () => {
     {
       id: 1,
       title: "CV Type Selection",
-      description: "Choose whether to upload a new CV or update your existing one",
+      description:
+        "Choose whether to upload a new CV or update your existing one",
     },
     {
       id: 2,
@@ -80,9 +76,7 @@ const CvLink = () => {
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
-      const allowedTypes = [
-        "application/pdf",
-      ];
+      const allowedTypes = ["application/pdf"];
 
       if (allowedTypes.includes(file.type)) {
         setFormData((prev) => ({
@@ -105,6 +99,65 @@ const CvLink = () => {
     }
   };
 
+  const handleUpdateExistingUser = (
+    email,
+    setIsLoading,
+    isLoading,
+    setUserExists
+  ) => {
+    let searchResult = {
+      body: [],
+      error: null,
+    };
+
+    if (!email || email.trim() === "") {
+      if (!isLoading) {
+        searchResult = {
+          body: [],
+          error: "Please provide a valid email address to search.",
+        };
+        setIsLoading(false);
+        setUserExists(searchResult);
+        return searchResult;
+      }
+    }
+
+    try {
+      const ROOT_PARAM = "/.netlify/functions/get_cv_users";
+      let url = `${ROOT_PARAM}?email=${email.toLowerCase()}&limit=1`;
+      if (!isLoading) {
+        setIsLoading(true);
+        console.warn("Fetching user with email:", email);
+        fetch(url)
+          .then((res) => res.json())
+          .then((value) => {
+            if (value && value.body.length > 0) {
+              setUserExists({
+                body: value.body,
+                error: null,
+              });
+              console.warn("User found:", value.body);
+              return;
+            }
+          });
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1500); // Simulate loading delay
+        return;
+      }
+    } catch (e) {
+      console.warn("Error:", e);
+      setUserExists({
+        body: [],
+        error: "Error fetching user data." + e.message,
+      });
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1500); // Simulate loading delay
+      return;
+    }
+  };
+
   const handleSubmit = async () => {
     setIsSubmitting(true);
     setSubmitStatus(null);
@@ -114,35 +167,37 @@ const CvLink = () => {
       const formDataToSend = new FormData();
 
       // Original CV data
-      formDataToSend.append('cvType', formData.cvType);
-      formDataToSend.append('previousJobReasons', formData.previousJobReasons);
+      formDataToSend.append("cvType", formData.cvType);
+      formDataToSend.append("previousJobReasons", formData.previousJobReasons);
 
       // Additional profile data
-      formDataToSend.append('email', formData.email);
-      formDataToSend.append('coverLetter', formData.coverLetter);
-      formDataToSend.append('status', formData.status);
-      formDataToSend.append('field', formData.field);
-      formDataToSend.append('jobTitle', formData.jobTitle);
-      formDataToSend.append('yearsOfXp', formData.yearsOfXp);
-      formDataToSend.append('skills', JSON.stringify(formData.skills));
-      formDataToSend.append('summary', formData.summary);
-      formDataToSend.append('name', formData.name);
+      formDataToSend.append("email", formData.email);
+      formDataToSend.append("coverLetter", formData.coverLetter);
+      formDataToSend.append("status", formData.status);
+      formDataToSend.append("field", formData.field);
+      formDataToSend.append("jobTitle", formData.jobTitle);
+      formDataToSend.append("yearsOfXp", formData.yearsOfXp);
+      formDataToSend.append("skills", JSON.stringify(formData.skills));
+      formDataToSend.append("summary", formData.summary);
+      formDataToSend.append("name", formData.name);
 
       if (formData.cvFile) {
-        formDataToSend.append('cvFile', formData.cvFile);
+        formDataToSend.append("cvFile", formData.cvFile);
       }
 
-      console.warn('Submitting data:', formData);
+      console.warn("Submitting data:", formData);
 
-      const response = await fetch('/.netlify/functions/cv_upload', {
-        method: 'POST',
-        body: formDataToSend
+      const response = await fetch("/.netlify/functions/cv_upload", {
+        method: "POST",
+        body: formDataToSend,
       });
 
       const result = await response.json();
       if (result.success) {
-        setSubmitStatus('success');
-        setSubmitMessage('CV and profile submitted successfully! Your application has been received.');
+        setSubmitStatus("success");
+        setSubmitMessage(
+          "CV and profile submitted successfully! Your application has been received."
+        );
 
         // Reset form after successful submission
         setTimeout(() => {
@@ -166,12 +221,14 @@ const CvLink = () => {
           setSubmitMessage("");
         }, 3000);
       } else {
-        throw new Error(result.error || 'Submission failed');
+        throw new Error(result.error || "Submission failed");
       }
     } catch (error) {
-      console.error('Error submitting CV:', error);
-      setSubmitStatus('error');
-      setSubmitMessage(error.message || 'Error submitting CV. Please try again.');
+      console.error("Error submitting CV:", error);
+      setSubmitStatus("error");
+      setSubmitMessage(
+        error.message || "Error submitting CV. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -182,7 +239,15 @@ const CvLink = () => {
       case 1:
         return formData.cvType !== "" && formData.cvFile !== null;
       case 2:
-        return formData.name.trim() !== "" && formData.email.trim() !== "" && formData.summary.trim() !== "" && formData.jobTitle.trim() !== "" && formData.field.trim() !== "" && formData.skills.length > 0 && formData.previousJobReasons.trim() !== "";
+        return (
+          formData.name.trim() !== "" &&
+          formData.email.trim() !== "" &&
+          formData.summary.trim() !== "" &&
+          formData.jobTitle.trim() !== "" &&
+          formData.field.trim() !== "" &&
+          formData.skills.length > 0 &&
+          formData.previousJobReasons.trim() !== ""
+        );
       case 3:
         return true;
       default:
@@ -201,14 +266,17 @@ const CvLink = () => {
           <CvUploadOption
             formData={formData}
             handleInputChange={handleInputChange}
-            handleFileUpload={handleFileUpload} />
+            handleFileUpload={handleFileUpload}
+            handleUpdateExistingUser={handleUpdateExistingUser}
+          />
         );
 
       case 2:
         return (
           <JobSummaryForm
             formData={formData}
-            onFormDataChange={handleInputChange} />
+            onFormDataChange={handleInputChange}
+          />
         );
 
       case 3:
@@ -216,7 +284,8 @@ const CvLink = () => {
           <FormSummary
             formData={formData}
             submitStatus={submitStatus}
-            submitMessage={submitMessage} />
+            submitMessage={submitMessage}
+          />
         );
 
       default:
@@ -225,8 +294,8 @@ const CvLink = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="text-center mb-8">
+    <div className='container mx-auto px-4 py-8'>
+      <div className='text-center mb-8'>
         <h1 className={`text-3xl font-bold ${STYLES.dark.text.primary} mb-2`}>
           Full Stop Recruitment CV Form
         </h1>
@@ -239,24 +308,28 @@ const CvLink = () => {
         <ProgressBar
           steps={steps}
           currentStep={currentStep}
-          getCurrentStep={getCurrentStep} />
+          getCurrentStep={getCurrentStep}
+        />
       }
 
-      <div className="max-w-4xl mx-auto">
-        <div className={`${STYLES.dark.background.secondary} border ${STYLES.dark.border.strong} rounded-lg shadow-lg p-8 mb-8`}>
+      <div className='max-w-4xl mx-auto'>
+        <div
+          className={`${STYLES.dark.background.secondary} border ${STYLES.dark.border.strong} rounded-lg shadow-lg p-8 mb-8`}
+        >
           {renderStepContent()}
         </div>
 
-        <div className="flex justify-between items-center">
+        <div className='flex justify-between items-center'>
           <button
             onClick={handlePrevious}
             disabled={currentStep === 1}
-            className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-200 ${currentStep === 1
-              ? `${STYLES.dark.background.darkest} ${STYLES.dark.text.paragraph} cursor-not-allowed`
-              : `${STYLES.dark.background.secondary} border ${STYLES.dark.border.light} ${STYLES.dark.text.primary} hover:${STYLES.dark.background.darkest}`
-              }`}
+            className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+              currentStep === 1
+                ? `${STYLES.dark.background.darkest} ${STYLES.dark.text.paragraph} cursor-not-allowed`
+                : `${STYLES.dark.background.secondary} border ${STYLES.dark.border.light} ${STYLES.dark.text.primary} hover:${STYLES.dark.background.darkest}`
+            }`}
           >
-            <ChevronLeft className="w-5 h-5 mr-2" />
+            <ChevronLeft className='w-5 h-5 mr-2' />
             Previous
           </button>
 
@@ -267,26 +340,29 @@ const CvLink = () => {
           {currentStep === totalSteps ? (
             <button
               onClick={handleSubmit}
-              disabled={!canProceed() || isSubmitting || submitStatus === 'success'}
-              className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-200 ${!canProceed() || isSubmitting || submitStatus === 'success'
-                ? `${STYLES.dark.background.darkest} ${STYLES.dark.text.paragraph} cursor-not-allowed`
-                : `bg-[${STYLES.dark.accent.color}] ${STYLES.dark.text.primary} hover:bg-red-900 border ${STYLES.dark.border.light}`
-                }`}
+              disabled={
+                !canProceed() || isSubmitting || submitStatus === "success"
+              }
+              className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+                !canProceed() || isSubmitting || submitStatus === "success"
+                  ? `${STYLES.dark.background.darkest} ${STYLES.dark.text.paragraph} cursor-not-allowed`
+                  : `bg-[${STYLES.dark.accent.color}] ${STYLES.dark.text.primary} hover:bg-red-900 border ${STYLES.dark.border.light}`
+              }`}
             >
               {isSubmitting ? (
                 <>
-                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  <Loader2 className='w-5 h-5 mr-2 animate-spin' />
                   Submitting...
                 </>
-              ) : submitStatus === 'success' ? (
+              ) : submitStatus === "success" ? (
                 <>
-                  <CheckCircle className="w-5 h-5 mr-2" />
+                  <CheckCircle className='w-5 h-5 mr-2' />
                   Submitted
                 </>
               ) : (
                 <>
                   Submit
-                  <ChevronRight className="w-5 h-5 ml-2" />
+                  <ChevronRight className='w-5 h-5 ml-2' />
                 </>
               )}
             </button>
@@ -294,13 +370,14 @@ const CvLink = () => {
             <button
               onClick={handleNext}
               disabled={!canProceed()}
-              className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-200 ${canProceed()
-                ? `bg-[${STYLES.dark.accent.color}] ${STYLES.dark.text.primary} hover:bg-red-900 border ${STYLES.dark.border.light}`
-                : `${STYLES.dark.background.darkest} ${STYLES.dark.text.paragraph} cursor-not-allowed`
-                }`}
+              className={`flex items-center px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
+                canProceed()
+                  ? `bg-[${STYLES.dark.accent.color}] ${STYLES.dark.text.primary} hover:bg-red-900 border ${STYLES.dark.border.light}`
+                  : `${STYLES.dark.background.darkest} ${STYLES.dark.text.paragraph} cursor-not-allowed`
+              }`}
             >
               Next
-              <ChevronRight className="w-5 h-5 ml-2" />
+              <ChevronRight className='w-5 h-5 ml-2' />
             </button>
           )}
         </div>

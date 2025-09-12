@@ -1,6 +1,6 @@
 import { DeleteIcon, FileText, RefreshCw, Upload } from "lucide-react";
 import { STYLES } from "../../../constants/styles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const CVOptionCard = ({
   type,
@@ -12,8 +12,19 @@ const CVOptionCard = ({
   onSelect,
   onFileUpload,
   formData,
+  updateExistingUser,
 }) => {
   const [updateVale, setUpdateVale] = useState("");
+  const [userExists, setUserExists] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (userExists && userExists.body.length > 0) {
+      console.warn("User Exists:", userExists);
+    } else if (userExists) {
+      console.warn("Error:", userExists);
+    }
+  }, [userExists]);
 
   const PdfPreview = ({ formData, color }) => {
     return (
@@ -107,11 +118,21 @@ const CVOptionCard = ({
                   value={updateVale}
                   onChange={(e) => setUpdateVale(e.target.value)}
                   type='text'
+                  disabled={isLoading}
                   placeholder='e.g test@gmail.com'
-                  className={`flex-1 p-2 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-yellow-600 focus:border-transparent ${STYLES.dark.background.tertiary} ${STYLES.dark.text.paragraph} placeholder:text-gray-600 w-70`}
+                  className={`flex-1 p-2 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-yellow-600 focus:border-transparent ${STYLES.dark.background.tertiary} ${STYLES.dark.text.paragraph} placeholder:text-gray-600 w-70 disabled:cursor-not-allowed disabled:opacity-50`}
                 />
                 <button
-                  className={`px-6 py-2 rounded-lg ${STYLES.dark.text.paragraph} font-medium transition-all duration-300 flex items-center space-x-2 justify-center w-20 bg-yellow-50 text-yellow-700 hover:bg-yellow-100 cursor-pointer`}
+                  onClick={() => {
+                    updateExistingUser(
+                      updateVale,
+                      setIsLoading,
+                      isLoading,
+                      setUserExists
+                    );
+                  }}
+                  disabled={isLoading}
+                  className={`px-6 py-2 rounded-lg ${STYLES.dark.text.paragraph} font-medium transition-all duration-300 flex items-center space-x-2 justify-center w-20 bg-yellow-50 text-yellow-700 hover:bg-yellow-100 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50`}
                 >
                   Submit
                 </button>
@@ -128,6 +149,7 @@ export const CvUploadOption = ({
   formData,
   handleInputChange,
   handleFileUpload,
+  handleUpdateExistingUser,
 }) => {
   const cvOptions = [
     {
@@ -178,6 +200,7 @@ export const CvUploadOption = ({
             }}
             onFileUpload={handleFileUpload}
             formData={formData}
+            updateExistingUser={handleUpdateExistingUser}
           />
         ))}
       </div>
