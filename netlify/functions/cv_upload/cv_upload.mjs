@@ -8,6 +8,67 @@ const validateFileType = (contentType) => {
   return allowedTypes.includes(contentType);
 };
 
+const uploadDocument = async (mongoose, headers, uploadedFileId, cvFile) => {
+  const conn = await mongoose.connect(process.env.MONGODB_CV_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
+  const db = conn.connection.db;
+  const gfs = new mongoose.mongo.GridFSBucket(db, {
+    bucketName: "uploads",
+  });
+
+  if (!cvFile) {
+    return new Response(
+      JSON.stringify({
+        statusCode: 400,
+        error: "No file uploaded.",
+      }),
+      {
+        status: 400,
+        headers,
+      }
+    );
+  }
+
+  if (!validateFileType(cvFile.type)) {
+    return new Response(
+      JSON.stringify({
+        statusCode: 400,
+        error: "Invalid file type. Please upload PDF documents only.",
+      }),
+      {
+        status: 400,
+        headers,
+      }
+    );
+  }
+
+  const fileBuffer = Buffer.from(await cvFile.arrayBuffer());
+
+  const writestream = gfs.openUploadStream(cvFile.name, {
+    chunkSizeBytes: 1024 * 256,
+    metadata: {
+      contentType: cvFile.type,
+    },
+  });
+
+  uploadedFileId = writestream.id.toString();
+  console.log("File uploaded to GridFS with ID:", uploadedFileId);
+
+  await new Promise((resolve, reject) => {
+    writestream.end(fileBuffer, (err) => {
+      if (err) {
+        console.error("Error writing file to GridFS:", err);
+        return reject(err);
+      }
+      resolve();
+    });
+  });
+
+  console.warn("File uploaded to GridFS successfully.");
+};
+
 // eslint-disable-next-line import/no-anonymous-default-export
 export default async (request, _context) => {
   let uploadedFileId;
@@ -41,75 +102,14 @@ export default async (request, _context) => {
       );
     }
 
-    // ---------------------------- Upload Document ----------------------------
-
-    const conn = await mongoose.connect(process.env.MONGODB_CV_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-    const db = conn.connection.db;
-    const gfs = new mongoose.mongo.GridFSBucket(db, {
-      bucketName: "uploads",
-    });
-
     const formData = await request.formData();
-
     const cvFile = formData.get("cvFile");
-
-    if (!cvFile) {
-      return new Response(
-        JSON.stringify({
-          statusCode: 400,
-          error: "No file uploaded.",
-        }),
-        {
-          status: 400,
-          headers,
-        }
-      );
-    }
-
-    if (!validateFileType(cvFile.type)) {
-      return new Response(
-        JSON.stringify({
-          statusCode: 400,
-          error: "Invalid file type. Please upload PDF documents only.",
-        }),
-        {
-          status: 400,
-          headers,
-        }
-      );
-    }
-
-    const fileBuffer = Buffer.from(await cvFile.arrayBuffer());
-
-    const writestream = gfs.openUploadStream(cvFile.name, {
-      chunkSizeBytes: 1024 * 256,
-      metadata: {
-        contentType: cvFile.type,
-      },
-    });
-
-    uploadedFileId = writestream.id.toString();
-    console.log("File uploaded to GridFS with ID:", uploadedFileId);
-
-    await new Promise((resolve, reject) => {
-      writestream.end(fileBuffer, (err) => {
-        if (err) {
-          console.error("Error writing file to GridFS:", err);
-          return reject(err);
-        }
-        resolve();
-      });
-    });
-
-    console.warn("File uploaded to GridFS successfully.");
-
-    // ---------------------------- Upload Form Data ----------------------------
-
     const cvType = formData.get("cvType") || "";
     const previousJobReasons = formData.get("previousJobReasons") || "";
+
+    uploadDocument(mongoose, headers, uploadedFileId, cvFile);
+
+    // ---------------------------- Upload Form Data ----------------------------
 
     if (!cvType || !previousJobReasons) {
       return new Response(
