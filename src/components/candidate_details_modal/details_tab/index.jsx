@@ -80,7 +80,7 @@ export const DetailsTab = ({ candidate, isFetching, searchResult }) => {
             </div>
           </div>
 
-          {candidate.fileInfo && searchResult.pdfElement ? (
+          {candidate.fileInfo && searchResult && searchResult.pdfElement ? (
             <div className='flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2'>
               <button
                 disabled={isFetching}
