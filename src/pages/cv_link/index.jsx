@@ -9,6 +9,7 @@ import { STYLES } from "../../constants/styles";
 const CvLink = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [updateUserExists, setUpdateUserExists] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null); // 'success', 'error', or null
   const [submitMessage, setSubmitMessage] = useState("");
   const [formData, setFormData] = useState({
@@ -132,10 +133,16 @@ const CvLink = () => {
           .then((res) => res.json())
           .then((value) => {
             if (value && value.body.length > 0) {
+              setUpdateUserExists(true);
               setUserExists({
                 body: value.body,
                 error: null,
               });
+              setFormData((prev) => ({
+                ...prev,
+                ...value.body[0],
+                cvType: "update",
+              }));
               console.warn("User found:", value.body);
               return;
             }
@@ -237,7 +244,10 @@ const CvLink = () => {
   const canProceed = () => {
     switch (currentStep) {
       case 1:
-        return formData.cvType !== "" && formData.cvFile !== null;
+        return (
+          (formData.cvType !== "" && formData.cvFile !== null) ||
+          updateUserExists
+        );
       case 2:
         return (
           formData.name.trim() !== "" &&
