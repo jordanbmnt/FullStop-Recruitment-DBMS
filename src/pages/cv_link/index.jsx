@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { ChevronLeft, ChevronRight, Loader2, CheckCircle } from "lucide-react";
 import { JobSummaryForm } from "./job_summary_form";
 import { FormSummary } from "./form_summary";
@@ -6,29 +6,30 @@ import { CvUploadOption } from "./cv_upload_option";
 import { ProgressBar } from "./progress_bar";
 import { STYLES } from "../../constants/styles";
 
+const DEFAULT_FORM_DATA = {
+  cvType: "",
+  previousJobReasons: "",
+  cvFile: null,
+  cvFileName: "",
+  cvFileSize: 0,
+  email: "",
+  status: "",
+  field: "",
+  jobTitle: "",
+  yearsOfXp: "",
+  coverLetter: "",
+  skills: [],
+  summary: "",
+  name: "",
+};
+
 const CvLink = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [updateUserExists, setUpdateUserExists] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null); // 'success', 'error', or null
   const [submitMessage, setSubmitMessage] = useState("");
-  const [formData, setFormData] = useState({
-    cvType: "",
-    previousJobReasons: "",
-    cvFile: null,
-    cvFileName: "",
-    cvFileSize: 0,
-    // Additional fields for JobSummaryForm
-    email: "",
-    status: "",
-    field: "",
-    jobTitle: "",
-    yearsOfXp: "",
-    coverLetter: "",
-    skills: [],
-    summary: "",
-    name: "",
-  });
+  const [formData, setFormData] = useState(DEFAULT_FORM_DATA);
 
   // Step configuration
   const steps = [
@@ -241,7 +242,7 @@ const CvLink = () => {
     }
   };
 
-  const canProceed = () => {
+  const canProceed = useCallback(() => {
     switch (currentStep) {
       case 1:
         return (
@@ -263,6 +264,13 @@ const CvLink = () => {
       default:
         return true;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData, updateUserExists]);
+
+  const resetFormData = () => {
+    setFormData(DEFAULT_FORM_DATA);
+    setUpdateUserExists(false);
+    return;
   };
 
   const getCurrentStep = () => {
@@ -278,6 +286,7 @@ const CvLink = () => {
             handleInputChange={handleInputChange}
             handleFileUpload={handleFileUpload}
             handleUpdateExistingUser={handleUpdateExistingUser}
+            reset={resetFormData}
           />
         );
 
