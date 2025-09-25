@@ -46,7 +46,7 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
 
   const getData = ({ user_id }) => {
     try {
-      const ROOT_PARAM = `/.netlify/functions/get_users_cv_data`;
+      const ROOT_PARAM = `/.netlify/functions/user`;
       let url = `${ROOT_PARAM}?user_id=${user_id}`;
 
       setIsFetching(true);
