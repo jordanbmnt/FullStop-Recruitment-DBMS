@@ -89,7 +89,88 @@ export default async (request, _context) => {
       });
     }
 
-    if (request.method !== "POST") {
+    if (request.method === "POST") {
+      const formData = await request.formData();
+      const cvFile = formData.get("cvFile");
+      const cvType = formData.get("cvType") || "";
+      const previousJobReasons = formData.get("previousJobReasons") || "";
+
+      uploadDocument(mongoose, headers, uploadedFileId, cvFile);
+
+      // ---------------------------- Upload Form Data ----------------------------
+
+      if (!cvType || !previousJobReasons) {
+        return new Response(
+          JSON.stringify({
+            statusCode: 400,
+            error:
+              "Missing required fields: cvType and previousJobReasons are required",
+          }),
+          {
+            status: 400,
+            headers,
+          }
+        );
+      }
+
+      let fileInfo = {
+        gridFsId: new ObjectId(uploadedFileId),
+        fileName: cvFile.name,
+        fileSize: Math.round(cvFile.size / 1024),
+        fileType: cvFile.type,
+        uploadedAt: new Date(),
+      };
+
+      // Create CV submission document
+      const cvSubmission = {
+        email: formData.get("email"),
+        status: formData.get("status"),
+        field: formData.get("field"),
+        jobTitle: formData.get("jobTitle"),
+        yearsOfXp: parseInt(formData.get("yearsOfXp")),
+        skills: JSON.parse(formData.get("skills")),
+        summary: formData.get("summary"),
+        name: formData.get("name"),
+        coverLetter: formData.get("coverLetter"),
+        cvType,
+        previousJobReasons,
+        fileInfo,
+        createdAt: new Date(),
+        lastUpdated: new Date(),
+      };
+
+      const database = (await clientPromise).db(process.env.MONGODB_DATABASE);
+      const collection = database.collection(
+        process.env.MONGODB_COLLECTION || "fullstop-db-users"
+      );
+
+      const insertResult = await collection.insertOne(cvSubmission);
+
+      if (!insertResult.acknowledged) {
+        throw new Error("Failed to save CV submission to database");
+      }
+
+      return new Response(
+        JSON.stringify({
+          statusCode: 200,
+          success: true,
+          message: "CV submitted successfully and file uploaded to GridFS!",
+          body: {
+            id: cvSubmission.id,
+            cvType: cvSubmission.cvType,
+            createdAt: cvSubmission.createdAt,
+            fileName: fileInfo?.fileName || null,
+            fileSize: fileInfo?.fileSize || null,
+            gridFsId: fileInfo?.gridFsId || null,
+            insertedId: insertResult.insertedId,
+          },
+        }),
+        {
+          status: 200,
+          headers,
+        }
+      );
+    } else {
       return new Response(
         JSON.stringify({
           statusCode: 405,
@@ -101,89 +182,8 @@ export default async (request, _context) => {
         }
       );
     }
-
-    const formData = await request.formData();
-    const cvFile = formData.get("cvFile");
-    const cvType = formData.get("cvType") || "";
-    const previousJobReasons = formData.get("previousJobReasons") || "";
-
-    uploadDocument(mongoose, headers, uploadedFileId, cvFile);
-
-    // ---------------------------- Upload Form Data ----------------------------
-
-    if (!cvType || !previousJobReasons) {
-      return new Response(
-        JSON.stringify({
-          statusCode: 400,
-          error:
-            "Missing required fields: cvType and previousJobReasons are required",
-        }),
-        {
-          status: 400,
-          headers,
-        }
-      );
-    }
-
-    let fileInfo = {
-      gridFsId: new ObjectId(uploadedFileId),
-      fileName: cvFile.name,
-      fileSize: Math.round(cvFile.size / 1024),
-      fileType: cvFile.type,
-      uploadedAt: new Date(),
-    };
-
-    // Create CV submission document
-    const cvSubmission = {
-      email: formData.get("email"),
-      status: formData.get("status"),
-      field: formData.get("field"),
-      jobTitle: formData.get("jobTitle"),
-      yearsOfXp: parseInt(formData.get("yearsOfXp")),
-      skills: JSON.parse(formData.get("skills")),
-      summary: formData.get("summary"),
-      name: formData.get("name"),
-      coverLetter: formData.get("coverLetter"),
-      cvType,
-      previousJobReasons,
-      fileInfo,
-      createdAt: new Date(),
-      lastUpdated: new Date(),
-    };
-
-    const database = (await clientPromise).db(process.env.MONGODB_DATABASE);
-    const collection = database.collection(
-      process.env.MONGODB_COLLECTION || "fullstop-db-users"
-    );
-
-    const insertResult = await collection.insertOne(cvSubmission);
-
-    if (!insertResult.acknowledged) {
-      throw new Error("Failed to save CV submission to database");
-    }
-
-    return new Response(
-      JSON.stringify({
-        statusCode: 200,
-        success: true,
-        message: "CV submitted successfully and file uploaded to GridFS!",
-        body: {
-          id: cvSubmission.id,
-          cvType: cvSubmission.cvType,
-          createdAt: cvSubmission.createdAt,
-          fileName: fileInfo?.fileName || null,
-          fileSize: fileInfo?.fileSize || null,
-          gridFsId: fileInfo?.gridFsId || null,
-          insertedId: insertResult.insertedId,
-        },
-      }),
-      {
-        status: 200,
-        headers,
-      }
-    );
   } catch (error) {
-    console.error("Error processing CV submission:", error);
+    console.error("Error processing user:", error);
 
     return new Response(
       JSON.stringify({

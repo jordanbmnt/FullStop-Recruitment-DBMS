@@ -195,7 +195,7 @@ const CvLink = () => {
 
       console.warn("Submitting data:", formData);
 
-      const response = await fetch("/.netlify/functions/cv_upload", {
+      const response = await fetch("/.netlify/functions/user", {
         method: "POST",
         body: formDataToSend,
       });
