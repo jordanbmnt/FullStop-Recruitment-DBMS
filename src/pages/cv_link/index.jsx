@@ -125,7 +125,7 @@ const CvLink = () => {
     }
 
     try {
-      const ROOT_PARAM = "/.netlify/functions/get_cv_users";
+      const ROOT_PARAM = "/.netlify/functions/user";
       let url = `${ROOT_PARAM}?email=${email.toLowerCase()}&limit=1`;
       if (!isLoading) {
         setIsLoading(true);

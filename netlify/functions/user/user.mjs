@@ -69,9 +69,7 @@ const uploadDocument = async (mongoose, headers, uploadedFileId, cvFile) => {
   console.warn("File uploaded to GridFS successfully.");
 };
 
-const collectionQueryBuilder = ({ searchParams, uploadsType }) => {
-  const userId = searchParams.get("user_id");
-
+const cvCollectionQueryBuilder = ({ userId, uploadsType }) => {
   if (uploadsType === "meta") {
     return { _id: new ObjectId(userId) };
   } else if (uploadsType === "binary") {
@@ -81,15 +79,57 @@ const collectionQueryBuilder = ({ searchParams, uploadsType }) => {
   }
 };
 
-const collectionQueryCall = async (database, searchParams, type) => {
+const userCollectionQueryBuilder = ({ searchParams }) => {
+  const query = {};
+  const searchParamsDict = {
+    name: searchParams.get("name"),
+    email: searchParams.get("email"),
+    field: searchParams.get("field"),
+    skills: searchParams.get("skills"),
+    status: searchParams.get("status"),
+    minExperience: searchParams.get("minExperience"),
+    maxExperience: searchParams.get("maxExperience"),
+  };
+
+  for (const param in searchParamsDict) {
+    const paramValue = searchParamsDict[param];
+
+    if (paramValue) {
+      if (param === "skills") {
+        const paramArr = paramValue
+          .split(" ")
+          .map((p) => p.toLowerCase().replace("-", " "));
+
+        query[param] = {
+          $in: paramArr,
+        };
+      } else if (param === "minExperience" || param === "maxExperience") {
+        if (!query.yearsOfXp) {
+          query.yearsOfXp = {};
+        }
+
+        if (param === "minExperience") {
+          query.yearsOfXp.$gte = parseInt(paramValue);
+        } else {
+          query.yearsOfXp.$lte = parseInt(paramValue);
+        }
+      } else {
+        const regExp = new RegExp(paramValue, "i");
+
+        query[param] = {
+          $regex: regExp,
+        };
+      }
+    }
+  }
+
+  return query;
+};
+
+const collectionQueryCall = async (dbCollection, userId, type) => {
   try {
-    const collection =
-      type === "meta"
-        ? process.env.MONGODB_CV_META_COLLECTION
-        : process.env.MONGODB_CV_BIN_COLLECTION;
-    const dbCollection = database.collection(collection);
-    const metaDataQuery = collectionQueryBuilder({
-      searchParams,
+    const metaDataQuery = cvCollectionQueryBuilder({
+      userId,
       uploadsType: type,
     });
     const results = await dbCollection.find(metaDataQuery).toArray();
@@ -110,9 +150,6 @@ const collectionQueryCall = async (database, searchParams, type) => {
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default async (request, _context) => {
-  let uploadedFileId;
-
-  // Set CORS headers
   const headers = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "Content-Type",
@@ -128,15 +165,23 @@ export default async (request, _context) => {
       });
     }
 
+    const DATABASE = (await clientPromise).db(process.env.MONGODB_DATABASE);
+    const COLLECTION = DATABASE.collection(process.env.MONGODB_COLLECTION);
+    const META_COLLECTION = DATABASE.collection(
+      process.env.MONGODB_CV_META_COLLECTION
+    );
+    const CV_BIN_COLLECTION = DATABASE.collection(
+      process.env.MONGODB_CV_BIN_COLLECTION
+    );
+
     if (request.method === "POST") {
+      let uploadedFileId;
       const formData = await request.formData();
       const cvFile = formData.get("cvFile");
       const cvType = formData.get("cvType") || "";
       const previousJobReasons = formData.get("previousJobReasons") || "";
 
       uploadDocument(mongoose, headers, uploadedFileId, cvFile);
-
-      // ---------------------------- Upload Form Data ----------------------------
 
       if (!cvType || !previousJobReasons) {
         return new Response(
@@ -159,8 +204,6 @@ export default async (request, _context) => {
         fileType: cvFile.type,
         uploadedAt: new Date(),
       };
-
-      // Create CV submission document
       const cvSubmission = {
         email: formData.get("email"),
         status: formData.get("status"),
@@ -177,32 +220,28 @@ export default async (request, _context) => {
         createdAt: new Date(),
         lastUpdated: new Date(),
       };
-
-      const database = (await clientPromise).db(process.env.MONGODB_DATABASE);
-      const collection = database.collection(
-        process.env.MONGODB_COLLECTION || "fullstop-db-users"
-      );
-
-      const insertResult = await collection.insertOne(cvSubmission);
+      const insertResult = await COLLECTION.insertOne(cvSubmission);
 
       if (!insertResult.acknowledged) {
         throw new Error("Failed to save CV submission to database");
       }
+
+      const results = {
+        id: cvSubmission.id,
+        cvType: cvSubmission.cvType,
+        createdAt: cvSubmission.createdAt,
+        fileName: fileInfo?.fileName || null,
+        fileSize: fileInfo?.fileSize || null,
+        gridFsId: fileInfo?.gridFsId || null,
+        insertedId: insertResult.insertedId,
+      };
 
       return new Response(
         JSON.stringify({
           statusCode: 200,
           success: true,
           message: "CV submitted successfully and file uploaded to GridFS!",
-          body: {
-            id: cvSubmission.id,
-            cvType: cvSubmission.cvType,
-            createdAt: cvSubmission.createdAt,
-            fileName: fileInfo?.fileName || null,
-            fileSize: fileInfo?.fileSize || null,
-            gridFsId: fileInfo?.gridFsId || null,
-            insertedId: insertResult.insertedId,
-          },
+          body: results,
         }),
         {
           status: 200,
@@ -211,36 +250,58 @@ export default async (request, _context) => {
       );
     } else if (request.method === "GET") {
       const { searchParams } = new URL(request.url);
-      const database = (await clientPromise).db(
-        process.env.MONGODB_CV_DATABASE
-      );
-      const metaData = await collectionQueryCall(
-        database,
-        searchParams,
-        "meta"
-      );
-      const binaryData = await collectionQueryCall(
-        database,
-        searchParams,
-        "binary"
-      );
-      const results = [{ ...metaData, ...binaryData }];
+      const userId = searchParams.get("user_id");
 
-      //! ERROR: MongoServerError: Expected 'find' to be string, but got <nil> instead. Doc = [{find <nil>} {filter [{_id ObjectID("687514c7ef891ba5e3fef44a")}]} {lsid [{id {4 [139 97 100 197 17 208 75 30 184 65 148 73 124 216 184 142]}}]} {$clusterTime [{clusterTime {1753824511 1}} {signature [{hash {0 [132 67 215 0 185 235 79 216 39 163 123 89 219 243 30 249 63 141 188 19]}} {keyId 7481352916712816647}]}]} {$db cv_data}]
-      //TODO: Testing getting meta data
+      // If userId is provided, fetch specific user CV data
+      if (userId) {
+        const metaData = await collectionQueryCall(
+          META_COLLECTION,
+          userId,
+          "meta"
+        );
+        const binaryData = await collectionQueryCall(
+          CV_BIN_COLLECTION,
+          userId,
+          "binary"
+        );
+        const results = [{ ...metaData, ...binaryData }];
 
-      return new Response(
-        JSON.stringify({
-          statusCode: 200,
-          success: true,
-          message: "Successfully retrieved user data",
-          body: results,
-        }),
-        {
-          status: 200,
-          headers,
-        }
-      );
+        //! ERROR: MongoServerError: Expected 'find' to be string, but got <nil> instead. Doc = [{find <nil>} {filter [{_id ObjectID("687514c7ef891ba5e3fef44a")}]} {lsid [{id {4 [139 97 100 197 17 208 75 30 184 65 148 73 124 216 184 142]}}]} {$clusterTime [{clusterTime {1753824511 1}} {signature [{hash {0 [132 67 215 0 185 235 79 216 39 163 123 89 219 243 30 249 63 141 188 19]}} {keyId 7481352916712816647}]}]} {$db cv_data}]
+        //TODO: Testing getting meta data
+
+        return new Response(
+          JSON.stringify({
+            statusCode: 200,
+            success: true,
+            message: "Successfully retrieved user data",
+            body: results,
+          }),
+          {
+            status: 200,
+            headers,
+          }
+        );
+      } else {
+        const returnLimit = searchParams.get("limit");
+        const findQuery = userCollectionQueryBuilder({ searchParams });
+        const maxResults = await COLLECTION.countDocuments(findQuery);
+        const results = await COLLECTION.find(findQuery)
+          .sort("yearsOfXp", "desc")
+          .limit(parseInt(returnLimit))
+          .toArray();
+
+        return new Response(
+          JSON.stringify({
+            statusCode: 200,
+            body: results,
+            maxLength: maxResults,
+          }),
+          {
+            status: 200,
+            headers,
+          }
+        );
+      }
     } else {
       return new Response(
         JSON.stringify({
