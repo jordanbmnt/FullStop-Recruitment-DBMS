@@ -166,7 +166,7 @@ const CvLink = () => {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (isUpdating) => {
     setIsSubmitting(true);
     setSubmitStatus(null);
     setSubmitMessage("");
@@ -177,6 +177,12 @@ const CvLink = () => {
       // Original CV data
       formDataToSend.append("cvType", formData.cvType);
       formDataToSend.append("previousJobReasons", formData.previousJobReasons);
+
+      if (formData["fileInfo"]) {
+        formDataToSend.append("fileInfo", JSON.stringify(formData["fileInfo"]));
+      } else {
+        formDataToSend.append("fileInfo", ["no-file-info"]);
+      }
 
       // Additional profile data
       formDataToSend.append("email", formData.email);
@@ -193,10 +199,8 @@ const CvLink = () => {
         formDataToSend.append("cvFile", formData.cvFile);
       }
 
-      console.warn("Submitting data:", formData);
-
       const response = await fetch("/.netlify/functions/user", {
-        method: "POST",
+        method: isUpdating ? "PUT" : "POST",
         body: formDataToSend,
       });
 
@@ -358,7 +362,9 @@ const CvLink = () => {
 
           {currentStep === totalSteps ? (
             <button
-              onClick={handleSubmit}
+              onClick={() => {
+                handleSubmit(formData.cvType === "update");
+              }}
               disabled={
                 !canProceed() || isSubmitting || submitStatus === "success"
               }

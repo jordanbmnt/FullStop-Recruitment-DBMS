@@ -153,7 +153,7 @@ export default async (request, _context) => {
   const headers = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, OPTIONS",
     "Content-Type": "application/json",
   };
 
@@ -302,6 +302,99 @@ export default async (request, _context) => {
           }
         );
       }
+    } else if (request.method === "PUT") {
+      let uploadedFileId;
+      const formData = await request.formData();
+      const cvFile = formData.get("cvFile");
+      const cvType = formData.get("cvType") || "";
+      const previousJobReasons = formData.get("previousJobReasons") || "";
+
+      uploadDocument(mongoose, headers, uploadedFileId, cvFile);
+
+      if (!cvType || !previousJobReasons) {
+        return new Response(
+          JSON.stringify({
+            statusCode: 400,
+            error:
+              "Missing required fields: cvType and previousJobReasons are required",
+          }),
+          {
+            status: 400,
+            headers,
+          }
+        );
+      }
+
+      let fileInfo = {
+        gridFsId: new ObjectId(uploadedFileId),
+        fileSize: Math.round(cvFile?.size || 0 / 1024),
+        fileType: cvFile?.type || "update",
+        uploadedAt: new Date(),
+      };
+
+      // Append previous upload info if it exists
+      if (formData.get("fileInfo")) {
+        fileInfo.fileName = JSON.parse(formData.get("fileInfo")).fileName;
+        fileInfo["previousUploads"] = Object.hasOwn(
+          formData.get("fileInfo"),
+          "previousUploads"
+        )
+          ? [
+              ...formData.get("fileInfo").previousUploads,
+              { ...formData.get("fileInfo"), uploadedAt: new Date() },
+            ]
+          : [formData.get("fileInfo")];
+      } else {
+        fileInfo["previousUploads"] = [];
+      }
+
+      const cvSubmission = {
+        email: formData.get("email"),
+        status: formData.get("status"),
+        field: formData.get("field"),
+        jobTitle: formData.get("jobTitle"),
+        yearsOfXp: parseInt(formData.get("yearsOfXp")),
+        skills: JSON.parse(formData.get("skills")),
+        summary: formData.get("summary"),
+        name: formData.get("name"),
+        coverLetter: formData.get("coverLetter"),
+        cvType,
+        previousJobReasons,
+        fileInfo,
+        createdAt: new Date(),
+        lastUpdated: new Date(),
+      };
+      const insertResult = await COLLECTION.updateOne(
+        { email: formData.get("email") },
+        { $set: cvSubmission }
+      );
+
+      if (!insertResult.acknowledged) {
+        throw new Error("Failed to save CV submission to database");
+      }
+
+      const results = {
+        id: cvSubmission.id,
+        cvType: cvSubmission.cvType,
+        createdAt: cvSubmission.createdAt,
+        fileName: fileInfo?.fileName || null,
+        fileSize: fileInfo?.fileSize || null,
+        gridFsId: fileInfo?.gridFsId || null,
+        insertedId: insertResult.insertedId,
+      };
+
+      return new Response(
+        JSON.stringify({
+          statusCode: 200,
+          success: true,
+          message: "CV submitted successfully and file uploaded to GridFS!",
+          body: results,
+        }),
+        {
+          status: 200,
+          headers,
+        }
+      );
     } else {
       return new Response(
         JSON.stringify({
