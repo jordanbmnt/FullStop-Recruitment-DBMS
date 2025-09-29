@@ -1,6 +1,6 @@
 import { DeleteIcon, FileText, RefreshCw, Upload } from "lucide-react";
 import { STYLES } from "../../../constants/styles";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const CVOptionCard = ({
   type,
@@ -17,14 +17,6 @@ const CVOptionCard = ({
   const [updateVale, setUpdateVale] = useState("");
   const [userExists, setUserExists] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    if (userExists && userExists.body.length > 0) {
-      console.warn("User Exists:", userExists);
-    } else if (userExists) {
-      console.warn("Error:", userExists);
-    }
-  }, [userExists]);
 
   const PdfPreview = ({ formData, color }) => {
     return (

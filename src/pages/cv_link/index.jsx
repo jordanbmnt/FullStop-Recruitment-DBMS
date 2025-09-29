@@ -129,7 +129,6 @@ const CvLink = () => {
       let url = `${ROOT_PARAM}?email=${email.toLowerCase()}&limit=1`;
       if (!isLoading) {
         setIsLoading(true);
-        console.warn("Fetching user with email:", email);
         fetch(url)
           .then((res) => res.json())
           .then((value) => {
@@ -144,7 +143,6 @@ const CvLink = () => {
                 ...value.body[0],
                 cvType: "update",
               }));
-              console.warn("User found:", value.body);
               return;
             }
           });
