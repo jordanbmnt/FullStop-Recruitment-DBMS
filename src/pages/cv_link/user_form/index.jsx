@@ -1,5 +1,14 @@
 import { useState } from "react";
-import { User, Mail, Briefcase, Clock, FileText, Brain } from "lucide-react";
+import {
+  User,
+  Mail,
+  Briefcase,
+  Clock,
+  FileText,
+  Brain,
+  DeleteIcon,
+  FileEdit,
+} from "lucide-react";
 import { FIELDS, STATUSES } from "../../../helpers/constants";
 import { TextAreaSection } from "./text_area_section";
 import { STYLES } from "../../../constants/styles";
@@ -8,7 +17,25 @@ const ResponsiveAsterisk = () => {
   return <span class='text-red-500'>*</span>;
 };
 
-export const UserForm = ({ formData, onFormDataChange }) => {
+const PdfPreview = ({ formData, color, onFileUpload }) => {
+  return (
+    <div
+      className={`w-full p-1 px-2 bg-${color}-50 rounded-lg flex items-center justify-between space-x-4 border border-${color}-200`}
+    >
+      <p className={`text-sm text-${color}-700`}>
+        {`${formData.cvFileName.slice(0, 13)}...`} ({formData.cvFileSize} KB)
+      </p>
+      <DeleteIcon
+        className={`w-5 text-${color}-700`}
+        onClick={() => {
+          onFileUpload({ target: { files: [] } });
+        }}
+      />
+    </div>
+  );
+};
+
+export const UserForm = ({ formData, onFormDataChange, onFileUpload }) => {
   const [currentSkill, setCurrentSkill] = useState("");
   const textAreaSections = [
     {
@@ -110,6 +137,42 @@ export const UserForm = ({ formData, onFormDataChange }) => {
             />
           </div>
         </div>
+      </div>
+
+      {/* Resume / CV Upload */}
+      <div
+        className={`${STYLES.dark.background.secondary} p-6 rounded-lg w-full`}
+      >
+        <h3 className={HEADING_STYLE}>
+          <FileEdit
+            className={`w-5 h-5 mr-2 text-[${STYLES.dark.accent.color}]`}
+          />
+          Resume / CV Upload
+        </h3>
+        {formData.cvType === "update" ? (
+          <div className='w-full flex justify-between align-center'>
+            <label
+              className={`block text-sm font-medium ${STYLES.dark.text.tertiary} self-center`}
+            >
+              Choose your updated CV file:
+            </label>
+            <div className='flex w-fit space-x-4'>
+              {formData.cvFile && formData.cvType === "update" && (
+                <PdfPreview
+                  formData={formData}
+                  color={"red"}
+                  onFileUpload={onFileUpload}
+                />
+              )}
+              <input
+                type='file'
+                accept='.pdf'
+                onChange={onFileUpload}
+                className={`flex max-w-min text-sm text-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-red-50 file:text-red-700 hover:file:bg-red-100 self-center w-[105px] cursor-pointer`}
+              />
+            </div>
+          </div>
+        ) : null}
       </div>
 
       {/* Professional Information */}

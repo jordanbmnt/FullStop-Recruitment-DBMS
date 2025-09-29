@@ -296,7 +296,11 @@ const CvLink = () => {
 
       case 2:
         return (
-          <UserForm formData={formData} onFormDataChange={handleInputChange} />
+          <UserForm
+            formData={formData}
+            onFormDataChange={handleInputChange}
+            onFileUpload={handleFileUpload}
+          />
         );
 
       case 3:
