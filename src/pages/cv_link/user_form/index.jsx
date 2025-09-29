@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   User,
   Mail,
@@ -8,10 +8,19 @@ import {
   Brain,
   DeleteIcon,
   FileEdit,
+  EyeClosed,
+  Eye,
+  Download,
+  Annoyed,
 } from "lucide-react";
 import { FIELDS, STATUSES } from "../../../helpers/constants";
 import { TextAreaSection } from "./text_area_section";
 import { STYLES } from "../../../constants/styles";
+import {
+  getDataWithPDF,
+  handleDownload,
+  handleView,
+} from "../../../helpers/pdfFunctions";
 
 const ResponsiveAsterisk = () => {
   return <span class='text-red-500'>*</span>;
@@ -37,6 +46,9 @@ const PdfPreview = ({ formData, color, onFileUpload }) => {
 
 export const UserForm = ({ formData, onFormDataChange, onFileUpload }) => {
   const [currentSkill, setCurrentSkill] = useState("");
+  const [isFetching, setIsFetching] = useState(false);
+  const [searchResult, setSearchResult] = useState(null);
+  const [isCvVisible, setIsCvVisible] = useState(null);
   const textAreaSections = [
     {
       field: "coverLetter",
@@ -86,6 +98,17 @@ export const UserForm = ({ formData, onFormDataChange, onFileUpload }) => {
       addSkill();
     }
   };
+
+  useEffect(() => {
+    if (formData && formData?.fileInfo?.gridFsId && !isFetching) {
+      getDataWithPDF({
+        user_id: formData.fileInfo.gridFsId,
+        setIsFetching,
+        setSearchResult,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [formData["_id"]]);
 
   const HEADING_STYLE = `text-lg font-semibold ${STYLES.dark.text.primary} mb-4 flex items-center`;
   const LABEL_STYLE = `block text-sm font-medium ${STYLES.dark.text.secondary} mb-2`;
@@ -140,16 +163,16 @@ export const UserForm = ({ formData, onFormDataChange, onFileUpload }) => {
       </div>
 
       {/* Resume / CV Upload */}
-      <div
-        className={`${STYLES.dark.background.secondary} p-6 rounded-lg w-full`}
-      >
-        <h3 className={HEADING_STYLE}>
-          <FileEdit
-            className={`w-5 h-5 mr-2 text-[${STYLES.dark.accent.color}]`}
-          />
-          Resume / CV Upload
-        </h3>
-        {formData.cvType === "update" ? (
+      {formData.cvType === "update" ? (
+        <div
+          className={`${STYLES.dark.background.secondary} p-6 rounded-lg w-full`}
+        >
+          <h3 className={HEADING_STYLE}>
+            <FileEdit
+              className={`w-5 h-5 mr-2 text-[${STYLES.dark.accent.color}]`}
+            />
+            Resume / CV Upload
+          </h3>
           <div className='w-full flex justify-between align-center'>
             <label
               className={`block text-sm font-medium ${STYLES.dark.text.tertiary} self-center`}
@@ -172,8 +195,63 @@ export const UserForm = ({ formData, onFormDataChange, onFileUpload }) => {
               />
             </div>
           </div>
-        ) : null}
-      </div>
+          {formData.fileInfo && searchResult && searchResult.pdfElement ? (
+            <div className='flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2'>
+              <button
+                disabled={isFetching}
+                onClick={(e) =>
+                  handleView(e, searchResult, isCvVisible, setIsCvVisible)
+                }
+                className={`flex items-center justify-center space-x-2 px-3 py-2 text-xs sm:text-sm font-medium ${
+                  isCvVisible
+                    ? `text-[${STYLES.dark.accent.color}] bg-red-50 hover:bg-red-100`
+                    : isFetching
+                    ? "text-gray-700 bg-gray-100"
+                    : `text-[${STYLES.dark.accent.color}] bg-red-50 hover:bg-red-100`
+                } rounded-md transition-colors`}
+              >
+                {isCvVisible ? (
+                  <div className='w-max flex flex-row items-center justify-center'>
+                    <EyeClosed className='w-3 h-3 mx-2 sm:w-4 sm:h-4' />
+                    <span>Close View</span>
+                  </div>
+                ) : (
+                  <div className='w-max flex flex-row items-center justify-center'>
+                    <Eye className='w-3 h-3 mx-2 sm:w-4 sm:h-4' />
+                    <span>View CV</span>
+                  </div>
+                )}
+              </button>
+              <button
+                disabled={isFetching}
+                onClick={() => handleDownload("cv", searchResult)}
+                className={`flex items-center justify-center space-x-2 px-3 py-2 text-xs sm:text-sm font-medium ${
+                  STYLES.dark.text.primary
+                } ${
+                  isFetching
+                    ? STYLES.dark.background.tertiary
+                    : `${STYLES.dark.background.tertiary} hover:${STYLES.dark.background.darkest} hover:${STYLES.dark.border.medium}`
+                } rounded-md transition-colors`}
+              >
+                <Download className='w-3 h-3 sm:w-4 sm:h-4' />
+                <span>Download</span>
+              </button>
+            </div>
+          ) : (
+            <div className='flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2'>
+              <button
+                onClick={() => {
+                  window.location = `mailto:${formData.email}?subject=Missing+CV+in+our+database`;
+                }}
+                className={`flex items-center justify-center space-x-2 px-3 py-2 text-xs sm:text-sm font-medium ${STYLES.dark.text.primary} ${STYLES.dark.background.secondary} rounded-md hover:${STYLES.dark.background.tertiary} transition-colors`}
+              >
+                <Annoyed className='w-3 h-3 sm:w-4 sm:h-4' />
+                <span>NOT UPLOADED</span>
+              </button>
+            </div>
+          )}
+        </div>
+      ) : null}
 
       {/* Professional Information */}
       <div className={`${STYLES.dark.background.secondary} p-6 rounded-lg`}>
