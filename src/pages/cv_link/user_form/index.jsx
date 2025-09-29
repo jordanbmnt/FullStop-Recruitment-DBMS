@@ -8,7 +8,7 @@ const ResponsiveAsterisk = () => {
   return <span class='text-red-500'>*</span>;
 };
 
-export const JobSummaryForm = ({ formData, onFormDataChange }) => {
+export const UserForm = ({ formData, onFormDataChange }) => {
   const [currentSkill, setCurrentSkill] = useState("");
   const textAreaSections = [
     {

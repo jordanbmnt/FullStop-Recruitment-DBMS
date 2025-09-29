@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { ChevronLeft, ChevronRight, Loader2, CheckCircle } from "lucide-react";
-import { JobSummaryForm } from "./job_summary_form";
+import { UserForm } from "./user_form";
 import { FormSummary } from "./form_summary";
 import { CvUploadOption } from "./cv_upload_option";
 import { ProgressBar } from "./progress_bar";
@@ -296,10 +296,7 @@ const CvLink = () => {
 
       case 2:
         return (
-          <JobSummaryForm
-            formData={formData}
-            onFormDataChange={handleInputChange}
-          />
+          <UserForm formData={formData} onFormDataChange={handleInputChange} />
         );
 
       case 3:
