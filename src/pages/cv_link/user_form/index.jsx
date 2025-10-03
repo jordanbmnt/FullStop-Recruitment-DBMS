@@ -12,6 +12,7 @@ import {
   Eye,
   Download,
   Annoyed,
+  RefreshCw,
 } from "lucide-react";
 import { FIELDS, STATUSES } from "../../../helpers/constants";
 import { TextAreaSection } from "./text_area_section";
@@ -196,7 +197,7 @@ export const UserForm = ({ formData, onFormDataChange, onFileUpload }) => {
             </div>
           </div>
           {formData.fileInfo && searchResult && searchResult.pdfElement ? (
-            <div className='flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2'>
+            <div className='flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2 mt-4'>
               <button
                 disabled={isFetching}
                 onClick={(e) =>
@@ -237,6 +238,8 @@ export const UserForm = ({ formData, onFormDataChange, onFileUpload }) => {
                 <span>Download</span>
               </button>
             </div>
+          ) : isFetching ? (
+            <RefreshCw className='w-5 h-5 animate-spin text-red-600 m-auto' />
           ) : (
             <div className='flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2'>
               <button
