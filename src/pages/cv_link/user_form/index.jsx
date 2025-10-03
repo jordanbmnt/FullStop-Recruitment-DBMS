@@ -23,7 +23,7 @@ import {
 } from "../../../helpers/pdfFunctions";
 
 const ResponsiveAsterisk = () => {
-  return <span class='text-red-500'>*</span>;
+  return <span className='text-red-500'>*</span>;
 };
 
 const PdfPreview = ({ formData, color, onFileUpload }) => {
@@ -250,6 +250,10 @@ export const UserForm = ({ formData, onFormDataChange, onFileUpload }) => {
               </button>
             </div>
           )}
+          <div
+            id='view-cv-section'
+            className={`border ${STYLES.dark.border.light} rounded-lg p-10 m-5 hidden`}
+          />
         </div>
       ) : null}
 
