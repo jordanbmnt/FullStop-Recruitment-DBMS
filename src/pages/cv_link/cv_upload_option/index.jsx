@@ -112,15 +112,31 @@ const CVOptionCard = ({
               ) : (
                 <div>
                   <label
-                    className={`block text-sm font-medium ${STYLES.dark.text.tertiary} mb-2`}
+                    className={`block text-sm ${
+                      userExists &&
+                      userExists.error === "Does not exist" &&
+                      "text-red-100"
+                    } font-medium ${STYLES.dark.text.tertiary} mb-2`}
                   >
-                    Who would you like to update?:
+                    {userExists && userExists.error === "Does not exist"
+                      ? "User does not exist. Please try another user:"
+                      : "Who would you like to update?:"}
                   </label>
                   {/* If a user is found disable and change to a message box */}
                   <div className='flex w-full space-x-4'>
                     <input
                       value={updateVale}
                       onChange={(e) => setUpdateVale(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          updateExistingUser(
+                            updateVale,
+                            setIsLoading,
+                            isLoading,
+                            setUserExists
+                          );
+                        }
+                      }}
                       type='text'
                       disabled={isLoading}
                       placeholder='e.g test@gmail.com'

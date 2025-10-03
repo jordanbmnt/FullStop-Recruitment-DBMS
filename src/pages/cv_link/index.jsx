@@ -147,6 +147,12 @@ const CvLink = () => {
                 setIsLoading(false);
               }, 1500); // Simulate loading delay
               return;
+            } else {
+              setUserExists({
+                body: [],
+                error: "Does not exist",
+              });
+              setIsLoading(false);
             }
           });
         return;
