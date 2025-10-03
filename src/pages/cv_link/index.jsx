@@ -143,12 +143,12 @@ const CvLink = () => {
                 ...value.body[0],
                 cvType: "update",
               }));
+              setTimeout(() => {
+                setIsLoading(false);
+              }, 1500); // Simulate loading delay
               return;
             }
           });
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 1500); // Simulate loading delay
         return;
       }
     } catch (e) {

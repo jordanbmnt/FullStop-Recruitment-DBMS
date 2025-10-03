@@ -126,20 +126,24 @@ const CVOptionCard = ({
                       placeholder='e.g test@gmail.com'
                       className={`flex-1 p-2 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-yellow-600 focus:border-transparent ${STYLES.dark.background.tertiary} ${STYLES.dark.text.paragraph} placeholder:text-gray-600 w-70 disabled:cursor-not-allowed disabled:opacity-50`}
                     />
-                    <button
-                      onClick={() => {
-                        updateExistingUser(
-                          updateVale,
-                          setIsLoading,
-                          isLoading,
-                          setUserExists
-                        );
-                      }}
-                      disabled={isLoading}
-                      className={`px-6 py-2 rounded-lg ${STYLES.dark.text.paragraph} font-medium transition-all duration-300 flex items-center space-x-2 justify-center w-20 bg-yellow-50 text-yellow-700 hover:bg-yellow-100 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50`}
-                    >
-                      Submit
-                    </button>
+                    {isLoading ? (
+                      <RefreshCw className='w-5 h-5 animate-spin text-yellow-600 m-auto' />
+                    ) : (
+                      <button
+                        onClick={() => {
+                          updateExistingUser(
+                            updateVale,
+                            setIsLoading,
+                            isLoading,
+                            setUserExists
+                          );
+                        }}
+                        disabled={isLoading}
+                        className={`px-6 py-2 rounded-lg ${STYLES.dark.text.paragraph} font-medium transition-all duration-300 flex items-center space-x-2 justify-center w-20 bg-yellow-50 text-yellow-700 hover:bg-yellow-100 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50`}
+                      >
+                        Submit
+                      </button>
+                    )}
                   </div>
                 </div>
               )}
