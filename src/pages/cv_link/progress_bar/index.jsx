@@ -2,7 +2,7 @@ import { STYLES } from "../../../constants/styles";
 
 export const ProgressBar = ({ steps, currentStep, getCurrentStep }) => {
   return (
-    <div className='max-w-2xl mx-auto mb-8'>
+    <div className='max-w-2xl mx-auto mb-8 flex flex-col gap-8 md:gap-4'>
       <div className='flex items-center mb-4 justify-between'>
         {steps.map((step, index) => {
           const isCompleted = currentStep > step.id;
