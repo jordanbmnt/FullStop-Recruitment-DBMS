@@ -3,13 +3,14 @@ import { useState } from "react";
 import { Sidebar } from "./sidebar";
 // import { MenuIcon } from "lucide-react";
 import { STYLES } from "../../constants/styles";
+import { MenuIcon } from "lucide-react";
 
 const DashboardSidebar = () => {
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);
 
   return (
     <div className={`${STYLES.dark.background.primary}`}>
-      {/* <nav className='fixed top-0 z-50'>
+      <nav className='fixed top-0 z-50'>
         <div className='px-3 py-3 lg:px-5 lg:pl-3'>
           <div className='flex items-center justify-between'>
             <div className='flex items-center justify-start rtl:justify-end'>
@@ -27,7 +28,7 @@ const DashboardSidebar = () => {
             </div>
           </div>
         </div>
-      </nav > */}
+      </nav >
 
       <Sidebar
         isSideBarOpen={isSideBarOpen}
