@@ -322,7 +322,7 @@ const CvLink = () => {
   };
 
   return (
-    <div className='container flex align-center justify-center flex-col px-4 py-8 min-h-[100dvh] h-[max-content]'>
+    <div className='container flex align-center justify-center flex-col px-4 py-8 min-h-[100dvh] h-[max-content] md:mt-auto mt-[7vh]'>
       <div className='hidden md:block text-center mb-16 md:mb-8'>
         <h1 className={`text-3xl font-bold ${STYLES.dark.text.primary} mb-2`}>
           SOY_JIMB Recruitment CV Form
