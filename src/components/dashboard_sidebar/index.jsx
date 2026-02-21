@@ -29,12 +29,15 @@ const DashboardSidebar = () => {
         </div>
       </nav > */}
 
-      <Sidebar isSideBarOpen={isSideBarOpen} setIsSideBarOpen={setIsSideBarOpen} />
+      <Sidebar
+        isSideBarOpen={isSideBarOpen}
+        setIsSideBarOpen={setIsSideBarOpen}
+      />
 
       <div className={`p-4 sm:ml-64 mt-0 ${STYLES.dark.background.primary}`}>
         <Outlet />
       </div>
-    </div >
+    </div>
   );
 };
 
