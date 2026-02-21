@@ -21,9 +21,9 @@ const CVOptionCard = ({
   const PdfPreview = ({ formData, color }) => {
     return (
       <div
-        className={`w-full p-1 px-2 bg-${color}-50 rounded-lg flex items-center justify-between space-x-4 border border-${color}-200`}
+        className={`md:w-[60%] w-[100%] p-1 px-3 bg-${color}-50 rounded-lg flex items-center justify-between space-x-4 border border-${color}-200`}
       >
-        <p className={`text-sm text-${color}-700`}>
+        <p className={`text-sm text-${color}-700 w-auto`}>
           {`${formData.cvFileName.slice(0, 13)}...`} ({formData.cvFileSize} KB)
         </p>
         <DeleteIcon
@@ -57,11 +57,10 @@ const CVOptionCard = ({
 
   return (
     <div
-      className={`p-6 rounded-lg border transition-all duration-200 cursor-pointer ${
-        isSelected
-          ? `${selectedBorder} ${STYLES.dark.background.tertiary} shadow-md`
-          : STYLES.dark.border.medium
-      }`}
+      className={`p-6 rounded-lg border transition-all duration-200 cursor-pointer ${isSelected
+        ? `${selectedBorder} ${STYLES.dark.background.tertiary} shadow-md`
+        : STYLES.dark.border.medium
+        }`}
       onClick={onSelect}
     >
       {icon === "upload" ? (
@@ -85,7 +84,7 @@ const CVOptionCard = ({
               >
                 Choose your {type === "update" ? "updated " : ""} CV file:
               </label>
-              <div className='flex w-full space-x-4'>
+              <div className={`flex w-full ${formData.cvFile && formData.cvType === type ? "md:justify-around" : "md:justify-start"} space-y-4 md:space-y-0 flex-row flex-wrap`}>
                 {formData.cvFile && formData.cvType === type && (
                   <PdfPreview formData={formData} color={color} />
                 )}
@@ -93,16 +92,16 @@ const CVOptionCard = ({
                   type='file'
                   accept='.pdf'
                   onChange={onFileUpload}
-                  className={`flex max-w-min text-sm text-transparent file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium ${colorClasses[color].file} self-center w-[105px] cursor-pointer`}
+                  className={`text-sm text-transparent md:file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium ${colorClasses[color].file} self-center cursor-pointer file:w-[100%] max-w-[100%] md:max-w-[30%]`}
                 />
               </div>
             </div>
           ) : (
             <div>
               {formData.cvType === "update" &&
-              userExists &&
-              userExists.body.length > 0 &&
-              formData.name ? (
+                userExists &&
+                userExists.body.length > 0 &&
+                formData.name ? (
                 <div
                   className={`w-full p-4 ${STYLES.dark.background.secondary} border ${selectedBorder} rounded-lg ${STYLES.dark.text.paragraph}`}
                 >
@@ -112,18 +111,17 @@ const CVOptionCard = ({
               ) : (
                 <div>
                   <label
-                    className={`block text-sm ${
-                      userExists &&
+                    className={`block text-sm ${userExists &&
                       userExists.error === "Does not exist" &&
                       "text-red-100"
-                    } font-medium ${STYLES.dark.text.tertiary} mb-2`}
+                      } font-medium ${STYLES.dark.text.tertiary} mb-2`}
                   >
                     {userExists && userExists.error === "Does not exist"
                       ? "User does not exist. Please try another user:"
                       : "Who would you like to update?:"}
                   </label>
                   {/* If a user is found disable and change to a message box */}
-                  <div className='flex w-full space-x-4'>
+                  <div className='flex w-full md:space-x-4 space-y-4 md:space-y-0 flex-wrap justify-center align-center'>
                     <input
                       value={updateVale}
                       onChange={(e) => setUpdateVale(e.target.value)}
@@ -140,26 +138,26 @@ const CVOptionCard = ({
                       type='text'
                       disabled={isLoading}
                       placeholder='e.g test@gmail.com'
-                      className={`flex-1 p-2 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-yellow-600 focus:border-transparent ${STYLES.dark.background.tertiary} ${STYLES.dark.text.paragraph} placeholder:text-gray-600 w-70 disabled:cursor-not-allowed disabled:opacity-50`}
+                      className={`flex-1 p-2 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-yellow-600 focus:border-transparent ${STYLES.dark.background.tertiary} ${STYLES.dark.text.paragraph} placeholder:text-gray-600 md:w-70 w-full disabled:cursor-not-allowed disabled:opacity-50`}
                     />
-                    {isLoading ? (
-                      <RefreshCw className='w-5 h-5 animate-spin text-yellow-600 m-auto' />
-                    ) : (
-                      <button
-                        onClick={() => {
-                          updateExistingUser(
-                            updateVale,
-                            setIsLoading,
-                            isLoading,
-                            setUserExists
-                          );
-                        }}
-                        disabled={isLoading}
-                        className={`px-6 py-2 rounded-lg ${STYLES.dark.text.paragraph} font-medium transition-all duration-300 flex items-center space-x-2 justify-center w-20 bg-yellow-50 text-yellow-700 hover:bg-yellow-100 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50`}
-                      >
-                        Submit
-                      </button>
-                    )}
+
+                    <button
+                      onClick={() => {
+                        updateExistingUser(
+                          updateVale,
+                          setIsLoading,
+                          isLoading,
+                          setUserExists
+                        );
+                      }}
+                      disabled={isLoading}
+                      className={`px-6 py-2 rounded-lg ${STYLES.dark.text.paragraph} font-medium transition-all duration-300 flex items-center space-x-2 justify-center bg-yellow-50 text-yellow-700 hover:bg-yellow-100 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 md:w-20 w-[100%]`}
+                    >
+                      {isLoading ? (
+                        <RefreshCw className='w-5 h-5 animate-spin text-yellow-600 m-auto border' />
+                      ) : "Submit"}
+                    </button>
+
                   </div>
                 </div>
               )}
@@ -196,7 +194,7 @@ export const CvUploadOption = ({
   ];
 
   return (
-    <div className='space-y-6'>
+    <div className='space-y-6 p-2'>
       <div className='text-center mb-8'>
         <FileText className='w-16 h-16 mx-auto text-red-600 mb-4' />
         <h2 className={`text-2xl font-bold ${STYLES.dark.text.secondary} mb-2`}>

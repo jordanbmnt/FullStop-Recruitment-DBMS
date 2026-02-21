@@ -340,9 +340,9 @@ const CvLink = () => {
         />
       }
 
-      <div className='max-w-4xl mx-auto'>
+      <div className='flex flex-col align-center justify-center max-w-4xl mx-auto md:w-[60vw] max-w-[85vw]'>
         <div
-          className={`${STYLES.dark.background.secondary} border ${STYLES.dark.border.strong} rounded-lg shadow-lg p-8 mb-8`}
+          className={`${STYLES.dark.background.secondary} border ${STYLES.dark.border.strong} rounded-lg shadow-lg p-2 md:p-8 mb-8`}
         >
           {renderStepContent()}
         </div>
