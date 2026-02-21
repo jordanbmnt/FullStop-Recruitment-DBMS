@@ -322,10 +322,10 @@ const CvLink = () => {
   };
 
   return (
-    <div className='container mx-auto px-4 py-8'>
-      <div className='text-center mb-8'>
+    <div className='container flex align-center justify-center flex-col px-4 py-8 min-h-[100dvh] h-[max-content]'>
+      <div className='hidden md:block text-center mb-16 md:mb-8'>
         <h1 className={`text-3xl font-bold ${STYLES.dark.text.primary} mb-2`}>
-          Full Stop Recruitment CV Form
+          SOY_JIMB Recruitment CV Form
         </h1>
         <p className={STYLES.dark.text.secondary}>
           Complete the steps below to submit your CV
