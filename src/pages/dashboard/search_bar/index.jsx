@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Search, Filter, ChevronDown } from "lucide-react";
+import { Search, Filter } from "lucide-react";
 import { SearchResult } from "../search_result";
 import CandidateDetailsModal from "../../../components/candidate_details_modal";
 import { Skeleton } from "../../../components/skeleton";
@@ -181,13 +181,14 @@ export const SearchBar = () => {
 
   return (
     <div
-      className={`mx-auto rounded-xl p-6 pt-0 mt-0 transition-all duration-300 ease-in-out border ${CONTAINER_STYLE}`}
+      className={`mx-auto rounded-xl p-2 md:p-0  md:pt-0 mt-0 transition-all duration-300 ease-in-out border ${CONTAINER_STYLE} w-[100%]`}
     >
-      <div className={`bg-transparent rounded-xl p-8`}>
+      <div className={`flex flex-col items-center justify-center bg-transparent rounded-xl md:p-8 px-0`}>
+
         {/* Main Search Bar */}
-        <div className='flex-row items-center justify-around space-y-6'>
+        <div className='flex flex-col items-center justify-around space-y-6 w-[90%] md:w-[80%] min-w-[250px]'>
           <div
-            className={`w-[90%] m-auto flex justify-center items-center ${SEARCH_BAR_STYLE} ${STYLES.dark.border.medium} rounded-xl px-5 py-3 space-x-4 shadow-lg`}
+            className={`w-full m-0 flex justify-center items-center ${SEARCH_BAR_STYLE} ${STYLES.dark.border.medium} rounded-xl md:px-5 px-3 md:py-3 py-2 space-x-4 shadow-lg`}
           >
             <Search className={`h-5 w-5 ${STYLES.dark.text.paragraph}`} />
             <input
@@ -196,19 +197,15 @@ export const SearchBar = () => {
               onChange={(e) => setSearchQueryTerm(e.target.value)}
               onKeyDownCapture={(e) => handleSearch(e)}
               placeholder='Search by name, or email...'
-              className={`block w-full pl-6 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] ${SEARCH_BAR_STYLE} focus:border-[${STYLES.dark.accent.color}] backdrop-blur-sm ${STYLES.dark.text.primary} border-transparent placeholder-gray-500`}
+              className={`block w-full pl-2 md:pl-6 md:pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] ${SEARCH_BAR_STYLE} focus:border-[${STYLES.dark.accent.color}] backdrop-blur-sm ${STYLES.dark.text.primary} border-transparent placeholder-gray-500`}
             />
           </div>
-          <div className='w-full flex flex-row justify-around'>
+          <div className='w-[100%] flex flex-row flex-wrap md:gap-6 justify-between md:justify-around'>
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 justify-center ${FILTER_BUTTON_STYLE} w-[200px] hover:shadow-md hover:scale-105 transition-all duration-300 shadow-lg`}
+              className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 justify-center ${FILTER_BUTTON_STYLE} min-w-[120px] md:w-[200px] hover:shadow-md hover:scale-105 transition-all duration-300 shadow-lg md:after:content-['Filter']`}
             >
-              <Filter className='h-5 w-5' />
-              <span>Filters</span>
-              <ChevronDown
-                className={`h-4 w-4 transition-transform ${CHEVRON_STYLE}`}
-              />
+              <Filter className='md:mx-2 h-5 w-5' />
             </button>
             <button
               onClick={() => {
@@ -219,9 +216,9 @@ export const SearchBar = () => {
                   handleSearch({ code: "Enter" });
                 }
               }}
-              className={`px-8 py-3 bg-[${STYLES.dark.accent.color}] ${STYLES.dark.text.primary} rounded-lg hover:bg-[${STYLES.dark.accent.red}] focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:outline-none font-medium hover:shadow-md hover:scale-105 transition-all duration-300 w-[200px] shadow-lg`}
+              className={`px-8 py-3 bg-[${STYLES.dark.accent.color}] ${STYLES.dark.text.primary} rounded-lg hover:bg-[${STYLES.dark.accent.red}] focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:outline-none font-medium hover:shadow-md hover:scale-105 transition-all duration-300 min-w-[120px] md:w-[200px] shadow-lg md:after:content-['Search'] flex items-center space-x-2 justify-center`}
             >
-              {ACTIVE_SEARCH ? "Clear Results" : "Search"}
+              {ACTIVE_SEARCH ? "Clear Results" :<Search className={`md:mx-2 h-5 w-5 `} />}
             </button>
           </div>
         </div>

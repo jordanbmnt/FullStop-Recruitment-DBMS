@@ -4,6 +4,7 @@ import { OverViewTab } from "./overview_tab";
 import { DetailsTab } from "./details_tab";
 import { TabNavigation } from "./tab_navigation";
 import { STYLES } from "../../constants/styles";
+import { getDataWithPDF } from "../../helpers/pdfFunctions";
 
 const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
   const [activeTab, setActiveTab] = useState("overview");
@@ -11,62 +12,6 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
   const [searchResult, setSearchResult] = useState(null);
 
   if (!isOpen || !candidate) return null;
-
-  const transformCVData = ([{ meta, binary }]) => {
-    let result = {};
-    if (meta && meta.length > 0) {
-      const { filename, uploadDate } = meta[0];
-      result = { ...result, filename, uploadDate };
-    }
-
-    if (binary && binary.length > 0) {
-      const { data } = binary[0];
-
-      // For display purposes
-      const pdfElement = document.createElement("object");
-      pdfElement.style.width = "100%";
-      pdfElement.style.height = "842pt";
-      pdfElement.style.className = "rounded-md";
-      pdfElement.type = "application/pdf";
-      pdfElement.data = "data:application/pdf;base64," + data;
-
-      // use the click attribute and then remove it from the document
-      // document.body.appendChild(link);
-      // link.click();
-      // document.body.removeChild(link);
-      const downloadElement = document.createElement("a");
-      downloadElement.innerHTML = "Download PDF file";
-      downloadElement.download = result.filename; // Change this to be more based on the info that is available
-      downloadElement.href = "data:application/octet-stream;base64," + data;
-      result = { ...result, pdfElement, downloadElement };
-    }
-
-    return result;
-  };
-
-  const getData = ({ user_id }) => {
-    try {
-      const ROOT_PARAM = `/.netlify/functions/user`;
-      let url = `${ROOT_PARAM}?user_id=${user_id}`;
-
-      setIsFetching(true);
-
-      fetch(url)
-        .then((res) => res.json())
-        .then((value) => {
-          if (value && value.body.length > 0) {
-            setSearchResult(transformCVData(value.body));
-          }
-          setIsFetching(false);
-        });
-      return;
-    } catch (e) {
-      setSearchResult(null);
-      setIsFetching(false);
-      console.warn("Error:", e);
-      return;
-    }
-  };
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -152,7 +97,9 @@ const CandidateDetailsModal = ({ candidate, isOpen, onClose }) => {
           <TabNavigation
             setActiveTab={setActiveTab}
             candidate={candidate}
-            getData={getData}
+            getData={(user_id) => {
+              getDataWithPDF({ user_id, setIsFetching, setSearchResult });
+            }}
             activeTab={activeTab}
           />
 

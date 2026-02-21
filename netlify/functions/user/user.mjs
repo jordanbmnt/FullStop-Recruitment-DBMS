@@ -8,7 +8,7 @@ const validateFileType = (contentType) => {
   return allowedTypes.includes(contentType);
 };
 
-const uploadDocument = async (mongoose, headers, uploadedFileId, cvFile) => {
+const uploadDocument = async (mongoose, headers, cvFile) => {
   const conn = await mongoose.connect(process.env.MONGODB_CV_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -53,7 +53,7 @@ const uploadDocument = async (mongoose, headers, uploadedFileId, cvFile) => {
     },
   });
 
-  uploadedFileId = writestream.id.toString();
+  const uploadedFileId = writestream.id.toString();
   console.log("File uploaded to GridFS with ID:", uploadedFileId);
 
   await new Promise((resolve, reject) => {
@@ -67,6 +67,8 @@ const uploadDocument = async (mongoose, headers, uploadedFileId, cvFile) => {
   });
 
   console.warn("File uploaded to GridFS successfully.");
+
+  return uploadedFileId;
 };
 
 const cvCollectionQueryBuilder = ({ userId, uploadsType }) => {
@@ -132,7 +134,7 @@ const collectionQueryCall = async (dbCollection, userId, type) => {
       userId,
       uploadsType: type,
     });
-    const results = await dbCollection.find(metaDataQuery).toArray();
+    const results = await dbCollection.find(metaDataQuery).limit(1).toArray();
 
     return {
       [type]: results,
@@ -165,12 +167,19 @@ export default async (request, _context) => {
       });
     }
 
-    const DATABASE = (await clientPromise).db(process.env.MONGODB_DATABASE);
-    const COLLECTION = DATABASE.collection(process.env.MONGODB_COLLECTION);
-    const META_COLLECTION = DATABASE.collection(
+    const DATABASE = await (
+      await clientPromise
+    ).db(process.env.MONGODB_DATABASE);
+    const CV_DATABASE = await (
+      await clientPromise
+    ).db(process.env.MONGODB_CV_DATABASE);
+    const COLLECTION = await DATABASE.collection(
+      process.env.MONGODB_COLLECTION
+    );
+    const META_COLLECTION = await CV_DATABASE.collection(
       process.env.MONGODB_CV_META_COLLECTION
     );
-    const CV_BIN_COLLECTION = DATABASE.collection(
+    const CV_BIN_COLLECTION = await CV_DATABASE.collection(
       process.env.MONGODB_CV_BIN_COLLECTION
     );
 
@@ -181,7 +190,7 @@ export default async (request, _context) => {
       const cvType = formData.get("cvType") || "";
       const previousJobReasons = formData.get("previousJobReasons") || "";
 
-      uploadDocument(mongoose, headers, uploadedFileId, cvFile);
+      uploadedFileId = await uploadDocument(mongoose, headers, cvFile);
 
       if (!cvType || !previousJobReasons) {
         return new Response(
@@ -204,6 +213,7 @@ export default async (request, _context) => {
         fileType: cvFile.type,
         uploadedAt: new Date(),
       };
+
       const cvSubmission = {
         email: formData.get("email"),
         status: formData.get("status"),
@@ -251,7 +261,6 @@ export default async (request, _context) => {
     } else if (request.method === "GET") {
       const { searchParams } = new URL(request.url);
       const userId = searchParams.get("user_id");
-
       // If userId is provided, fetch specific user CV data
       if (userId) {
         const metaData = await collectionQueryCall(
@@ -264,10 +273,8 @@ export default async (request, _context) => {
           userId,
           "binary"
         );
-        const results = [{ ...metaData, ...binaryData }];
 
-        //! ERROR: MongoServerError: Expected 'find' to be string, but got <nil> instead. Doc = [{find <nil>} {filter [{_id ObjectID("687514c7ef891ba5e3fef44a")}]} {lsid [{id {4 [139 97 100 197 17 208 75 30 184 65 148 73 124 216 184 142]}}]} {$clusterTime [{clusterTime {1753824511 1}} {signature [{hash {0 [132 67 215 0 185 235 79 216 39 163 123 89 219 243 30 249 63 141 188 19]}} {keyId 7481352916712816647}]}]} {$db cv_data}]
-        //TODO: Testing getting meta data
+        const results = [{ ...metaData, ...binaryData }];
 
         return new Response(
           JSON.stringify({
@@ -309,7 +316,7 @@ export default async (request, _context) => {
       const cvType = formData.get("cvType") || "";
       const previousJobReasons = formData.get("previousJobReasons") || "";
 
-      uploadDocument(mongoose, headers, uploadedFileId, cvFile);
+      uploadedFileId = await uploadDocument(mongoose, headers, cvFile);
 
       if (!cvType || !previousJobReasons) {
         return new Response(

@@ -1,41 +1,10 @@
 import { Annoyed, Download, Eye, EyeClosed } from "lucide-react";
 import { useState } from "react";
 import { STYLES } from "../../../constants/styles";
+import { handleDownload, handleView } from "../../../helpers/pdfFunctions";
 
 export const DetailsTab = ({ candidate, isFetching, searchResult }) => {
   const [isCvVisible, setIsCvVisible] = useState(null);
-
-  const handleDownload = (type) => {
-    //TODO: Create loading animation and that sort of shandies
-    if (searchResult) {
-      const { downloadElement } = searchResult;
-      document.body.appendChild(downloadElement);
-      downloadElement.click();
-      document.body.removeChild(downloadElement);
-    }
-  };
-
-  const handleView = (e) => {
-    // Simulated view functionality
-    if (searchResult) {
-      const { pdfElement } = searchResult;
-      const viewCV = document.getElementById("view-cv-section");
-
-      if (isCvVisible) {
-        viewCV.classList.remove("flex");
-        viewCV.classList.add("hidden");
-        viewCV.removeChild(pdfElement);
-        setIsCvVisible(false);
-      } else {
-        viewCV.classList.remove("hidden");
-        viewCV.classList.add("flex");
-        if (pdfElement) {
-          setIsCvVisible(true);
-          viewCV.appendChild(pdfElement);
-        }
-      }
-    }
-  };
 
   return (
     <div className='space-y-3 sm:space-y-4'>
@@ -84,7 +53,9 @@ export const DetailsTab = ({ candidate, isFetching, searchResult }) => {
             <div className='flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2'>
               <button
                 disabled={isFetching}
-                onClick={(e) => handleView(e)}
+                onClick={(e) =>
+                  handleView(e, searchResult, isCvVisible, setIsCvVisible)
+                }
                 className={`flex items-center justify-center space-x-2 px-3 py-2 text-xs sm:text-sm font-medium ${
                   isCvVisible
                     ? `text-[${STYLES.dark.accent.color}] bg-red-50 hover:bg-red-100`
@@ -107,7 +78,7 @@ export const DetailsTab = ({ candidate, isFetching, searchResult }) => {
               </button>
               <button
                 disabled={isFetching}
-                onClick={() => handleDownload("cv")}
+                onClick={() => handleDownload("cv", searchResult)}
                 className={`flex items-center justify-center space-x-2 px-3 py-2 text-xs sm:text-sm font-medium ${
                   STYLES.dark.text.primary
                 } ${

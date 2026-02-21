@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { ChevronLeft, ChevronRight, Loader2, CheckCircle } from "lucide-react";
-import { JobSummaryForm } from "./job_summary_form";
+import { UserForm } from "./user_form";
 import { FormSummary } from "./form_summary";
 import { CvUploadOption } from "./cv_upload_option";
 import { ProgressBar } from "./progress_bar";
@@ -129,7 +129,6 @@ const CvLink = () => {
       let url = `${ROOT_PARAM}?email=${email.toLowerCase()}&limit=1`;
       if (!isLoading) {
         setIsLoading(true);
-        console.warn("Fetching user with email:", email);
         fetch(url)
           .then((res) => res.json())
           .then((value) => {
@@ -144,13 +143,18 @@ const CvLink = () => {
                 ...value.body[0],
                 cvType: "update",
               }));
-              console.warn("User found:", value.body);
+              setTimeout(() => {
+                setIsLoading(false);
+              }, 1500); // Simulate loading delay
               return;
+            } else {
+              setUserExists({
+                body: [],
+                error: "Does not exist",
+              });
+              setIsLoading(false);
             }
           });
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 1500); // Simulate loading delay
         return;
       }
     } catch (e) {
@@ -296,9 +300,10 @@ const CvLink = () => {
 
       case 2:
         return (
-          <JobSummaryForm
+          <UserForm
             formData={formData}
             onFormDataChange={handleInputChange}
+            onFileUpload={handleFileUpload}
           />
         );
 
@@ -317,10 +322,10 @@ const CvLink = () => {
   };
 
   return (
-    <div className='container mx-auto px-4 py-8'>
-      <div className='text-center mb-8'>
+    <div className='container flex align-center justify-center flex-col px-4 py-8 min-h-[100dvh] h-[max-content]'>
+      <div className='hidden md:block text-center mb-16 md:mb-8'>
         <h1 className={`text-3xl font-bold ${STYLES.dark.text.primary} mb-2`}>
-          Full Stop Recruitment CV Form
+          SOY_JIMB Recruitment CV Form
         </h1>
         <p className={STYLES.dark.text.secondary}>
           Complete the steps below to submit your CV
