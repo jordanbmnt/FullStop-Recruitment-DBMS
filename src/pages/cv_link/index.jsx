@@ -322,7 +322,7 @@ const CvLink = () => {
   };
 
   return (
-    <div className='container flex align-center justify-center flex-col px-4 py-8 min-h-[100dvh] h-[max-content]'>
+    <div className='container flex align-center justify-center flex-col px-4 py-8 min-h-[100dvh] h-[max-content] md:mt-auto mt-[7vh]'>
       <div className='hidden md:block text-center mb-16 md:mb-8'>
         <h1 className={`text-3xl font-bold ${STYLES.dark.text.primary} mb-2`}>
           SOY_JIMB Recruitment CV Form
@@ -340,9 +340,9 @@ const CvLink = () => {
         />
       }
 
-      <div className='max-w-4xl mx-auto'>
+      <div className='flex flex-col align-center justify-center max-w-4xl mx-auto md:w-[60vw] max-w-[85vw]'>
         <div
-          className={`${STYLES.dark.background.secondary} border ${STYLES.dark.border.strong} rounded-lg shadow-lg p-8 mb-8`}
+          className={`${STYLES.dark.background.secondary} border ${STYLES.dark.border.strong} rounded-lg shadow-lg p-2 md:p-8 mb-8`}
         >
           {renderStepContent()}
         </div>

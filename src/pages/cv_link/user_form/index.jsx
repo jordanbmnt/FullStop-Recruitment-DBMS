@@ -117,7 +117,7 @@ export const UserForm = ({ formData, onFormDataChange, onFileUpload }) => {
   const SELECT_STYLE = `w-full p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary} ${STYLES.dark.text.paragraph} placeholder:text-gray-600`;
 
   return (
-    <div className='space-y-8'>
+    <div className='space-y-4 md:space-y-8'>
       <div className='text-center mb-8'>
         <User className='w-16 h-16 mx-auto text-green-600 mb-4' />
         <h2 className={`text-2xl font-bold ${STYLES.dark.text.primary} mb-2`}>
@@ -357,19 +357,19 @@ export const UserForm = ({ formData, onFormDataChange, onFileUpload }) => {
             Add your skills (press Enter to add each skill){" "}
             <ResponsiveAsterisk />
           </label>
-          <div className='flex gap-2'>
+          <div className='flex flex-wrap gap-2'>
             <input
               type='text'
               value={currentSkill}
               onChange={(e) => setCurrentSkill(e.target.value)}
               onKeyDown={handleKeyPress}
               placeholder='e.g., Problem Solving, Project Management, JavaScript'
-              className={`flex-1 p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary} ${STYLES.dark.text.paragraph} placeholder:text-gray-600`}
+              className={`w-full md:flex-1 p-3 border ${STYLES.dark.border.medium} rounded-lg focus:ring-2 focus:ring-[${STYLES.dark.accent.color}] focus:border-transparent ${STYLES.dark.background.tertiary} ${STYLES.dark.text.paragraph} placeholder:text-gray-600`}
             />
             <button
               type='button'
               onClick={addSkill}
-              className={`px-4 py-3 bg-red-600 ${STYLES.dark.text.primary} rounded-lg hover:bg-red-700 transition-colors`}
+              className={`px-4 py-3 bg-red-600 ${STYLES.dark.text.primary} rounded-lg hover:bg-red-700 transition-colors w-full md:w-auto`}
             >
               Add
             </button>
