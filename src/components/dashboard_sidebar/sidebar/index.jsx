@@ -6,6 +6,7 @@ import { useState } from "react";
 export const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }) => {
   const iconStyle = 'shrink-0 w-5 h-5 transition duration-75';
   const linkStyle = `flex items-center p-2 ${STYLES.dark.text.paragraph} rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group`;
+  const disabledStyle = `flex items-center p-2 text-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 group cursor-not-allowed`;
   const spanStyle = 'flex-1 ms-3 whitespace-nowrap';
 
   const [activeLink, setActiveLink] = useState('Dashboard');
@@ -18,8 +19,8 @@ export const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }) => {
   ];
 
   const linkOnClick = (linkName) => {
-    setIsSideBarOpen(false)
-    setActiveLink(linkName)
+    setIsSideBarOpen(false);
+    setActiveLink(linkName);
   }
 
   return (
@@ -49,12 +50,12 @@ export const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }) => {
           <li>
             <Link
               onClick={() => {
-                linkOnClick(USER_REVIEW)
+                // linkOnClick(USER_REVIEW)
               }}
               to='/'
-              className={linkStyle}
+              className={disabledStyle}
             >
-              <CheckCircleIcon color={activeLink === USER_REVIEW ? STYLES.dark.accent.color : "grey"} className={iconStyle} />
+              <CheckCircleIcon color={"#4a5565c5"} className={iconStyle} />
               <span className={spanStyle}>{USER_REVIEW}</span>
             </Link>
           </li>
@@ -73,24 +74,24 @@ export const Sidebar = ({ isSideBarOpen, setIsSideBarOpen }) => {
           <li>
             <Link
               onClick={() => {
-                linkOnClick(USER_MAN)
+                // linkOnClick(USER_MAN)
               }}
               to='/'
-              className={linkStyle}
+              className={disabledStyle}
             >
-              <UserPenIcon color={activeLink === USER_MAN ? STYLES.dark.accent.color : "grey"} className={iconStyle} />
+              <UserPenIcon color={"#4a5565c5"} className={iconStyle} />
               <span className={spanStyle}>{USER_MAN}</span>
             </Link>
           </li>
           <li>
             <Link
               onClick={() => {
-                linkOnClick(EXPORT_DATA)
+                // linkOnClick(EXPORT_DATA)
               }}
               to='/'
-              className={linkStyle}
+              className={disabledStyle}
             >
-              <SaveAllIcon color={activeLink === EXPORT_DATA ? STYLES.dark.accent.color : "grey"} className={iconStyle} />
+              <SaveAllIcon color={"#4a5565c5"} className={iconStyle} />
               <span className={spanStyle}>{EXPORT_DATA}</span>
             </Link>
           </li>
