@@ -38,7 +38,6 @@ export const SearchBar = () => {
   const FILTER_BUTTON_STYLE = showFilters
     ? `border ${STYLES.dark.border.medium} bg-[${STYLES.dark.accent.color}] ${STYLES.dark.text.secondary} ${STYLES.dark.accent.red}`
     : `bg-gray-200 border-4 border-[${STYLES.dark.accent.color}] text-[${STYLES.dark.accent.color}] hover:bg-gray-100`;
-  const CHEVRON_STYLE = showFilters ? "rotate-180" : "";
   const SHOW_MORE_BUTTON_STYLE =
     searchQueryLimit === searchQueryMaxLength
       ? STYLES.dark.text.paragraph
